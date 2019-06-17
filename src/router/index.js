@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import home from '@/views/home/home'
+import home from '@/views/home/'
+import serve from '@/views/serve/'
 
 Vue.use(Router)
 
@@ -11,6 +12,10 @@ const router = new Router({
         path: '/',
         name: 'home',
         component: home
+    },{
+        path: '/serve',
+        name: 'serve',
+        component: serve
     }]
 })
 

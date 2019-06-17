@@ -47,7 +47,7 @@ export default {
               src: require('@/assets/button_hd.png'),
               link: '/'
             },
-        ]
+        ],
       }
     },
     components: {mainNav},
@@ -61,7 +61,7 @@ export default {
             console.log(url)
             this.$router.push(url);
         },
-    }
+    },
 }
 </script>
 <style scoped lang="less">

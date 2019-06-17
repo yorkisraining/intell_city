@@ -19,7 +19,7 @@ export default {
     methods: {
         clickFn(url) {
             this.$emit('toThisNavEmit', url);
-        },
+        }
     }
 }
 

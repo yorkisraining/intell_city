@@ -60,12 +60,12 @@
             <globalTitle :title="'项目信息'" :link="'/'" :showMore="true" @toThisNavEmit="toThisNav"></globalTitle>
             <div class="slider_block_wrap">
                 <ul class="slider_block clearfix">
-                    <li v-for="(item, index) in carouselList" :key="item.id">
+                    <li v-for="item in carouselList" :key="item.id">
                         <carouselWithDesc 
                         :src="item.src" 
                         :title="item.title" 
                         :desc="item.desc" 
-                        :bgColor="[index % 2 == 0 ? '#F0F5FF' : '#FFF1F0']"
+                        :bgColor="item.bgColor"
                         :link="item.link" 
                         @toThisNavEmit="toThisNav"></carouselWithDesc>
                     </li>
@@ -82,7 +82,6 @@ import detailBox1 from './detailBox1'
 import detailBox2 from './detailBox2'
 import detailBox3 from './detailBox3'
 import carouselWithDesc from './carouselWithDesc'
-import { mapState } from 'vuex'
 
 export default {
     data () {
@@ -239,7 +238,7 @@ export default {
                     src: require('@/assets/th.jpg'),
                     topMark: '三品王',
                     color: '#FE5FD9',
-                    link: this.sanPinWangUrl,
+                    link: '/',
                 },
             ],
             carouselList: [
@@ -248,6 +247,7 @@ export default {
                     desc: '世界如此美好，怎能让忙碌停止我们探索世界的脚步。',
                     title: '第35个！中国又多一处世界遗产！',
                     src: require('@/assets/gd1.jpg'),
+                    bgColor: '#F0F5FF',
                     link: '/',
                 },
                 {
@@ -255,6 +255,7 @@ export default {
                     desc: '世界如此美好，怎能让忙碌停止我们探索世界的脚步',
                     title: '第35个！中国又多一处世界遗产！',
                     src: require('@/assets/gd2.jpg'),
+                    bgColor: '#FFF1F0',
                     link: '/',
                 },
                 {
@@ -262,35 +263,19 @@ export default {
                     desc: '世界如此美好，怎能让忙碌停止我们探索世界的脚步',
                     title: '第35个！中国又多一处世界遗产！',
                     src: require('@/assets/gd3.jpg'),
+                    bgColor: '#F0F5FF',
                     link: '/',
                 },
             ]
         };
     },
     components: {mainNav, globalTitle, detailBox1, detailBox2, detailBox3, carouselWithDesc},
-    created() {
-        this.$store.dispatch('homeModule/getHomeData');
-    },
-    computed: {
-        ...mapState('homeModule', [
-            'appList',
-            'imageList',
-            'companyPerformanceList',
-            'companyProjectList',
-            'inforList',
-            'activityUrl',
-            'projectCenterUrl',
-            'sanPinWangUrl',
-            'coffeeUrl',
-        ])
-    },
     methods: {
         toThisNav(url) {
             console.log(url)
             this.$router.push(url);
         },
-    },
-
+    }
 }
 
 </script>
