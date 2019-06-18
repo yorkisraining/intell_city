@@ -8,10 +8,10 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import store from './vuex'
 import remAndPhoneConfig from './common/js/rem'
-import { Tab, Tabs } from 'vant';
+import { Tab, Tabs, Popup } from 'vant';
 import 'vant/lib/index.css';
 
-Vue.use(Tab).use(Tabs);
+Vue.use(Tab).use(Tabs).use(Popup);
 
 Vue.use(ElementUI);
 remAndPhoneConfig();
