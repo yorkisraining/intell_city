@@ -2,6 +2,11 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import home from '@/views/home/'
 import serve from '@/views/serve/'
+import serveHistory from '@/views/serve/building/serveHistory'
+import paySuccess from '@/views/serve/building/serveHistory/paySuccess'
+import payFail from '@/views/serve/building/serveHistory/payFail'
+import confirmOrder from '@/views/serve/building/serveHistory/confirmOrder'
+import serveClassify from '@/views/serve/building/serveClassify'
 
 Vue.use(Router)
 
@@ -12,11 +17,31 @@ const router = new Router({
         path: '/',
         name: 'home',
         component: home
-    },{
+    }, {
         path: '/serve',
         name: 'serve',
-        component: serve
-    }]
+        component: serve,
+    }, {
+        path: '/serveHistory',
+        name: 'serveHistory',
+        component: serveHistory
+    }, {
+        path: '/paySuccess',
+        name: 'paySuccess',
+        component: paySuccess
+    }, {
+        path: '/payFail',
+        name: 'payFail',
+        component: payFail
+    }, {
+        path: '/confirmOrder',
+        name: 'confirmOrder',
+        component: confirmOrder
+    }, {
+        path: '/serveClassify',
+        name: 'serveClassify',
+        component: serveClassify
+    }, ]
 })
 
 /* let vm = new Vue();

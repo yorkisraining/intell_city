@@ -2,18 +2,32 @@
 <template>
     <div>
         <div class="change_btn_group">
-            <div class="btn_item curr">未解决</div>
-            <div class="btn_item">已解决</div>
+            <div :class="[curr == 0 ? 'curr' : '', 'btn_item']" @click="() => {curr = 0}">未解决</div>
+            <div :class="[curr == 1 ? 'curr' : '', 'btn_item']" @click="() => {curr = 1}">已解决</div>
         </div>
-        <orderCard v-for="item in orderCardList" :key="item.id" 
-        :status = "item.status"
-        :orderId = "item.orderId"
-        :orderType = "item.orderType"
-        :createTime = "item.createTime"
-        :contain = "item.contain"
-        :remark = "item.remark"
-        :doneTime = "item.doneTime"
-        ></orderCard>
+        <div v-show="curr == 0">
+            <orderCard v-for="item in orderCardList" :key="item.id" v-if="item.status != 1"
+            :status = "item.status"
+            :orderId = "item.orderId"
+            :orderType = "item.orderType"
+            :createTime = "item.createTime"
+            :contain = "item.contain"
+            :remark = "item.remark"
+            :doneTime = "item.doneTime"
+            ></orderCard>
+        </div>
+        <div v-show="curr == 1">
+            <orderCard v-for="item in orderCardList" :key="item.id" v-if="item.status == 1"
+            :status = "item.status"
+            :orderId = "item.orderId"
+            :orderType = "item.orderType"
+            :createTime = "item.createTime"
+            :contain = "item.contain"
+            :remark = "item.remark"
+            :doneTime = "item.doneTime"
+            ></orderCard>
+        </div>
+        
     </div>
 </template>
 
@@ -23,6 +37,7 @@ import orderCard from './orderCard'
 export default {
     data () { 
         return {
+            curr: 0,
             orderCardList: [
                 {
                     status: 0,
@@ -75,7 +90,7 @@ export default {
             border-radius: .1rem 0 0 .1rem;
         }
         &:last-child {
-            border-radius: .1rem 0 0 .1rem;
+            border-radius: 0 .1rem .1rem 0;
         }
         &.curr {
             background-color: #FFA122;

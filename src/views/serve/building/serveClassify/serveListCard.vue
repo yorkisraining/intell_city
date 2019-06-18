@@ -1,0 +1,107 @@
+<!-- building/serveClassify/serveListCard 图 名称 价格 数量卡 -->
+<template>
+    <div class="serve_list_card">
+        <div class="serve_img">
+            <img :src="src" alt="">
+        </div>
+        <div class="serve_detail">
+            <div class="title">{{title}}</div>
+            <div class="brief">{{brief}}</div>
+            <div class="price_box">
+                <div class="price">￥<span>{{price}}</span></div>
+                <div class="stepper">
+                    <span @click="sub" class="btn sub" v-show="count != 0">+</span>
+                    <span v-show="count != 0">{{count}}</span>
+                    <span @click="add" class="btn add">+</span>
+                </div>
+            </div>
+        </div>
+    </div> 
+</template>
+
+<script>
+export default {
+    data () {
+        return {
+            count: 0
+        };
+    },
+    props: ['title', 'brief', 'price', 'src'],
+    methods: {
+        sub() {
+            this.count--;
+        },
+        add() {
+            this.count++;
+        }
+    }
+}
+
+</script>
+<style lang='less' scoped>
+.serve_list_card {
+    display: flex;
+    align-items: top; 
+    margin-bottom: .48rem;
+    .serve_img {
+        width: 1.8rem;
+        height: 1.8rem;
+        overflow: hidden;
+        margin-right: .24rem;
+        img {
+            width: 100%;
+        }
+    }
+    .serve_detail {
+        width: calc(100% - 1.8rem - .24rem);
+        .title {
+            font-size: .34rem;
+            line-height: .48rem;
+            color: #333;
+        }
+        .brief {
+            font-size: .26rem;
+            color: #999;
+            width: 100%;
+            line-height: .38rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .price_box {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-top: .24rem;
+            .price {
+                font-size: .28rem;
+                color: #F14D2A;
+                span {
+                    font-size: .48rem;
+                }
+            }
+            .stepper {
+                span {
+                    display: inline-block;
+                    text-align: center;
+                    font-size: .28rem;
+                    margin-left: .16rem;
+                }
+                .btn {
+                    border-radius: 50%;
+                    height: .48rem;
+                    width: .48rem;
+                    line-height: .48rem;
+                    color: #333;
+                    background-color: #FFA122;
+                    &.sub {
+                        background-color: #fff;
+                        color: #999;
+                        border: .02rem solid #CBCBCB;
+                    }
+                }
+            }
+        }
+    }
+}
+</style>

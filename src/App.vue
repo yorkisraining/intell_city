@@ -1,8 +1,6 @@
 <template>
   <div id="app">
-    <el-header>
-      <div class="title">{{title}}</div>
-    </el-header>
+    <globalHeader :title="title"></globalHeader>
     <router-view/>
     <div class="fix_bottom_nav">
       <el-row>
@@ -23,6 +21,8 @@
 
 <script>
 import mainNav from '@/components/mainNav'
+import globalHeader from '@/components/header'
+
 export default {
     name: 'App',
     data() {
@@ -50,7 +50,7 @@ export default {
         ],
       }
     },
-    components: {mainNav},
+    components: {mainNav, globalHeader},
     filters: {
       filterTitle(val) {
         return val.length > 8 ? val.slice(0, 8) + '...' : val;
