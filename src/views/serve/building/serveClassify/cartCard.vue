@@ -5,9 +5,9 @@
         <div class="price_box">
             <div class="price">￥<span>{{price}}</span></div>
             <div class="stepper">
-                <span @click="sub" class="btn sub">+</span>
-                <span>{{count}}</span>
-                <span @click="add" class="btn add">+</span>
+                <span @click="sub(id, price)" class="btn sub">+</span>
+                <span>{{tCount}}</span>
+                <span @click="add(id, price)" class="btn add">+</span>
             </div>
         </div>
     </div> 
@@ -17,18 +17,35 @@
 export default {
     data () {
         return {
-            count: 0
         };
     },
-    props: ['title', 'price'],
+    props: ['title', 'price', 'count', 'id'],
+    computed: {
+        tCount() {
+            return this.count;
+        }
+    },
     methods: {
-        sub() {
-            if (this.count > 0) {
-                this.count--;
+        sub(id, price) {
+            if ( this.tCount > 0 ) {
+                this.tCount--;
+                this.$emit('changePrice', {
+                    id: id,
+                    price: price,
+                    count: this.tCount,
+                    type: -1
+                })
             }
+            
         },
-        add() {
-            this.count++;
+        add(id, price) {
+            this.tCount++;
+            this.$emit('changePrice', {
+                id: id,
+                price: price,
+                count: this.tCount,
+                type: 1
+            })
         }
     }
 }

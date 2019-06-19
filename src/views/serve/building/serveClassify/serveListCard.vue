@@ -10,9 +10,9 @@
             <div class="price_box">
                 <div class="price">￥<span>{{price}}</span></div>
                 <div class="stepper">
-                    <span @click="sub" class="btn sub" v-show="count != 0">+</span>
-                    <span v-show="count != 0">{{count}}</span>
-                    <span @click="add" class="btn add">+</span>
+                    <span @click="sub(id, price)" class="btn sub" v-show="tCount != 0">+</span>
+                    <span v-show="tCount != 0">{{tCount}}</span>
+                    <span @click="add(id, price)" class="btn add">+</span>
                 </div>
             </div>
         </div>
@@ -23,16 +23,50 @@
 export default {
     data () {
         return {
-            count: 0
         };
     },
-    props: ['title', 'brief', 'price', 'src'],
+    props: ['title', 'brief', 'price', 'src', 'id', 'totalPrice', 'chooseListLength', 'count'],
+    computed: {
+        tCount() {
+            return this.count;
+        }
+    },
     methods: {
-        sub() {
-            this.count--;
+        isCanChange(price) {
+            /* 
+                1.如果当前选择商品的价格为0，并且当前总价不为零
+                2.当前选择商品价格不为零，当前总价为零，chooseList.length不为零
+                以上两种情况时，有异常提示
+            */
+            if ((price == 0 && this.totalPrice != 0) || (price != 0 && this.totalPrice == 0 && this.chooseListLength != 0)) {
+                // 不能共存,异常提示
+                console.log('不能这样选择');
+                return false;
+            }
+            return true;
         },
-        add() {
-            this.count++;
+        sub(id, price) {
+            if (this.isCanChange(price) ) {
+                this.tCount--;
+                this.$emit('changePrice', {
+                    id: id,
+                    price: price,
+                    count: this.tCount,
+                    type: -1
+                })
+            }
+            
+        },
+        add(id, price) {
+            if (this.isCanChange(price) ) {
+                this.tCount++;
+                this.$emit('changePrice', {
+                    id: id,
+                    price: price,
+                    count: this.tCount,
+                    type: 1
+                })
+            }
         }
     }
 }

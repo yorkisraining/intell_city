@@ -10,7 +10,12 @@
             <serveListCard v-for="item in serveList" :key="item.id" 
             :price="item.price" 
             :title="item.name" 
-            :brief="item.brief"></serveListCard>
+            :brief="item.brief"
+            :id="item.id"
+            :count="item.count"
+            :totalPrice="totalPrice"
+            :chooseListLength="chooseList.length"
+            @changePrice="changePrice"></serveListCard>
         </div>
         <div class="cart" @click="showCard">
             <div class="cart_left">
@@ -35,7 +40,15 @@
             <div class="popup_cart_box">
                 <div class="popup_cart_preferent">有优惠券可使用，已优惠{{preferentPrice}}元</div>
                 <div class="popup_cart_title">已选服务</div>
-                <cartCard v-for="item in chooseList" :key="item.id" :title="item.name" :price="item.price" class="popup_cart_card"></cartCard>
+                <cartCard class="popup_cart_card" v-for="item in chooseList" 
+                :key="item.id" 
+                :id="item.id" 
+                :title="item.name" 
+                :price="item.price" 
+                :count="item.count" 
+                :totalPrice="totalPrice" 
+                :chooseListLength="chooseList.length" 
+                @changePrice="changePrice"></cartCard>
             </div>
         </van-popup>
     </div>
@@ -53,34 +66,27 @@ export default {
             isTelshow: false,
             isCartshow: false,
             preferentPrice: 100,
-            totalPrice: 88,
+            totalPrice: 0,
             serveList: [{
                 id: 54124321,
-                price: 88,
+                price: 188,
                 name: '自主研发产权服务',
-                brief: '入驻条件为，科技信息产业相关且入驻条件为'
+                brief: '入驻条件为，科技信息产业相关且入驻条件为',
+                count: 0
             },{
                 id: 415241,
                 price: 88,
                 name: '自主研发产权服务',
-                brief: '入驻条件为，科技信息产业相关且入驻条件为'
+                brief: '入驻条件为，科技信息产业相关且入驻条件为',
+                count: 0
             },{
                 id: 5325632,
                 price: 0,
                 name: '自主研发产权服务',
-                brief: '入驻条件为，科技信息产业相关且入驻条件为'
+                brief: '入驻条件为，科技信息产业相关且入驻条件为',
+                count: 0
             }],
-            chooseList: [{
-                id: 54124321,
-                price: 88,
-                name: '自主研发产权服务',
-                brief: '入驻条件为，科技信息产业相关且入驻条件为'
-            },{
-                id: 415241,
-                price: 88,
-                name: '自主研发产权服务',
-                brief: '入驻条件为，科技信息产业相关且入驻条件为'
-            },]
+            chooseList: []
         };
     },
     components: {serveListCard, cartCard},
@@ -94,6 +100,47 @@ export default {
         },
         showCard() {
             this.isCartshow = true;
+        },
+        findChooseList(id) {
+            for (let i=0; i<this.chooseList.length; i++) {
+                if (this.chooseList[i].id == id) {
+                    return i;
+                }
+            }
+            return -1;
+        },
+        findServeList(id) {
+            for (let i=0; i<this.serveList.length; i++) {
+                if (this.serveList[i].id == id) {
+                    return i;
+                }
+            }
+        },
+        changePrice(obj) {
+            this.totalPrice += obj.type * obj.price;
+
+            const cidx = this.findChooseList(obj.id),
+                    sidx = this.findServeList(obj.id);
+            
+            let count = this.serveList[sidx].count + obj.type;
+
+            //不管怎么样都先修改serlist里的count
+            this.$set(this.serveList[sidx], 'count', count);
+
+            if (obj.count == 0) {
+                //count为0，chooseList删掉这个选择的商品
+                this.chooseList.splice(cidx, 1);
+            } else {
+                if (cidx != -1) {
+                    //找到了，修改chooselist里这个商品的数量
+                    this.$set(this.chooseList[cidx], 'count', count);
+                } else {
+                    //没找到，添加进去
+                    this.chooseList.push(this.serveList[sidx]);
+                }
+            }
+
+            console.log(this.serveList[sidx].count, this.chooseList[cidx].count)
         }
     }
 }
