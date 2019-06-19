@@ -1,14 +1,14 @@
 <!-- building/serveClassify/serveListCard 图 名称 价格 数量卡 -->
 <template>
-    <div class="serve_list_card" @click="changeRouter">
-        <div class="serve_img">
+    <div class="serve_list_card">
+        <div class="serve_img"  @click="changeRouter(id)">
             <img :src="src" alt="">
         </div>
         <div class="serve_detail">
-            <div class="title">{{title}}</div>
-            <div class="brief">{{brief}}</div>
+            <div class="title"  @click="changeRouter(id)">{{title}}</div>
+            <div class="brief"  @click="changeRouter(id)">{{brief}}</div>
             <div class="price_box">
-                <div class="price">￥<span>{{price}}</span></div>
+                <div class="price"  @click="changeRouter(id)">￥<span>{{price}}</span></div>
                 <div class="stepper">
                     <span @click="sub(id, price)" class="btn sub" v-show="tCount != 0">+</span>
                     <span v-show="tCount != 0">{{tCount}}</span>

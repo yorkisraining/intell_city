@@ -1,6 +1,6 @@
 <!-- serve/cusmade/cusCard 定制化服务展示卡片 -->
 <template>
-    <div class="card">
+    <div class="card"  @click="toDetaill(id, title)">
         <div class="icon">
             <img :src="iconList[src]" />
         </div>
@@ -24,8 +24,14 @@ export default {
             ]
         };
     },
-    props: ['src', 'title', 'brief'],
+    props: ['src', 'title', 'brief', 'id'],
     methods: {
+        toDetaill(id, title) {
+            this.$emit('toDetail', {
+                id: id,
+                title: title
+            });
+        }
     }
 }
 

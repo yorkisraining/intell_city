@@ -1,7 +1,7 @@
 <!-- serve/cusmade 定制化服务 -->
 <template>
     <div class="cusmade_containt">
-        <cusCard v-for="item in cardList" :key="item.id" :title="item.title" :brief="item.brief" :src="item.classify"></cusCard>
+        <cusCard v-for="item in cardList" :key="item.id" :id="item.id" :title="item.title" :brief="item.brief" :src="item.classify" @toDetail="toDetail"></cusCard>
     </div>
 </template>
 
@@ -38,6 +38,9 @@ export default {
     },
     components: {cusCard},
     methods: {
+        toDetail(obj) {
+            this.$router.push(`/serveClassify?id=${obj.id}&title=${obj.title}`);
+        }
     }
 }
 

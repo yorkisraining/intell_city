@@ -1,6 +1,7 @@
 <!-- building/serveClassify 服务分类主 -->
 <template>
     <div class="server_classify">
+        <headerWithPhone :title="title" :linkMsg="''" class="head" @clickLink="toHis"></headerWithPhone>
         <div class="address_box">
             <div class="address_item">
                 <img src="@/assets/address.png">
@@ -62,10 +63,13 @@
 <script>
 import serveListCard from './serveListCard'
 import cartCard from './cartCard'
+import headerWithPhone from '@/components/headerWithPhone'
 
 export default {
     data () {
         return {
+            title: '',
+            id: '',
             address: '广西南宁市兴宁区民族大道10号',
             tel: '15573957203',
             isTelshow: false,
@@ -94,7 +98,13 @@ export default {
             chooseList: [],
         };
     },
-    components: {serveListCard, cartCard},
+    components: {serveListCard, cartCard, headerWithPhone},
+    created() {
+        let query = this.$router.history.current.query;
+        this.id = query.id;
+        this.title = query.title;
+        console.log(this.title, query)
+    },
     methods: {
         telFn() {
             this.isTelshow = true;
@@ -149,14 +159,23 @@ export default {
             }
         },
         toThisDetail(id) {
-            this.$router.push('/serveDetail');
+            this.$router.push(`/serveDetail?id=${id}`);
         },
+        toHis() {
+
+        }
     }
 }
 
 </script>
 <style lang='less' scoped>
 .server_classify {
+    .head {
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 199;
+    }
     .address_box {
         padding: .16rem .32rem;
         border-bottom: 1px solid #CBCBCB;

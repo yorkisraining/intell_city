@@ -72,3 +72,16 @@ export const ajaxPost = (url, params, callback, errorCallback) => {
             console.log('服务器错误', error);
         })
 }
+
+export const ajaxGet = (url, params, callback, errorCallback) => {
+    axios.get(url, params)
+        .then(function(response) {
+            callback(response);
+        })
+        .catch(function(error) {
+            if (errorCallback) {
+                errorCallback(error)
+            }
+            console.log('服务器错误', error);
+        })
+}

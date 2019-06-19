@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <globalHeader :title="title" :returnBtn="returnBtn" :ifShowHeader="ifShowHeader" ></globalHeader>
+    <globalHeader :title="title" :returnBtn="returnBtn" :ifShowHeader="ifShowHeader" class="head"></globalHeader>
     <router-view/>
   </div>
 </template>
@@ -31,12 +31,14 @@ export default {
     },
     watch: {
       $route(now, old) {
-        console.log(now)
         this.title = now.name;
-        
+        if (now.path == '/') {
+          this.returnBtn = false;
+        } else {
+          this.returnBtn = true;
+        }
         now.matched.some(res => {
           this.ifShowHeader = res.props.default.ifShowHeader;
-          this.returnBtn = res.props.default.returnBtn;
         })
         
       }
@@ -44,17 +46,15 @@ export default {
 }
 </script>
 <style scoped lang="less">
-  .el-header {
-    background-color: #0d92eb;
-    color: #fff;
-    line-height: 60px;
-    position: relative;
-    .el-icon-arrow-left {
-      position: absolute;
-      left: 20px;
-      top: 50%;
-      transform: translateY(-50%);
-    }
+#app {
+  padding-top: 1.2rem;
+  .head {
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 99;
   }
+}
+  
 
 </style>

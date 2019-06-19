@@ -1,6 +1,6 @@
 <!-- foods/foodsListCard 图 名称 价格 数量卡 -->
 <template>
-    <div class="serve_list_card" @click="changeRouter">
+    <div class="serve_list_card">
         <div class="serve_img">
             <img :src="src" alt="">
         </div>
@@ -34,31 +34,23 @@ export default {
     },
     methods: {
         sub(id, price) {
-            if ( this.isCanChange(price) ) {
-                this.tCount--;
-                this.$emit('changePrice', {
-                    id: id,
-                    price: price,
-                    count: this.tCount,
-                    type: -1
-                })
-            }
-            
+            this.tCount--;
+            this.$emit('changePrice', {
+                id: id,
+                price: price,
+                count: this.tCount,
+                type: -1
+            })
         },
         add(id, price) {
-            if (this.isCanChange(price) ) {
-                this.tCount++;
-                this.$emit('changePrice', {
-                    id: id,
-                    price: price,
-                    count: this.tCount,
-                    type: 1
-                })
-            }
+            this.tCount++;
+            this.$emit('changePrice', {
+                id: id,
+                price: price,
+                count: this.tCount,
+                type: 1
+            })
         },
-        changeRouter(id) {
-            this.$emit('toThisDetail', id)
-        }
     }
 }
 

@@ -2,9 +2,9 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import home from '@/views/home/'
 import serve from '@/views/serve/'
-import serveHistory from '@/views/serve/building/serveHistory'
-import paySuccess from '@/views/serve/building/serveHistory/paySuccess'
-import payFail from '@/views/serve/building/serveHistory/payFail'
+import serveHistory from '@/views/serve/building/serveHistory'  
+import paySuccess from '@/components/paySuccess'
+import payFail from '@/components/payFail'
 import confirmOrder from '@/views/serve/building/serveHistory/confirmOrder'
 import serveClassify from '@/views/serve/building/serveClassify'
 import serveDetail from '@/views/serve/building/serveClassify/serveDetail'
@@ -27,15 +27,15 @@ const router = new Router({
         }
     }, {
         path: '/serve',
-        name: 'serve',
+        name: '企业服务',
         component: serve,
         props: {
-            returnBtn: false,
-            ifShowHeader: true
+            returnBtn: true,
+            ifShowHeader: false
         }
     }, {
         path: '/serveHistory',
-        name: 'serveHistory',
+        name: '服务记录',
         component: serveHistory,
         props: {
             returnBtn: true,
@@ -43,66 +43,66 @@ const router = new Router({
         }
     }, {
         path: '/paySuccess',
-        name: 'paySuccess',
+        name: '支付成功',
         component: paySuccess,
         props: {
-            returnBtn: false,
-            ifShowHeader: false
+            returnBtn: true,
+            ifShowHeader: true
         }
     }, {
         path: '/payFail',
-        name: 'payFail',
+        name: '支付失败',
         component: payFail,
         props: {
-            returnBtn: false,
+            returnBtn: true,
             ifShowHeader: true
         }
     }, {
         path: '/confirmOrder',
-        name: 'confirmOrder',
+        name: '订单信息确认',
         component: confirmOrder,
         props: {
-            returnBtn: false,
+            returnBtn: true,
             ifShowHeader: true
         }
     }, {
         path: '/serveClassify',
-        name: 'serveClassify',
+        name: '定制服务',
         component: serveClassify,
         props: {
-            returnBtn: false,
-            ifShowHeader: true
+            returnBtn: true,
+            ifShowHeader: false
         }
     }, {
         path: '/serveDetail',
         name: 'serveDetail',
         component: serveDetail,
         props: {
-            returnBtn: false,
-            ifShowHeader: true
+            returnBtn: true,
+            ifShowHeader: false
         }
     }, {
         path: '/foods',
         name: 'foods',
         component: foods,
         props: {
-            returnBtn: false,
-            ifShowHeader: true
+            returnBtn: true,
+            ifShowHeader: false
         }
     }, {
         path: '/foodsHistory',
-        name: 'foodsHistory',
+        name: '订单记录',
         component: foodsHistory,
         props: {
-            returnBtn: false,
+            returnBtn: true,
             ifShowHeader: true
         }
     }, {
         path: '/foodsOrderComfirm',
-        name: 'foodsOrderComfirm',
+        name: '订单信息确认',
         component: foodsOrderComfirm,
         props: {
-            returnBtn: false,
+            returnBtn: true,
             ifShowHeader: true
         }
     }, ]

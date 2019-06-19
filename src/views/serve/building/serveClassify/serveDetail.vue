@@ -1,6 +1,7 @@
 <!-- building/serveClassify/serveDetail 服务详情 -->
 <template>
     <div class="serve_detail_box">
+        <globalHeader :title="headeTitle" :returnBtn="true" :ifShowHeader="true" class="head"></globalHeader>
         <div class="serve_list_card">
             <div class="serve_img">
                 <img :src="src" alt="">
@@ -20,20 +21,32 @@
 </template>
 
 <script>
+import globalHeader from '@/components/header'
+
 export default {
     data () {
         return {
+            headeTitle: 'tite',
             id: 54124321,
             price: 188,
             title: '自主研发产权服务',
             brief: '入驻条件为，科技信息产业相关且入驻条件为',
+            article: '',
+            src: ''
         }
     },
+    components: {globalHeader}
 }
 
 </script>
 <style lang='less' scoped>
 .serve_detail_box {
+    .head {
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 99;
+    }
     .serve_list_card {
         display: flex;
         align-items: top; 

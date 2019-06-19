@@ -3,7 +3,7 @@
     <div class="confirm_order"  :style="{minHeight: minH + 'px'}">
         <div class="card_item">
             <div class="title">{{name}}</div>
-            <anOrderList class="order_list" v-for="item in orderList" :key="item.orderid" :orderName="item.orderName" :orderMoney="item.orderMoney" :orderCount="item.orderCount"></anOrderList>
+            <anOrderList class="order_list" v-for="item in orderList" :key="item.id" :orderName="item.name" :orderMoney="item.price" :orderCount="item.count"></anOrderList>
         </div>
         <div class="card_item">
             <div class="title">订单信息</div>
@@ -14,7 +14,7 @@
                 </div>
                 <div class="msg_list_item">
                     <div>服务分类</div>
-                    <div>恒伟知识产权服务</div>
+                    <div>三品王</div>
                 </div>
                 <div class="msg_list_item">
                     <div>下单时间</div>
@@ -32,15 +32,27 @@
                 </div>
                 <div class="msg_list_item">
                     <div>合计金额</div>
-                    <div class="orange">￥888</div>
+                    <div class="orange">￥{{totalPrice}}</div>
                 </div>
             </div>
         </div>
+        <div class="explaint">请在下单后6个小时内取餐，过期订单自动失效</div>
         <div class="appoint_btn_box">
-            <div class="appoint_btn cur">立即取餐</div>
-            <div class="appoint_btn">预约取餐 {{appointTime}}</div>
+            <div :class="['appoint_btn', {cur: curBtn}]" @click="() => {this.curBtn = true}">立即取餐</div>
+            <div :class="['appoint_btn', {cur: !curBtn}]" @click="clickAppoint">预约取餐 <span v-show="!curBtn">{{appointTime}}</span></div>
         </div>
-        <div :class="['type_btn', {'default_btn': type == 0}]">{{type | filterTypeBtn}}</div>
+        <div :class="['type_btn', {'default_btn': type == 0}]" @click="pay">{{type | filterTypeBtn}}</div>
+        <van-popup v-model="ifShowTime" position="bottom">
+            <van-datetime-picker
+                v-model="appointTime"
+                type="time"
+                :min-hour="0"
+                :max-hour="24"
+                @confirm="closePopup"
+                @cancel="() => {this.ifShowTime = false}"
+            />
+        </van-popup>
+            
     </div>
 </template>
 
@@ -52,19 +64,12 @@ export default {
         return {
             minH: 0,
             name: '恒伟知识产权服务',
-            orderList: [{
-                orderid: 135123,
-                orderName: '商标注册服务',
-                orderMoney: 88, 
-                orderCount: 2
-            },{
-                orderid: 511241,
-                orderName: 'logo注册服务',
-                orderMoney: 88, 
-                orderCount: 1
-            }],
-            type: 0,
-            appointTime: ''
+            orderList: this.$store.state.cartModule.foodsList.chooseFoodsList,
+            type: 1,
+            appointTime: '00:00',
+            ifShowTime: false,
+            curBtn: true,
+            totalPrice: this.$store.state.cartModule.foodsList.totalPrice,
         };
     },
     components: {anOrderList},
@@ -77,7 +82,20 @@ export default {
     mounted() {
         this.minH = document.documentElement.clientHeight;
     },
-    methods: {},
+    methods: {
+        clickAppoint() {
+            //预约取餐
+            this.ifShowTime = true;
+        },
+        closePopup(val) {
+            this.ifShowTime = false;
+            this.curBtn = false;
+        },
+        pay() {
+            //支付
+        }
+    },
+    
 }
 
 </script>
@@ -151,6 +169,7 @@ export default {
     .appoint_btn_box {
         display: flex;
         font-size: .3rem;
+        padding: 0 .32rem;
         .appoint_btn {
             margin-right: .18rem;
             width: calc(100% / 2);
@@ -170,6 +189,11 @@ export default {
                 border: none;
             }
         }
+    }
+    .explaint {
+        font-size: .2rem;
+        color: #666;
+        padding: 0 .32rem .16rem;
     }
 }
 

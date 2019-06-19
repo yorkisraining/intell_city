@@ -8,10 +8,10 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import store from './vuex'
 import remAndPhoneConfig from './common/js/rem'
-import { Tab, Tabs, Popup } from 'vant';
+import { Tab, Tabs, Popup, DatetimePicker  } from 'vant';
 import 'vant/lib/index.css';
 
-Vue.use(Tab).use(Tabs).use(Popup);
+Vue.use(Tab).use(Tabs).use(Popup).use(DatetimePicker);
 
 Vue.use(ElementUI);
 remAndPhoneConfig();
@@ -26,18 +26,3 @@ new Vue({
     components: { App },
     template: '<App/>'
 })
-
-/* 
-package.json 以下几个是koa依赖，不需要可以删掉
-    "koa-history-api-fallback": "^0.2.0",
-    "koa": "^2.0.0",
-    "koa-body": "^4.1.0",
-    "koa-cors": "0.0.16",
-    "koa-jwt": "^3.5.1",
-    "koa-router": "^7.0.0",
-    "koa-static": "^4.0.3",
-    "mime": "^1.3.4",
-    "mysql": "^2.17.1",
-    "mysql2": "^1.6.5",
-    "sequelize": "^5.8.5"
-*/

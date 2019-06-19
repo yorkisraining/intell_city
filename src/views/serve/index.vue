@@ -1,8 +1,9 @@
 <!-- serve/index -->
 <template>
     <div class="serve_contain"  :style="{minHeight: minH + 'px'}">
+        <headerWithPhone :title="'企业服务'" :linkMsg="'服务记录'" class="head" @clickLink="toHis"></headerWithPhone>
         <div class="tabs_box">
-            <van-tabs @click="changeTabs" color="#0D9BED" line-width=".4rem" title-active-color="#0D9BED" >
+            <van-tabs v-model="active" color="#0D9BED" line-width=".4rem" title-active-color="#0D9BED" >
                 <van-tab class="tabs_item" title="楼宇服务">
                     <building></building>
                 </van-tab>
@@ -17,28 +18,42 @@
 <script>
 import building from './building'
 import cusMade from './cusmade'
+import headerWithPhone from '@/components/headerWithPhone'
 
 export default {
     data () {
         return {
-            whichTabs: 'build',
+            active: 0,
             minH: 0
         };
     },
-    components: {building, cusMade},
+    components: {building, cusMade, headerWithPhone},
     methods: {
-        changeTabs(index, title) {
-            this.whichTabs = title;
-        }
+        toHis() {
+            //服务记录
+            this.$router.push('/serveHistory');
+        },
     },
     mounted() {
-      this.minH = document.documentElement.clientHeight;
-    }
+        this.minH = document.documentElement.clientHeight;
+        this.$router.beforeEach((to, from, next) => {
+            if (from.path == '/serveClassify') {
+                this.active = 1;
+            }
+            next();
+        })
+    },
 }
 
 </script>
 <style lang='less' scoped>
     .serve_contain {
         background-color: #f3f3f3;
+        .head {
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 199;
+        }
     }
 </style>

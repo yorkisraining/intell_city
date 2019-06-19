@@ -1,9 +1,9 @@
 <!-- globalHeaderWithLink -->
 <template>
     <div class="g_title">
-        <div class="return_icon" v-if="returnBtn" @click="() => {this.$router.go(-1)}"><i class="el-icon-arrow-left"></i></div>
+        <div class="return_icon" @click="() => {this.$router.go(-1)}"><i class="el-icon-arrow-left"></i></div>
         <div class="title">{{title | filterTitle}}</div>
-        <div class="link" @click="clickLink">{{linkMsg}}</div>
+        <div class="link" @click="clickPhone">{{linkMsg}}</div>
     </div>
 </template>
 
@@ -13,7 +13,7 @@ export default {
         return {
         };
     },
-    props: ['title', 'returnBtn'],
+    props: ['title', 'returnBtn', 'linkMsg'],
     filters: {
         filterTitle(val) {
             return val.length > 8 ? val.slice(0, 8) + '...' : val;

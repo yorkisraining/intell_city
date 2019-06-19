@@ -1,13 +1,14 @@
 <!-- foods 美食服务首页 -->
 <template>
     <div class="foods_containt">
+        <headerWithPhone :title="'三品王'" :linkMsg="'服务记录'" class="head" @clickLink="toHis"></headerWithPhone>
         <div class="carousel_block">
             <el-carousel :height="setting.height" >
                 <el-carousel-item v-for="item in topCarImgList" :key="item.id" >
                     <img :src="item.src" alt="" @click="toThisNav(item.link)">
                 </el-carousel-item>
             </el-carousel>
-        </div>
+        </div> 
         <div class="address_box">
             <div class="address_item">
                 <img src="@/assets/address.png">
@@ -33,18 +34,17 @@
             :count="item.count"
             :totalPrice="totalPrice"
             :chooseListLength="chooseList.length"
-            @changePrice="changePrice" 
-            @toThisDetail="toThisDetail"></foodsListCard>
+            @changePrice="changePrice" ></foodsListCard>
         </div>
-        <div class="cart" @click="showCard">
-            <div class="cart_left">
+        <div class="cart">
+            <div class="cart_left"  @click="showCard">
                 <img src="@/assets/cart.png" class="cart_icon">
                 <div class="cart_price">
                     <div>合计:<span class="total_price">￥{{totalPrice}}</span></div>
                     <div class="preferent">已优惠{{preferentPrice}}</div>
                 </div>
             </div>
-            <div class="cart_right cart_btn">下单</div>
+            <div class="cart_right cart_btn" @click="toPay">下单</div>
         </div>
         <van-popup v-model="isCartshow" position="bottom" class="popup_cart">
             <div class="popup_cart_box">
@@ -67,6 +67,7 @@
 <script>
 import foodsListCard from './foodsListCard'
 import cartCard from './cartCard'
+import headerWithPhone from '@/components/headerWithPhone'
 
 export default {
     data () {
@@ -99,40 +100,22 @@ export default {
             isTelshow: false,
             isCartshow: false,
             preferentPrice: 100, //优惠金额
-            totalPrice: 0, //总价
-            foodsList: [{
-                id: 54124321,
-                price: 20,
-                name: '麻辣牛腩粉',
-                brief: '月销量八千，销量第一',
-                count: 0
-            },{
-                id: 415241,
-                price: 14,
-                name: '酸辣牛肉粉',
-                brief: '月销量300份',
-                count: 0
-            },{
-                id: 5325632,
-                price: 14.9,
-                name: '高汤牛肉粉',
-                brief: '日销50份，店长推荐',
-                count: 0
-            },{
-                id: 5325635,
-                price: 13.88,
-                name: '高汤牛肉粉',
-                brief: '日销50份，店长推荐',
-                count: 0
-            }],
-            totalPrice: 0,
-            chooseList: []
+            totalPrice: this.$store.state.cartModule.foodsList.totalPrice, //总价
+            foodsList: this.$store.state.cartModule.foodsList.originList,
+            chooseList: this.$store.state.cartModule.foodsList.chooseFoodsList,
         };
     },
-    components: {foodsListCard, cartCard},
+    components: {foodsListCard, cartCard, headerWithPhone},
+    mounted() {
+        this.$store.commit('cartModule/changeFoodsReduce', this.reduce);
+    },
     methods: {
         toThisNav() {
 
+        },
+        toHis() {
+            //服务记录
+            this.$router.push('/foodsHistory');
         },
         telFn() {
             this.isTelshow = true;
@@ -143,12 +126,6 @@ export default {
         returnFn() {
             this.isTelshow = false;
             this.isCartshow = false;
-        },
-        changePrice() {
-
-        },
-        toThisDetail() {
-
         },
         showCard() {
             this.isCartshow = true;
@@ -191,13 +168,28 @@ export default {
                     this.chooseList.push(this.foodsList[sidx]);
                 }
             }
+            this.$store.commit('cartModule/changeFoodsList', {
+                list: this.chooseList,
+                total: this.totalPrice,
+                origin: this.foodsList
+            });
         },
-    }
+        toPay() {
+            //下单  
+            this.$router.push('/foodsOrderComfirm');
+        }
+    },
 }
 
 </script>
 <style lang='less' scoped>
 .foods_containt {
+    .head {
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 99;
+    }
     .el-carousel__item img {
         width: 100%;
         border-radius: 4px;
