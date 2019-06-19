@@ -1,4 +1,4 @@
-<!-- building/serveClassify/serveListCard 图 名称 价格 数量卡 -->
+<!-- foods/foodsListCard 图 名称 价格 数量卡 -->
 <template>
     <div class="serve_list_card" @click="changeRouter">
         <div class="serve_img">
@@ -33,21 +33,8 @@ export default {
         }
     },
     methods: {
-        isCanChange(price) {
-            /* 
-                1.如果当前选择商品的价格为0，并且当前总价不为零
-                2.当前选择商品价格不为零，当前总价为零，chooseList.length不为零
-                以上两种情况时，有异常提示
-            */
-            if ((price == 0 && this.totalPrice != 0) || (price != 0 && this.totalPrice == 0 && this.chooseListLength != 0)) {
-                // 不能共存,异常提示
-                console.log('不能这样选择');
-                return false;
-            }
-            return true;
-        },
         sub(id, price) {
-            if (this.isCanChange(price) ) {
+            if ( this.isCanChange(price) ) {
                 this.tCount--;
                 this.$emit('changePrice', {
                     id: id,

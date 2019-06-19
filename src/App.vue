@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <globalHeader :title="title"></globalHeader>
+    <globalHeader :title="title" :returnBtn="returnBtn" :ifShowHeader="ifShowHeader" ></globalHeader>
     <router-view/>
   </div>
 </template>
@@ -13,6 +13,8 @@ export default {
     data() {
       return  {
         title: '中国-东盟新型智慧城市协同创新中心',
+        returnBtn: false,
+        ifShowHeader: true,
       }
     },
     components: {globalHeader},
@@ -27,6 +29,18 @@ export default {
             this.$router.push(url);
         },
     },
+    watch: {
+      $route(now, old) {
+        console.log(now)
+        this.title = now.name;
+        
+        now.matched.some(res => {
+          this.ifShowHeader = res.props.default.ifShowHeader;
+          this.returnBtn = res.props.default.returnBtn;
+        })
+        
+      }
+    },
 }
 </script>
 <style scoped lang="less">
@@ -40,11 +54,6 @@ export default {
       left: 20px;
       top: 50%;
       transform: translateY(-50%);
-    }
-    .title {
-      text-align: center;
-      font-size: .38rem;
-      font-weight: 500;
     }
   }
 

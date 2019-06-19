@@ -1,4 +1,4 @@
-<!-- serve/building/confirmOrder 订单信息确认 or 订单详情 -->
+<!-- foods/foodsOrderComfirm 订单信息确认 or 订单详情 -->
 <template>
     <div class="confirm_order"  :style="{minHeight: minH + 'px'}">
         <div class="card_item">
@@ -36,22 +36,9 @@
                 </div>
             </div>
         </div>
-        <div class="card_item">
-            <div class="title">联系信息</div>
-            <div class="msg_list">
-                <div class="msg_list_item">
-                    <div>姓名</div>
-                    <div>李太白</div>
-                </div>
-                <div class="msg_list_item">
-                    <div>电话</div>
-                    <div>15548745124</div>
-                </div>
-                <div class="msg_list_item">
-                    <div>地址</div>
-                    <div>广西大学</div>
-                </div>
-            </div>
+        <div class="appoint_btn_box">
+            <div class="appoint_btn cur">立即取餐</div>
+            <div class="appoint_btn">预约取餐 {{appointTime}}</div>
         </div>
         <div :class="['type_btn', {'default_btn': type == 0}]">{{type | filterTypeBtn}}</div>
     </div>
@@ -76,7 +63,8 @@ export default {
                 orderMoney: 88, 
                 orderCount: 1
             }],
-            type: 0
+            type: 0,
+            appointTime: ''
         };
     },
     components: {anOrderList},
@@ -96,11 +84,12 @@ export default {
 <style lang='less' scoped>
 .confirm_order {
     background-color: #f3f3f3;
-    padding: .24rem .32rem;
+    padding: .24rem 0;
     .card_item {
         background-color: #fff;
         padding: .18rem .24rem .24rem;
         margin-bottom: .32rem;
+        margin: 0 .32rem .32rem;
         border-radius: .1rem;
         .title {
             font-size: .32rem;
@@ -150,12 +139,36 @@ export default {
         line-height: .98rem;
         color: #393733;
         background-color: #FFCB44;
-        border: 1px solid #DCDCDC;
         border-radius: .1rem;
+        position: fixed;
+        bottom: 0;
         &.default_btn {
             background-color: #FFFFFF;
             font-size: .34rem;
             color: #666;
+        }
+    }
+    .appoint_btn_box {
+        display: flex;
+        font-size: .3rem;
+        .appoint_btn {
+            margin-right: .18rem;
+            width: calc(100% / 2);
+            height: .88rem;
+            line-height: .88rem;
+            color: #999;
+            text-align: center;
+            border-radius: .1rem;
+            background: #FFF;
+            border: 1px solid #DCDCDC;
+            &:last-child {
+                margin: 0;
+            }
+            &.cur {
+                background-color: #FFCB44;
+                color: #333;
+                border: none;
+            }
         }
     }
 }

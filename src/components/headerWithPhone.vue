@@ -1,8 +1,9 @@
-<!-- globalHeader -->
+<!-- globalHeaderWithLink -->
 <template>
-    <div class="g_title" v-if="ifShowHeader">
+    <div class="g_title">
         <div class="return_icon" v-if="returnBtn" @click="() => {this.$router.go(-1)}"><i class="el-icon-arrow-left"></i></div>
         <div class="title">{{title | filterTitle}}</div>
+        <div class="link" @click="clickLink">{{linkMsg}}</div>
     </div>
 </template>
 
@@ -10,15 +11,19 @@
 export default {
     data () {
         return {
-
         };
     },
-    props: ['title', 'returnBtn', 'ifShowHeader'],
+    props: ['title', 'returnBtn'],
     filters: {
         filterTitle(val) {
             return val.length > 8 ? val.slice(0, 8) + '...' : val;
         }
     },
+    methods: {
+        clickPhone() {
+            this.$emit('clickLink');
+        }
+    }
 }
 
 </script>
@@ -41,6 +46,14 @@ export default {
         left: .3rem;
         top: 50%;
         transform: translateY(-50%);
+    }
+    .link {
+        position: absolute;
+        right: .3rem;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: .3rem;
+        color: #fff;
     }
 }
 

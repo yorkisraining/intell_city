@@ -7,6 +7,10 @@ import paySuccess from '@/views/serve/building/serveHistory/paySuccess'
 import payFail from '@/views/serve/building/serveHistory/payFail'
 import confirmOrder from '@/views/serve/building/serveHistory/confirmOrder'
 import serveClassify from '@/views/serve/building/serveClassify'
+import serveDetail from '@/views/serve/building/serveClassify/serveDetail'
+import foods from '@/views/foods'
+import foodsHistory from '@/views/foods/foodsHistory'
+import foodsOrderComfirm from '@/views/foods/foodsOrderComfirm'
 
 Vue.use(Router)
 
@@ -15,57 +19,93 @@ const router = new Router({
     linkActiveClass: 'is-active',
     routes: [{
         path: '/',
-        name: 'home',
-        component: home
+        name: '中国-东盟新型智慧城市协同创新中心',
+        component: home,
+        props: {
+            returnBtn: false,
+            ifShowHeader: true
+        }
     }, {
         path: '/serve',
         name: 'serve',
         component: serve,
+        props: {
+            returnBtn: false,
+            ifShowHeader: true
+        }
     }, {
         path: '/serveHistory',
         name: 'serveHistory',
-        component: serveHistory
+        component: serveHistory,
+        props: {
+            returnBtn: true,
+            ifShowHeader: true
+        }
     }, {
         path: '/paySuccess',
         name: 'paySuccess',
-        component: paySuccess
+        component: paySuccess,
+        props: {
+            returnBtn: false,
+            ifShowHeader: false
+        }
     }, {
         path: '/payFail',
         name: 'payFail',
-        component: payFail
+        component: payFail,
+        props: {
+            returnBtn: false,
+            ifShowHeader: true
+        }
     }, {
         path: '/confirmOrder',
         name: 'confirmOrder',
-        component: confirmOrder
+        component: confirmOrder,
+        props: {
+            returnBtn: false,
+            ifShowHeader: true
+        }
     }, {
         path: '/serveClassify',
         name: 'serveClassify',
-        component: serveClassify
+        component: serveClassify,
+        props: {
+            returnBtn: false,
+            ifShowHeader: true
+        }
+    }, {
+        path: '/serveDetail',
+        name: 'serveDetail',
+        component: serveDetail,
+        props: {
+            returnBtn: false,
+            ifShowHeader: true
+        }
+    }, {
+        path: '/foods',
+        name: 'foods',
+        component: foods,
+        props: {
+            returnBtn: false,
+            ifShowHeader: true
+        }
+    }, {
+        path: '/foodsHistory',
+        name: 'foodsHistory',
+        component: foodsHistory,
+        props: {
+            returnBtn: false,
+            ifShowHeader: true
+        }
+    }, {
+        path: '/foodsOrderComfirm',
+        name: 'foodsOrderComfirm',
+        component: foodsOrderComfirm,
+        props: {
+            returnBtn: false,
+            ifShowHeader: true
+        }
     }, ]
 })
-
-/* let vm = new Vue();
-router.beforeEach((to, from, next) => {
-    //如果要去login的，不判断，直接过去，其他的都得先判断是否登录，没有登录则跳转到login
-    if (to.name != 'login') {
-        if (localStorage.getItem('token')) { // 查询本地存储信息是否已经登陆,判断键是否存在
-            next();
-        } else {
-            vm.$Message.warning({
-                content: '您还未登录，请先登录!',
-                onClose: () => {
-                    next({
-                        path: '/login', // 未登录则跳转至login页面
-                        //query: {
-                        //    redirect: from.fullPath
-                        //} // 登陆成功后回到当前页面，这里传值给login页面，to.fullPath为当前点击的页面
-                    })
-                }
-            });
-        }
-    } else {
-        next();
-    }
-}) */
 
 export default router

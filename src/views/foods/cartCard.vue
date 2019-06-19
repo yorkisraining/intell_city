@@ -1,4 +1,4 @@
-<!-- building/serveClassify/cartCard 购物车商品列表 -->
+<!-- foods/cartCard 购物车商品列表 -->
 <template>
     <div class="cart_card_list">
         <div class="title">{{title}}</div>
