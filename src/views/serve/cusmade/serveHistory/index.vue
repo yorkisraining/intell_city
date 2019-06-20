@@ -1,11 +1,25 @@
 <!-- serve/building/serveHistory 服务记录 -->
 <template>
     <div class="serve_his_box" :style="{minHeight: minH + 'px'}">
-        <hisCard v-for="item in hisCardList" :key="item.id" 
-        :status="item.status" 
-        :orderName="item.orderName" 
-        :orderId="item.id" 
-        :orderTime="item.orderTime"></hisCard>
+        <div class="tabs_box">
+            <van-tabs  color="#FFA036" line-width=".4rem" title-active-color="#333" class="serve_tab_line">
+                <van-tab title="未支付">
+                    <hisCard v-for="item in hisCardList" :key="item.id" v-if="item.status == 0" 
+                    :status="item.status" 
+                    :orderName="item.orderName" 
+                    :orderId="item.id" 
+                    :orderTime="item.orderTime"></hisCard>
+                </van-tab>
+                <van-tab title="历史订单">
+                    <hisCard v-for="item in hisCardList" :key="item.id"
+                    :status="item.status" 
+                    :orderName="item.orderName" 
+                    :orderId="item.id" 
+                    :orderTime="item.orderTime"></hisCard>
+                </van-tab>
+            </van-tabs>
+        </div>
+        
     </div>
 </template>
 
@@ -53,5 +67,10 @@ export default {
 <style lang='less' scoped>
     .serve_his_box {
         background-color: #f3f3f3;
+        .serve_tab_line {
+            .van-tabs__wrap {
+                width: 50%;
+            }
+        }
     }
 </style>

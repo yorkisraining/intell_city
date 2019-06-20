@@ -2,15 +2,20 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import home from '@/views/home/'
 import serve from '@/views/serve/'
-import serveHistory from '@/views/serve/building/serveHistory'  
+import serveHistory from '@/views/serve/cusmade/serveHistory'
 import paySuccess from '@/components/paySuccess'
 import payFail from '@/components/payFail'
-import confirmOrder from '@/views/serve/building/serveHistory/confirmOrder'
-import serveClassify from '@/views/serve/building/serveClassify'
-import serveDetail from '@/views/serve/building/serveClassify/serveDetail'
+import confirmOrder from '@/views/serve/cusmade/serveHistory/confirmOrder'
+import serveClassify from '@/views/serve/cusmade/serveClassify'
+import serveDetail from '@/views/serve/cusmade/serveClassify/serveDetail'
 import foods from '@/views/foods'
 import foodsHistory from '@/views/foods/foodsHistory'
 import foodsOrderComfirm from '@/views/foods/foodsOrderComfirm'
+import coffee from '@/views/coffee'
+import coffeeHistory from '@/views/coffee/foodsHistory'
+import coffeeOrderComfirm from '@/views/coffee/foodsOrderComfirm'
+import information from '@/views/information'
+import inforArticle from '@/views/information/inforArticle'
 
 Vue.use(Router)
 
@@ -105,7 +110,57 @@ const router = new Router({
             returnBtn: true,
             ifShowHeader: true
         }
+    }, {
+        path: '/information',
+        name: '资讯',
+        component: information,
+        props: {
+            returnBtn: true,
+            ifShowHeader: true
+        }
+    }, {
+        path: '/inforArticle',
+        name: '资讯',
+        component: inforArticle,
+        props: {
+            returnBtn: true,
+            ifShowHeader: true
+        }
+    }, {
+        path: '/coffee',
+        name: 'coffee',
+        component: coffee,
+        props: {
+            returnBtn: true,
+            ifShowHeader: false
+        }
+    }, {
+        path: '/coffeeHistory',
+        name: '订单记录',
+        component: coffeeHistory,
+        props: {
+            returnBtn: true,
+            ifShowHeader: true
+        }
+    }, {
+        path: '/coffeeOrderComfirm',
+        name: '订单信息确认',
+        component: coffeeOrderComfirm,
+        props: {
+            returnBtn: true,
+            ifShowHeader: true
+        }
     }, ]
+})
+
+router.beforeEach((to, from, next) => {
+    // chrome
+    document.body.scrollTop = 0
+        // firefox
+    document.documentElement.scrollTop = 0
+        // safari
+    window.pageYOffset = 0
+    next();
 })
 
 export default router

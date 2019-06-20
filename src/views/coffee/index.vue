@@ -1,18 +1,18 @@
 <!-- foods 美食服务首页 -->
 <template>
     <div class="foods_containt">
-        <headerWithPhone :title="companyMsg.companyName" :linkMsg="'服务记录'" class="head" @clickLink="toHis"></headerWithPhone>
+        <headerWithPhone :title="'咖啡厅'" :linkMsg="'服务记录'" class="head" @clickLink="toHis"></headerWithPhone>
         <div class="carousel_block">
             <el-carousel :height="setting.height" >
                 <el-carousel-item v-for="item in topCarImgList" :key="item.id" >
-                    <img :src="item.image" :alt="item.remark" @click="toThisNav(item.url)">
+                    <img :src="item.src" alt="" @click="toThisNav(item.link)">
                 </el-carousel-item>
             </el-carousel>
         </div> 
         <div class="address_box">
             <div class="address_item">
                 <img src="@/assets/address.png">
-                <div>地址：<span>{{companyMsg.address}}</span></div>
+                <div>地址：<span>{{address}}</span></div>
             </div>
             <div class="tel" @click="telFn"><img src="@/assets/phone.png" /></div>
         </div>
@@ -20,20 +20,20 @@
             <div class="popup_box">
                 <div class="popup_top">
                     <div style="color: #999">拨打电话</div>
-                    <div style="color: #333" @click="callTel">{{companyMsg.linkPhone}}</div>
+                    <div style="color: #333" @click="callTel">{{tel}}</div>
                 </div>
                 <div class="popup_return" @click="returnFn" style="color: #666">返回</div>
             </div>
         </van-popup>
         <div class="foods_list_box">
-            <foodsListCard v-for="item in foodsList" :key="item.id" 
+            <foodsListCard v-for="item in coffeeList" :key="item.id" 
             :price="item.price" 
             :title="item.name" 
             :brief="item.brief"
             :id="item.id"
+            :src="item.src"
             :count="item.count"
-            :src="item.src" 
-            :totalPrice="totalPrice"
+            :totalPrice="totalPrice" 
             :chooseListLength="chooseList.length"
             @changePrice="changePrice" ></foodsListCard>
         </div>
@@ -79,54 +79,44 @@ export default {
                 interval: 2000,
                 indicatorPosition: 'inside',
             },
-            page: 1,
-            limit: 10,
+            topCarImgList: [{
+                id: 1010,
+                src: require('@/assets/fj.jpg'),
+                link: '/',
+            },{
+                id: 1011,
+                src: require('@/assets/fj.jpg'),
+                link: '/',
+            },{
+                id: 1012,
+                src: require('@/assets/fj.jpg'),
+                link: '/',
+            },{
+                id: 1013,
+                src: require('@/assets/fj.jpg'),
+                link: '/',
+            }],
+            address: '广西南宁市兴宁区民族大道10号',
+            tel: '15573957203',
             isTelshow: false,
             isCartshow: false,
             preferentPrice: 100, //优惠金额
-            totalPrice: this.$store.state.cartModule.foodsList.totalPrice, //总价
-            foodsList: this.$store.state.cartModule.foodsList.originList,
-            chooseList: this.$store.state.cartModule.foodsList.chooseFoodsList,
+            totalPrice: this.$store.state.cartModule.coffeeList.totalPrice, //总价
+            coffeeList: this.$store.state.cartModule.coffeeList.originList,
+            chooseList: this.$store.state.cartModule.coffeeList.chooseCoffeeList,
         };
     },
     components: {foodsListCard, cartCard, headerWithPhone},
-    created() {
-        if (this.topCarImgList.length == 0) {
-            //请求banner
-            this.$store.dispatch('cartModule/getSPWData');
-        }
-
-        if (this.companyMsg.length == 0) {
-            //请求公司信息
-            this.$store.dispatch('cartModule/getSPWCompanyData');
-        }
-
-
-        this.$store.commit('cartModule/changeFoodsReduce', this.reduce);
-    },
-    computed: {
-        topCarImgList() {
-            return this.$store.state.cartModule.spwBanner;
-        },
-        companyMsg() {
-            return this.$store.state.cartModule.spwCompanyMsg;
-        }
+    mounted() {
+        this.$store.commit('cartModule/changeCoffeeReduce', this.reduce);
     },
     methods: {
-        getMsgList() {
-            //获取商品列表
-            this.$store.dispatch('cartModule/getSPWGoodsData', {
-                page: this.page,
-                limit: this.limit
-            });
-        },
-        toThisNav(url) {
-            //图片链接
-            window.location.href = url;
+        toThisNav() {
+
         },
         toHis() {
             //服务记录
-            this.$router.push('/foodsHistory');
+            this.$router.push('/coffeeHistory');
         },
         telFn() {
             this.isTelshow = true;
@@ -151,7 +141,7 @@ export default {
         },
         findFoodsList(id) {
             for (let i=0; i<this.foodsList.length; i++) {
-                if (this.foodsList[i].id == id) {
+                if (this.coffeeList[i].id == id) {
                     return i;
                 }
             }
@@ -162,10 +152,10 @@ export default {
             const cidx = this.findChooseList(obj.id),
                     sidx = this.findFoodsList(obj.id);
             
-            let count = this.foodsList[sidx].count + obj.type;
+            let count = this.coffeeList[sidx].count + obj.type;
 
             //不管怎么样都先修改serlist里的count
-            this.$set(this.foodsList[sidx], 'count', count);
+            this.$set(this.coffeeList[sidx], 'count', count);
 
             if (obj.count == 0) {
                 //count为0，chooseList删掉这个选择的商品
@@ -176,18 +166,18 @@ export default {
                     this.$set(this.chooseList[cidx], 'count', count);
                 } else {
                     //没找到，添加进去
-                    this.chooseList.push(this.foodsList[sidx]);
+                    this.chooseList.push(this.coffeeList[sidx]);
                 }
             }
-            this.$store.commit('cartModule/changeFoodsList', {
+            this.$store.commit('cartModule/changeCoffeesList', {
                 list: this.chooseList,
                 total: this.totalPrice,
-                origin: this.foodsList
+                origin: this.coffeeList
             });
         },
         toPay() {
-            //下单  
-            this.$router.push('/foodsOrderComfirm');
+            //下单
+            this.$router.push('/coffeeOrderComfirm');
         }
     },
 }

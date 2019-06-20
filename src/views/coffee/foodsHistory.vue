@@ -36,13 +36,13 @@ export default {
                     id: 1323441243,
                     status: 0,
                     orderList: [{
-                        name: '牛肉粉',
+                        name: '拿铁',
                         count: 1
                     },{
-                        name: '牛肉粉',
+                        name: '抹茶拿铁',
                         count: 2
                     },{
-                        name: '牛肉粉',
+                        name: '牛排',
                         count: 1
                     }],
                     orderTime: '2019-07-13 08:30',
@@ -51,11 +51,8 @@ export default {
                     id: 1323441242,
                     status: 1,
                     orderList: [{
-                        name: '牛肉粉',
+                        name: '冰咖啡',
                         count: 1
-                    },{
-                        name: '牛肉粉',
-                        count: 2
                     }],
                     orderTime: '2019-07-13 08:30',
                     appointTime: '13:20',
@@ -63,7 +60,7 @@ export default {
                     id: 1323441241,
                     status: 2,
                     orderList: [{
-                        name: '牛肉粉',
+                        name: '拿铁',
                         count: 1
                     }],
                     orderTime: '2019-07-13 08:30',
@@ -72,13 +69,13 @@ export default {
                     id: 1323441245,
                     status: 3,
                     orderList: [{
-                        name: '牛肉粉',
+                        name: '拿铁',
                         count: 1
                     },{
-                        name: '牛肉粉',
+                        name: '拿铁',
                         count: 2
                     },{
-                        name: '牛肉粉',
+                        name: '抹茶拿铁',
                         count: 1
                     }],
                     orderTime: '2019-07-13 08:30',
@@ -91,7 +88,7 @@ export default {
     methods: {
         toPay(obj) {
             //去支付
-            this.$router.push('/foodsOrderComfirm');
+            this.$router.push('/coffeeOrderComfirm');
         }
     }
 }

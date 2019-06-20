@@ -33,7 +33,7 @@
             </div>
         </div>
         <div class="list_item">
-            <globalTitle :title="'资讯'"  :link="'/'" :showMore="true" @toThisNavEmit="toThisNav"></globalTitle>
+            <globalTitle :title="'资讯'"  :link="'/information'" :showMore="true" @toThisNavEmit="toThisNav"></globalTitle>
             <detailBox2 v-for="item in detailBox2List" 
             :key="item.id" 
             :title="item.title" 
@@ -166,7 +166,7 @@ export default {
                     id: 1004,
                     title: '企业服务',
                     src: require('@/assets/nav_qyfw.png'),
-                    link: '/',
+                    link: '/serve',
                 },
                 {
                     id: 1005,
@@ -265,14 +265,14 @@ export default {
                     src: require('@/assets/coffe.png'),
                     topMark: '咖啡厅',
                     color: '#807AFF',
-                    link: '/',
+                    link: '/coffee',
                 },
                 {
                     id: 4002,
                     src: require('@/assets/th.jpg'),
                     topMark: '三品王',
                     color: '#FE5FD9',
-                    link: '/',
+                    link: '/foods',
                 },
             ],
             carouselList: [
