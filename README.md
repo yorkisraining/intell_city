@@ -1,21 +1,10 @@
-# intell_city
+- 统一支付方法
+- foods/index 三品王banner , 三品王公司信息,
 
-> A Vue.js project
+https://7ca7tg.axshare.com
 
-## Build Setup
+http://139.224.194.252:8504/swagger-ui.html
 
-``` bash
-# install dependencies
-npm install
+https://lanhuapp.com/url/YHKv1-ixw3L
 
-# serve with hot reload at localhost:8080
-npm run dev
-
-# build for production with minification
-npm run build
-
-# build for production and view the bundle analyzer report
-npm run build --report
-```
-
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+http://pay.cloudbae.cn:39000/mv/api/doc#
