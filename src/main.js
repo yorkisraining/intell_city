@@ -8,10 +8,10 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import store from './vuex'
 import remAndPhoneConfig from './common/js/rem'
-import { Tab, Tabs, Popup, DatetimePicker  } from 'vant';
+import { Tab, Tabs, Popup, DatetimePicker, RadioGroup, Radio, Cell, CellGroup } from 'vant';
 import 'vant/lib/index.css';
 
-Vue.use(Tab).use(Tabs).use(Popup).use(DatetimePicker);
+Vue.use(Tab).use(Tabs).use(Popup).use(DatetimePicker).use(RadioGroup).use(Radio).use(Cell).use(CellGroup);
 
 Vue.use(ElementUI);
 remAndPhoneConfig();

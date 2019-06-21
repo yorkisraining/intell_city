@@ -1,7 +1,7 @@
 <!-- information 资讯 -->
 <template>
     <div class="information_contain" :style="{minHeight: minH + 'px'}">
-        <van-tabs>
+        <van-tabs  @click="changeTabs">
             <van-tab title="招商信息">
                 <inforTabs :type="0"></inforTabs>
             </van-tab>
@@ -21,14 +21,18 @@ import inforTabs from './inforTabs'
 export default {
     data () {
         return {
-            minH: 0
+            minH: 0,
         };
     },
     components: {inforTabs},
     mounted() {
         this.minH = document.documentElement.clientHeight;
     },
-    methods: {}
+    methods: {
+        changeTabs(index, title) {
+            
+        }
+    }
 }
 
 </script>

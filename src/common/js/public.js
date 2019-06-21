@@ -6,7 +6,7 @@ import qs from 'qs' //序列化字符串
 
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
-let token = localStorage.getItem('token');
+let token = localStorage.getItem('token') || sessionStorage.getItem('token');
 
 // 请求拦截器
 axios.interceptors.request.use(config => {
@@ -20,7 +20,7 @@ axios.interceptors.request.use(config => {
 })
 
 // 响应拦截器，拦截401错误，并重新跳入登页重新获取token
-axios.interceptors.response.use(response => {
+/* axios.interceptors.response.use(response => {
     return response;
 }, error => {
     if (error.response) {
@@ -38,32 +38,13 @@ axios.interceptors.response.use(response => {
         }
     }
     return Promise.reject(error);
-})
-
-function getPostParams(subbody) {
-    subbody = subbody || {};
-    let loginUserId = '',
-        token = '';
-    if (localStorage.getItem('userId')) {
-        loginUserId = localStorage.getItem('userId');
-    }
-    subbody.loginUserId = loginUserId;
-    const postParams = {
-        jsonParams: {
-            loginUserId: loginUserId,
-            token: token,
-            data: subbody
-        }
-    }
-    postParams.jsonParams = JSON.stringify(postParams.jsonParams);
-    return postParams;
-}
+}) */
 
 // 发送请求及接收后处理
 export const ajaxPost = (url, params, callback, errorCallback) => {
-    axios.post(url, qs.stringify(getPostParams(params)))
+    axios.post(url, params)
         .then(function(response) {
-            callback(response);
+            callback(response.result.data);
         })
         .catch(function(error) {
             if (errorCallback) {
@@ -76,7 +57,7 @@ export const ajaxPost = (url, params, callback, errorCallback) => {
 export const ajaxGet = (url, params, callback, errorCallback) => {
     axios.get(url, params)
         .then(function(response) {
-            callback(response);
+            callback(response.result.data);
         })
         .catch(function(error) {
             if (errorCallback) {

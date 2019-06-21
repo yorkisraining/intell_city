@@ -9,7 +9,7 @@
             </el-carousel>
         </div>
         <div>
-            <inforCard v-for="(item, index) in inforCardList" :key="index" :title="item"></inforCard>
+            <inforCard v-for="(item, index) in inforCardList" :key="index" :title="item" :type="type" :clasify="item" @toDetail="toDetail"></inforCard>
         </div>
     </div>
 </template>
@@ -49,7 +49,25 @@ export default {
     /* type 0招商信息 1商务信息 2租赁信息 */
     props: ['type'],
     components: {inforCard},
-    methods: {}
+    methods: {
+        toDetail(obj) {
+            this.$router.push(`/inforDetail?id=${obj.id}&type=${type}&classify=${obj.classify}`);
+        }
+    },
+    watch: {
+        type(newV) {
+            switch (newV) {
+                case 0:
+                    break;
+                case 1:
+                    
+                    break;
+                case 2:
+                    
+                    break;
+            }
+        }
+    }
 }
 
 </script>

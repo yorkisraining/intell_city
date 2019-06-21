@@ -6,7 +6,7 @@
             :height="setting.height"
             >
             <el-carousel-item v-for="item in topCarImgList" :key="item.id" >
-                <img :src="item.src" alt="" @click="toThisNav(item.link)">
+                <img :src="item.image" :alt="item.remark" @click="toThisNav(item.url)">
             </el-carousel-item>
             </el-carousel>
         </div>
@@ -96,6 +96,8 @@ import detailBox1 from './detailBox1'
 import detailBox2 from './detailBox2'
 import detailBox3 from './detailBox3'
 import carouselWithDesc from './carouselWithDesc'
+import { ajaxPost } from '@/common/js/public.js'
+import { apiUrl } from '@/common/js/api.js'
 
 export default {
     data () {
@@ -126,23 +128,6 @@ export default {
                 interval: 2000,
                 indicatorPosition: 'inside',
             },
-            topCarImgList: [{
-                id: 1010,
-                src: require('@/assets/fj.jpg'),
-                link: '/',
-            },{
-                id: 1011,
-                src: require('@/assets/fj.jpg'),
-                link: '/',
-            },{
-                id: 1012,
-                src: require('@/assets/fj.jpg'),
-                link: '/',
-            },{
-                id: 1013,
-                src: require('@/assets/fj.jpg'),
-                link: '/',
-            }],
             navList: [
                 {
                     id: 1001,
@@ -304,6 +289,28 @@ export default {
         };
     },
     components: {mainNav, globalTitle, detailBox1, detailBox2, detailBox3, carouselWithDesc},
+    created() {
+        //获取tooken
+        console.log(/\^?code=\w+/.exec(window.location.href)[0])
+        let code = /\^?code=\w+/.exec(window.location.href)[0].split('=')[1];
+
+        ajaxPost(apiUrl.token, {
+            code: code
+        }, res => {
+            localStorage.setItem('token', token);
+            sessionStorage.setItem('token', token);
+        })
+
+        if (this.topCarImgList.length == 0) {
+            //请求banner
+            this.$store.dispatch('homeModule/getHomeBanner');
+        }
+    },
+    computed: {
+        topCarImgList() {
+            return this.$store.state.homeModule.imageList;
+        }
+    },
     methods: {
         toThisNav(url) {
             console.log(url)

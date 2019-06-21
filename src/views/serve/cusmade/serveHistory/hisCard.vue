@@ -10,12 +10,18 @@
                 <div class="order_name">{{orderName}}</div>
                 <div class="order_time">{{orderTime}}</div>
             </div>
-            <div v-if="status != 2" class="status_btn" @click="toPay(status, orderId)">{{status | filterBtn}}</div>
+            <div v-if="status != 2">
+                <div class="status_btn cancel" v-if="status == 0" @click="cacelOrder(orderId)">取消订单</div>
+                <div class="status_btn"  @click="toPay(status, orderId)">{{status | filterBtn}}</div>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
+import { apiUrl } from '@/common/js/api'
+import { Dialog  } from 'vant';
+
 export default {
     data () {
         return {
@@ -58,6 +64,22 @@ export default {
             if (status == 0) {
                 this.$emit('toPay', id);
             }
+        },
+        cacelOrder(id) {
+            //撤单
+            
+            Dialog.confirm({
+                message: '是否确认取消订单？'
+            }).then(() => {
+            // on confirmz
+                ajaxPost(`${apiUrl.baseURL}app/goodOrder/cancel/${id}`, {}, res => {
+                    res = res.result.data;
+                    
+                })
+            }).catch(() => {
+            // on cancel
+
+            });
         }
     }
 }
@@ -106,6 +128,12 @@ export default {
             background-color: #FFCB44;
             border-radius: .04rem;
             float: right;
+            margin-left: .16rem;
+            &.cancel {  
+                background-color: #fff;
+                border: 1px solid #d2d2d2;
+                line-height: .58rem;
+            }
         }
     }   
 }

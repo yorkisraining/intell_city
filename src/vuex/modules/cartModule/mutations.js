@@ -4,34 +4,14 @@ export const changeFoodsList = (state, obj) => {
     state.foodsList.totalPrice = obj.total;
     state.foodsList.originList = obj.origin;
 };
-export const changeFoodsReduce = (state, obj) => {
-    state.foodsList.reduce = obj;
-};
 
-//修改CoffeList中的数据
-export const changeCoffeeList = (state, obj) => {
-    state.coffeeList.chooseCoffeeList = obj.list;
-    state.coffeeList.totalPrice = obj.total;
-    state.coffeeList.originList = obj.origin;
-};
-export const changeCoffeeReduce = (state, obj) => {
-    state.coffeeList.reduce = obj;
-};
-
-//修改三品王ServeList中的数据
-export const changeServeList = (state, obj) => {
-    state.serveList.chooseServeList = obj.list;
-    state.serveList.totalPrice = obj.total;
-    state.serveList.originList = obj.origin;
-};
-
-//修改三品王商品列表中的数据
+//增加三品王商品列表中的数据，分页
 export const changeSPWOriginList = (state, obj) => {
     state.serveList.originList.push(obj);
 };
 
-//修改可用优惠价格
-export const changeServeReduce = (state, obj) => {
+//修改三品王可用优惠价格
+export const changeFoodsReduce = (state, obj) => {
     state.serveList.reduce = obj;
 };
 
@@ -43,4 +23,33 @@ export const changeSPWBanner = (state, obj) => {
 //修改三品王公司数据
 export const changeSPWCompanyMsg = (state, obj) => {
     state.spwCompanyMsg = obj;
+};
+
+//======================================================
+
+//修改CoffeList中的数据
+export const changeCoffeeList = (state, obj) => {
+    state.coffeeList.chooseCoffeeList = obj.list;
+    state.coffeeList.totalPrice = obj.total;
+    state.coffeeList.originList = obj.origin;
+};
+
+//修改Coffe可用优惠价格
+export const changeCoffeeReduce = (state, obj) => {
+    state.coffeeList.reduce = obj;
+};
+
+//增加Coffee商品列表中的数据，分页
+export const changeCoffeeOriginList = (state, obj) => {
+    state.coffeeList.originList.push(obj);
+};
+
+//修改Coffee banner数据
+export const changeCoffeeBanner = (state, obj) => {
+    state.coffeeBanner = obj;
+};
+
+//修改Coffee公司数据
+export const changeCoffeeCompanyMsg = (state, obj) => {
+    state.coffeeCompanyMsg = obj;
 };

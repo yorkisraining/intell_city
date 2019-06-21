@@ -1,10 +1,11 @@
-import { ajaxGet } from '@/common/js/public.js'
+import { ajaxGet, ajaxPost } from '@/common/js/public.js'
+import { apiUrl } from '@/common/js/api.js'
 
 //请求首页banner数据
 export const getHomeData = ({
     commit
 }, obj) => {
-    ajaxGet("/app/home/firstPage", res => {
-        commit('changeHomeData', res.result.data);
+    ajaxGet(apiUrl.homeData, {}, res => {
+        commit('changeHomeData', res);
     })
 }

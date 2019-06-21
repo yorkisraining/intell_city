@@ -16,6 +16,8 @@ import coffeeHistory from '@/views/coffee/foodsHistory'
 import coffeeOrderComfirm from '@/views/coffee/foodsOrderComfirm'
 import information from '@/views/information'
 import inforArticle from '@/views/information/inforArticle'
+import inforDetail from '@/views/information/inforDetailList'
+import choosePayFn from '@/components/choosePayFn'
 
 Vue.use(Router)
 
@@ -127,6 +129,14 @@ const router = new Router({
             ifShowHeader: true
         }
     }, {
+        path: '/inforDetail',
+        name: '资讯',
+        component: inforDetail,
+        props: {
+            returnBtn: true,
+            ifShowHeader: true
+        }
+    }, {
         path: '/coffee',
         name: 'coffee',
         component: coffee,
@@ -150,7 +160,15 @@ const router = new Router({
             returnBtn: true,
             ifShowHeader: true
         }
-    }, ]
+    }, {
+        path: '/choosePayFn',
+        name: '订单支付',
+        component: choosePayFn,
+        props: {
+            returnBtn: true,
+            ifShowHeader: true
+        }
+    }]
 })
 
 router.beforeEach((to, from, next) => {

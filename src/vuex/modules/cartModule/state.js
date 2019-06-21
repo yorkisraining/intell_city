@@ -119,6 +119,53 @@ const state = {
         "type": "string",
         "updateTime": "2019-06-20T09:25:16.400Z",
         "updateUserId": 0
+    },
+    coffeeBanner: [{
+        "createTime": "2019-06-20T08:49:21.203Z",
+        "id": 1,
+        "image": require('@/assets/fj.jpg'),
+        "remark": "string",
+        "sort": 0,
+        "status": 0,
+        "title": "string",
+        "type": 0,
+        "url": "string"
+    }, {
+        "createTime": "2019-06-20T08:49:21.203Z",
+        "id": 2,
+        "image": require('@/assets/fj.jpg'),
+        "remark": "string",
+        "sort": 0,
+        "status": 0,
+        "title": "string",
+        "type": 0,
+        "url": "string"
+    }, {
+        "createTime": "2019-06-20T08:49:21.203Z",
+        "id": 3,
+        "image": require('@/assets/fj.jpg'),
+        "remark": "string",
+        "sort": 0,
+        "status": 0,
+        "title": "string",
+        "type": 0,
+        "url": "string"
+    }],
+    coffeeCompanyMsg: {
+        "companyName": "三品王",
+        "createTime": "2019-06-20T09:25:16.400Z",
+        "createUserId": 0,
+        "id": 0,
+        "inTime": "2019-06-20T09:25:16.400Z",
+        "linkMan": "string",
+        "linkPhone": "15478451242",
+        "outTime": "2019-06-20T09:25:16.400Z",
+        "scope": "string",
+        "shortName": "string",
+        "status": 0,
+        "type": "string",
+        "updateTime": "2019-06-20T09:25:16.400Z",
+        "updateUserId": 0
     }
 };
 export default state;

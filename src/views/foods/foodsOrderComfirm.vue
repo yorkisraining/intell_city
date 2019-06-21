@@ -41,7 +41,7 @@
             <div :class="['appoint_btn', {cur: curBtn}]" @click="() => {this.curBtn = true}">立即取餐</div>
             <div :class="['appoint_btn', {cur: !curBtn}]" @click="clickAppoint">预约取餐 <span v-show="!curBtn">{{appointTime}}</span></div>
         </div>
-        <div :class="['type_btn', {'default_btn': type == 0}]" @click="pay">{{type | filterTypeBtn}}</div>
+        <div :class="['type_btn', {'default_btn': type == 0}]" @click="pay(type)">{{type | filterTypeBtn}}</div>
         <van-popup v-model="ifShowTime" position="bottom">
             <van-datetime-picker
                 v-model="appointTime"
@@ -58,6 +58,7 @@
 
 <script>
 import anOrderList from '@/components/anOrderList'
+import { ajaxPost } from '@/common/js/public.js'
 
 export default {
     data () {
@@ -91,8 +92,11 @@ export default {
             this.ifShowTime = false;
             this.curBtn = false;
         },
-        pay() {
+        pay(type) {
             //支付
+            if (type == 1) {
+                this.$router.push('/choosePayFn?module=0');
+            }
         }
     },
     

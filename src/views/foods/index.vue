@@ -93,7 +93,7 @@ export default {
     created() {
         if (this.topCarImgList.length == 0) {
             //请求banner
-            this.$store.dispatch('cartModule/getSPWData');
+            this.$store.dispatch('cartModule/changeSPWBanner');
         }
 
         if (this.companyMsg.length == 0) {

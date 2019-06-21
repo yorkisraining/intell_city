@@ -1,6 +1,6 @@
 <!-- inforList -->
 <template>
-    <div class="infor_list" @click="toArticle(id)">
+    <div class="infor_list" @click="toArticle(id, title, type)">
         <div :class="['msg_box', {noImg: src == ''}]">
             <div class="title">{{title}}</div>
             <div class="brief">{{brief}}</div>
@@ -15,13 +15,14 @@
 export default {
     data () {
         return {
+            
         };
     },
-    props: ['title', 'brief', 'src', 'id'],
+    props: ['title', 'brief', 'src', 'id', 'type'],
     methods: {
-        toArticle(id) {
+        toArticle(id, title, type) {
             //跳转页面
-            this.$router.push(`/inforArticle?id=${id}`)
+            this.$router.push(`/inforArticle?id=${id}&type=${type}&title=${title}`)
         }
     }
 }

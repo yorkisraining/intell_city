@@ -35,6 +35,19 @@ export default {
             src: ''
         }
     },
+    created() {
+        ajaxPost(`${apiUrl.baseURL}app/good/info/service/${this.id}`, {}, res => {
+            res = res.
+            this.address = res.company.address;
+            this.tel = res.company.linkPhone;
+            let list = this.goodList;
+            for (let i=0; i<list.length; i++) {
+                list[i]['count'] = 0;
+            }
+            this.serveList = list;
+            this.$store.commit('serveModule/changeServeOriginList', list);
+        })
+    },
     components: {globalHeader}
 }
 

@@ -5,7 +5,7 @@
             <div class="left_item">
                 <span class="title">{{title}}</span>
             </div>
-            <div class="right_item" @click="clickFn">
+            <div class="right_item" @click="toDetailList(id, classify)">
                 查看详情<i class="el-icon-arrow-right"></i>
             </div>
        </div>
@@ -45,11 +45,15 @@ export default {
             ]
         };
     },
-    props: ['title'],
+    props: ['title', 'classify', 'type'],
     components: {inforList},
     methods: {
-        clickFn() {
+        toDetailList(id, classify) {
             //查看详情
+            this.$emit('toDetail', {
+                id: id,
+                classify: classify
+            })
         }
     }
 }

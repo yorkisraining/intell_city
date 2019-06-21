@@ -1,7 +1,7 @@
 <!-- serve/cusmade 定制化服务 -->
 <template>
     <div class="cusmade_containt">
-        <cusCard v-for="item in cardList" :key="item.id" :id="item.id" :title="item.title" :brief="item.brief" :src="item.classify" @toDetail="toDetail"></cusCard>
+        <cusCard v-for="item in cardList" :key="item.id + Math.random()" :id="item.id" :title="item.name" :brief="item.catDesc" :src="item.code" @toDetail="toDetail(item.code, item.name)"></cusCard>
     </div>
 </template>
 
@@ -11,35 +11,23 @@ import cusCard from './cusCard'
 export default {
     data () {
         return {
-            cardList: [
-                {
-                    id: 123,
-                    classify: 0,
-                    title: '恒伟知识产权服务',
-                    brief: '入驻条件为，科技信息产业相关且在协同创新大大大'
-                },{
-                    id: 124,
-                    classify: 1,
-                    title: '云宝宝企业服务',
-                    brief: '入驻条件为，科技信息产业相关且在协同创新大大大'
-                },{
-                    id: 125,
-                    classify: 2,
-                    title: '伊达企业保险服务',
-                    brief: '入驻条件为，科技信息产业相关且在协同创新大大大'
-                },{
-                    id: 126,
-                    classify: 3,
-                    title: '伊达企业金融服务',
-                    brief: '入驻条件为，科技信息产业相关且在协同创新大大大'
-                }
-            ]
         };
     },
     components: {cusCard},
+    computed: {
+        cardList() {
+            return this.$store.state.serveModule.serveCardList;
+        }
+    },
+    created() {
+        if (this.cardList.length == 0) {
+            //请求服务大类
+            this.$store.dispatch('serveModule/getServeGoodsData');
+        }
+    },
     methods: {
-        toDetail(obj) {
-            this.$router.push(`/serveClassify?id=${obj.id}&title=${obj.title}`);
+        toDetail(code, name) {
+            this.$router.push(`/serveClassify?goodtype=${code}&title=${name}`);
         }
     }
 }

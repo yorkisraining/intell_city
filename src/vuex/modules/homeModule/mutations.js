@@ -1,6 +1,6 @@
 //修改home中的数据
 export const changeHomeData = (state, obj) => {
-    state.imageList = obj.imageList;
+    state.imageList = obj.imageList
     state.activityUrl = obj.activityUrl;
     state.appList = obj.appList;
     state.companyPerformanceList = obj.companyPerformanceList;
