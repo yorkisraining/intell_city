@@ -22,6 +22,8 @@
 
 <script>
 import globalHeader from '@/components/header'
+import {ajaxPost} from '@/common/js/public'
+import { apiUrl } from '@/common/js/api.js'
 
 export default {
     data () {
@@ -36,16 +38,19 @@ export default {
         }
     },
     created() {
+        let query = this.$route.query;
+        this.id = query.id;
+        this.headeTitle = query.title;
+
         ajaxPost(`${apiUrl.baseURL}app/good/info/service/${this.id}`, {}, res => {
-            res = res.
             this.address = res.company.address;
             this.tel = res.company.linkPhone;
-            let list = this.goodList;
-            for (let i=0; i<list.length; i++) {
-                list[i]['count'] = 0;
-            }
-            this.serveList = list;
-            this.$store.commit('serveModule/changeServeOriginList', list);
+            let list = this.goodList[0];
+            this.article = list.absContent;
+            this.src = list.imgUrl;
+            this.title = list.goodName;
+            this.price = list.price;
+            this.brief = list.remark;
         })
     },
     components: {globalHeader}

@@ -2,7 +2,7 @@
 <template>
     <div class="confirm_order"  :style="{minHeight: minH + 'px'}">
         <div class="card_item">
-            <div class="title">{{name}}</div>
+            <div class="title">{{serveType}}</div>
             <anOrderList class="order_list" v-for="item in orderList" :key="item.id" :orderName="item.name" :orderMoney="item.price" :orderCount="item.count"></anOrderList>
         </div>
         <div class="card_item">
@@ -10,25 +10,33 @@
             <div class="msg_list">
                 <div class="msg_list_item">
                     <div>订单编号</div>
-                    <div>23545132344124</div>
+                    <div>{{orderId}}</div>
                 </div>
                 <div class="msg_list_item">
                     <div>服务分类</div>
-                    <div>三品王</div>
+                    <div>{{serveType}}</div>
                 </div>
                 <div class="msg_list_item">
                     <div>下单时间</div>
-                    <div>2019-07-12 08:30</div>
+                    <div>{{createTime}}</div>
+                </div>
+                <div class="msg_list_item" v-if="appointTime != ''">
+                    <div>预约时间</div>
+                    <div>{{appointTime}}</div>
                 </div>
             </div>
             <div class="msg_list">
                 <div class="msg_list_item">
                     <div>店铺优惠</div>
-                    <div>无</div>
+                    <div>{{dpDiscount}}</div>
+                </div>
+                <div class="msg_list_item">
+                    <div>会员优惠</div>
+                    <div>{{vipDiscount}}</div>
                 </div>
                 <div class="msg_list_item">
                     <div>优惠金额</div>
-                    <div class="orange">-￥100</div>
+                    <div class="orange">-￥{{discount}}</div>
                 </div>
                 <div class="msg_list_item">
                     <div>合计金额</div>
@@ -37,7 +45,7 @@
             </div>
         </div>
         <div class="explaint">请在下单后6个小时内取餐，过期订单自动失效</div>
-        <div class="appoint_btn_box">
+        <div class="appoint_btn_box" v-if="type == 1">
             <div :class="['appoint_btn', {cur: curBtn}]" @click="() => {this.curBtn = true}">立即取餐</div>
             <div :class="['appoint_btn', {cur: !curBtn}]" @click="clickAppoint">预约取餐 <span v-show="!curBtn">{{appointTime}}</span></div>
         </div>
@@ -58,19 +66,25 @@
 
 <script>
 import anOrderList from '@/components/anOrderList'
-import { ajaxPost } from '@/common/js/public.js'
+import { ajaxPost, ajaxGet } from '@/common/js/public.js'
+import { apiUrl } from '@/common/js/api.js'
 
 export default {
     data () {
         return {
             minH: 0,
-            name: '恒伟知识产权服务',
-            orderList: this.$store.state.cartModule.foodsList.chooseFoodsList,
             type: 1,
-            appointTime: '00:00',
+            serveType: '',
+            createTime: '',
+            appointTime: '',
+            orderId: '',
             ifShowTime: false,
             curBtn: true,
-            totalPrice: this.$store.state.cartModule.foodsList.totalPrice,
+            orderList: [],
+            totalPrice: 0,
+            discount: 0, //优惠
+            dpDiscount: '无',
+            vipDiscount: '无',
         };
     },
     components: {anOrderList},
@@ -80,8 +94,34 @@ export default {
             return val == 0 ? '已完成' : '去支付';
         }
     },
+    created() {
+        let query = this.$route.query;
+        this.orderId = query.id;
+        this.type = query.type;
+
+        ajaxPost(`${apiUrl.baseURL}app/goodOrder/info/${this.orderId}`, {}, res => {
+            res = res.result.data;
+            this.orderList = res.detailList;
+            this.createTime = res.createTime;
+            this.serveType = res.orderType;//服务分类
+            this.decount = res.orderMoney - res.realMoney;
+            this.totalPrice = res.orderMoney;
+            this.appointTime = res.bookTime
+
+            let discount = res.discountList;
+            for (let i=0; i<discount.length; i++) {
+                if (discount[i].scopName == 'huiyuan') {
+                    //会员优惠
+                    this.vipDiscount = `￥${discount[i].money}`;
+                } else {
+                    //店铺
+                    this.dpDiscount = `￥${discount[i].money}`;
+                }
+            }
+        })
+    },
     mounted() {
-        this.minH = document.documentElement.clientHeight;
+        this.minH = document.documentElement.clientHeight - 60;
     },
     methods: {
         clickAppoint() {
@@ -94,8 +134,24 @@ export default {
         },
         pay(type) {
             //支付
-            if (type == 1) {
-                this.$router.push('/choosePayFn?module=0');
+            /* 
+            立即就餐 app/goodOrder/book/1/{orderId}
+            预约取餐 app/goodOrder/book/2/{orderId} bookTime 
+            */
+            if (this.type == 1) {
+                if (this.curBtn) {
+                    //立即
+                    ajaxPost(`${apiUrl.baseUrl}app/goodOrder/book/1/${this.id}`, {}, res => {
+                        this.$router.push(`/choosePayFn?module=1&id=${this.orderId}`);
+                    })
+                } else {
+                    //预约
+                    ajaxPost(`${apiUrl.baseUrl}app/goodOrder/book/2/${this.id}`, {
+                        bookTime: this.appointTime
+                    }, res => {
+                        this.$router.push(`/choosePayFn?module=1&id=${this.orderId}`);
+                    })
+                }
             }
         }
     },

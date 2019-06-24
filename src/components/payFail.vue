@@ -15,14 +15,35 @@
 export default {
     data () {
         return {
+            module: 0,
+            id: 0
         };
+    },
+    created() {
+        let query = this.$route.query;
+        this.module = query.module;
+        this.id = query.id;
     },
     methods: {
         repayFn() {
-
+            //重新支付
+            this.$router.push(`/choosePayFn?module=${this.module}&id=${this.id}`);
         },
         returnFn() {
-
+            //返回，返回订单详情
+            switch (Number(this.module)) {
+                case 1:
+                    this.$router.push('/foodsHistory')
+                    break;
+                case 2:
+                    this.$router.push('/coffeeHistory')    
+                    break;
+                case 3:
+                    this.$router.push('/serveHistory')
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }

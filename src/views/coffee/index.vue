@@ -1,7 +1,7 @@
 <!-- foods 美食服务首页 -->
 <template>
     <div class="foods_containt">
-        <headerWithPhone :title="'咖啡厅'" :linkMsg="'服务记录'" class="head" @clickLink="toHis"></headerWithPhone>
+        <headerWithPhone :title="companyMsg.companyName" :linkMsg="'服务记录'" class="head" @clickLink="toHis"></headerWithPhone>
         <div class="carousel_block">
             <el-carousel :height="setting.height" >
                 <el-carousel-item v-for="item in topCarImgList" :key="item.id" >
@@ -12,7 +12,7 @@
         <div class="address_box">
             <div class="address_item">
                 <img src="@/assets/address.png">
-                <div>地址：<span>{{address}}</span></div>
+                <div>地址：<span>{{companyMsg.address}}</span></div>
             </div>
             <div class="tel" @click="telFn"><img src="@/assets/phone.png" /></div>
         </div>
@@ -20,22 +20,28 @@
             <div class="popup_box">
                 <div class="popup_top">
                     <div style="color: #999">拨打电话</div>
-                    <div style="color: #333" @click="callTel">{{tel}}</div>
+                    <div style="color: #333" @click="callTel">{{companyMsg.linkPhone}}</div>
                 </div>
                 <div class="popup_return" @click="returnFn" style="color: #666">返回</div>
             </div>
         </van-popup>
         <div class="foods_list_box">
-            <foodsListCard v-for="item in coffeeList" :key="item.id" 
-            :price="item.price" 
-            :title="item.name" 
-            :brief="item.brief"
-            :id="item.id"
-            :src="item.src"
-            :count="item.count"
-            :totalPrice="totalPrice" 
-            :chooseListLength="chooseList.length"
-            @changePrice="changePrice" ></foodsListCard>
+            <van-list v-model="scrollSetting.loading"
+                :finished="scrollSetting.finished"
+                finished-text="没有更多了"
+                @load="getMsgList"
+            >
+                <foodsListCard v-for="item in coffeeList" :key="item.id" 
+                :price="item.price" 
+                :title="item.name" 
+                :brief="item.brief"
+                :id="item.id"
+                :src="item.src"
+                :count="item.count"
+                :totalPrice="totalPrice" 
+                :chooseListLength="chooseList.length"
+                @changePrice="changePrice" ></foodsListCard>
+            </van-list>
         </div>
         <div class="cart">
             <div class="cart_left"  @click="showCard">
@@ -69,6 +75,9 @@
 import foodsListCard from './foodsListCard'
 import cartCard from './cartCard'
 import headerWithPhone from '@/components/headerWithPhone'
+import { ajaxPost, ajaxGet } from '@/common/js/public.js'
+import { apiUrl } from '@/common/js/api.js'
+import { Toast } from 'vant';
 
 export default {
     data () {
@@ -78,6 +87,22 @@ export default {
                 autoplay: true,
                 interval: 2000,
                 indicatorPosition: 'inside',
+            },
+            companyMsg: {
+                "companyName": "咖啡厅",
+                "createTime": "2019-06-20T09:25:16.400Z",
+                "createUserId": 0,
+                "id": 0,
+                "inTime": "2019-06-20T09:25:16.400Z",
+                "linkMan": "string",
+                "linkPhone": "15478451242",
+                "outTime": "2019-06-20T09:25:16.400Z",
+                "scope": "string",
+                "shortName": "string",
+                "status": 0,
+                "type": "string",
+                "updateTime": "2019-06-20T09:25:16.400Z",
+                "updateUserId": 0
             },
             topCarImgList: [{
                 id: 1010,
@@ -96,23 +121,67 @@ export default {
                 src: require('@/assets/fj.jpg'),
                 link: '/',
             }],
-            address: '广西南宁市兴宁区民族大道10号',
-            tel: '15573957203',
+            page: 0,
+            limit: 10,
+            totalPage: 0,
             isTelshow: false,
             isCartshow: false,
+            totalPrice: 0, //总价
+            scrollSetting: {
+                loading: false,
+                finished: false
+            },
+            coffeeList: [],
+            chooseList: [],
             preferentPrice: 100, //优惠金额
-            totalPrice: this.$store.state.cartModule.coffeeList.totalPrice, //总价
-            coffeeList: this.$store.state.cartModule.coffeeList.originList,
-            chooseList: this.$store.state.cartModule.coffeeList.chooseCoffeeList,
         };
     },
     components: {foodsListCard, cartCard, headerWithPhone},
     mounted() {
         this.$store.commit('cartModule/changeCoffeeReduce', this.reduce);
     },
-    methods: {
-        toThisNav() {
+    created() {
+        //重置vuex数据
+        this.$store.commit('cartModule/resetCoffee');
 
+        //请求banner
+        ajaxPost(apiUrl.banner, {
+            type: 3
+        }, res => {
+            this.topCarImgList = res
+        })
+        
+        //请求公司信息
+        ajaxPost(apiUrl.coffeeMsg, {}, res => {
+            this.companyMsg = res;
+        })
+    },
+    methods: {
+        getMsgList() {
+            this.page += 1;
+            //获取商品列表
+            ajaxPost(apiUrl.coffeeGoods, {
+                page: this.page,
+                limit: this.limit
+            }, res => {
+                this.totalPage = res.totalPage;
+                let list = res.list;
+                for (let i=0; i<list.length; i++) {
+                    list[i]['count'] = 0;
+                    this.coffeeList.push(list[i]);
+                }
+                this.scrollSetting.loading = false;
+            }, res => {
+                this.scrollSetting.loading = false;
+                this.scrollSetting.finished = true;
+            })
+            if (this.page > this.totalPage) {
+                this.scrollSetting.finished = true;
+            }
+        },
+        toThisNav(url) {
+            //图片链接
+            window.location.href = url;
         },
         toHis() {
             //服务记录
@@ -140,7 +209,7 @@ export default {
             return -1;
         },
         findFoodsList(id) {
-            for (let i=0; i<this.foodsList.length; i++) {
+            for (let i=0; i<this.coffeeList.length; i++) {
                 if (this.coffeeList[i].id == id) {
                     return i;
                 }
@@ -154,8 +223,7 @@ export default {
             
             let count = this.coffeeList[sidx].count + obj.type;
 
-            //不管怎么样都先修改serlist里的count
-            this.$set(this.coffeeList[sidx], 'count', count);
+            this.coffeeList[sidx].count = count;
 
             if (obj.count == 0) {
                 //count为0，chooseList删掉这个选择的商品
@@ -169,16 +237,35 @@ export default {
                     this.chooseList.push(this.coffeeList[sidx]);
                 }
             }
-            this.$store.commit('cartModule/changeCoffeesList', {
+            this.$store.commit('cartModule/changeCoffeeList', {
                 list: this.chooseList,
                 total: this.totalPrice,
-                origin: this.coffeeList
             });
+
         },
         toPay() {
-            //下单
-            this.$router.push('/coffeeOrderComfirm');
-        }
+           //下单  
+            if (this.chooseList.length > 0) {
+                let list = [];
+                for (let i=0; i<this.chooseList.length; i++) {
+                    list.push({
+                        goodId: this.chooseList[i].id,
+                        orderNum: this.chooseList[i].count
+                    })
+                }
+                ajaxPost(apiUrl.pay, {
+                    list: list
+                }, res => {
+                    this.$router.push(`/foodsOrderComfirm?id=${res}&company=${this.companyMsg.companyName}&type=1`);
+                })
+
+            } else {
+                Toast({
+                    message: '请选择商品',
+                    duration: 2000
+                });
+            }
+        },
     },
 }
 
@@ -231,7 +318,7 @@ export default {
     }
 
     .foods_list_box {
-        padding: .24rem .32rem;
+        padding: 0 .32rem;
     }
 
     .popup_cart {

@@ -11,14 +11,51 @@
 </template>
 
 <script>
+import { ajaxPost, ajaxGet } from '@/common/js/public'
+import { apiUrl } from '@/common/js/api'
+
 export default {
     data () {
         return {
+            module: 0,
+            orderNo: 0
         };
+    },
+    created() {
+        let query = this.$route.query;
+        this.module = query.module;
+
+        if (query.orderNo != undefined) {
+            this.orderNo = query.orderNo;
+            this.queryPay();
+        }
     },
     methods: {
         toDetail() {
-
+            switch (Number(this.module)) {
+                case 1:
+                    this.$router.push('/foodsHistory')
+                    break;
+                case 2:
+                    this.$router.push('/coffeeHistory')    
+                    break;
+                case 3:
+                    this.$router.push('/serveHistory')
+                    break;
+                default:
+                    break;
+            }
+        },
+        queryPay() {
+            //查询支付宝支付状态
+            ajaxPost(apiUrl.payResult, {
+                orderId: id
+            }, res => {
+                if (res == '') {
+                    //支付失败
+                    this.$router.push(`/payFail?id=${this.orderNo}&module=${this.module}`);
+                }
+            })
         }
     }
 }

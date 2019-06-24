@@ -6,25 +6,25 @@
             <div :class="[curr == 1 ? 'curr' : '', 'btn_item']" @click="() => {curr = 1}">已解决</div>
         </div>
         <div v-show="curr == 0">
-            <orderCard v-for="item in orderCardList" :key="item.id" v-if="item.status != 1"
+            <orderCard v-for="item in orderCardList1" :key="item.id" 
             :status = "item.status"
-            :orderId = "item.orderId"
-            :orderType = "item.orderType"
+            :orderId = "item.id"
+            :orderType = "item.typeName"
             :createTime = "item.createTime"
-            :contain = "item.contain"
-            :remark = "item.remark"
-            :doneTime = "item.doneTime"
+            :contain = "item.detail"
+            :remark = "item.processResult"
+            :doneTime = "item.processTime"
             ></orderCard>
         </div>
         <div v-show="curr == 1">
-            <orderCard v-for="item in orderCardList" :key="item.id" v-if="item.status == 1"
+            <orderCard v-for="item in orderCardList2" :key="item.id" 
             :status = "item.status"
-            :orderId = "item.orderId"
-            :orderType = "item.orderType"
+            :orderId = "item.id"
+            :orderType = "item.typeName"
             :createTime = "item.createTime"
-            :contain = "item.contain"
-            :remark = "item.remark"
-            :doneTime = "item.doneTime"
+            :contain = "item.detail"
+            :remark = "item.processResult"
+            :doneTime = "item.processTime"
             ></orderCard>
         </div>
         
@@ -33,41 +33,26 @@
 
 <script>
 import orderCard from './orderCard'
+import { ajaxPost, ajaxGet } from '@/common/js/public.js'
+import { apiUrl } from '@/common/js/api.js'
 
 export default {
     data () { 
         return {
             curr: 0,
-            orderCardList: [
-                {
-                    status: 0,
-                    orderId: 1235234753425,
-                    orderType: '投诉',
-                    createTime: '2019-03-12 03:42',
-                    contain: '五楼办501办公室，灯泡坏了，希望7月12号前解决（50个字）',
-                    remark: '维修师傅已经抢修完成，现在可以正常使用了，给你带来不便请谅解。',
-                    doneTime: '2019-03-12 03:42',
-                },
-                {
-                    status: 1,
-                    orderId: 1235234753425,
-                    orderType: '投诉',
-                    createTime: '2019-03-12 03:42',
-                    contain: '五楼办501办公室，灯泡坏了，希望7月12号前解决（50个字）',
-                    remark: '已安排维修师傅过去抢修，预计明天上午即可正常使用。',
-                    doneTime: '2019-03-12 03:42',
-                },
-                {
-                    status: 2,
-                    orderId: 1235234753425,
-                    orderType: '投诉',
-                    createTime: '2019-03-12 03:42',
-                    contain: '五楼办501办公室，灯泡坏了，希望7月12号前解决（50个字）',
-                }
-            ]
+            orderCardList1: [],
+            orderCardList2: []
         };
     },
     components: {orderCard},
+    created() {
+        ajaxPost(apiUrl.buildingNone, {}, res => {
+            this.orderCardList1 = res;
+        })
+        ajaxPost(apiUrl.buildingYes, {}, res => {
+            this.orderCardList2 = res;
+        })
+    },
     methods: {
     }
 }

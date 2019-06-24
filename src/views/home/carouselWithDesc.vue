@@ -1,6 +1,6 @@
 <!-- home/carouselWithDesc 左图右字无时间有背景 -->
 <template>
-    <div class="with_desc_carousel" :style="{backgroundColor: bgColor}" @click="clickFn(link)">
+    <div class="with_desc_carousel" :style="{backgroundColor: bgColor % 2 == 0 ? '#F0F5FF' : '#FFF1F0'}" @click="clickFn(link)">
         <img :src="src" class="list_img">
         <div class="list_desc">
             <p class="title">{{title}}</p>

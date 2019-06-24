@@ -1,7 +1,7 @@
 <!-- building/serveClassify 服务分类主 -->
 <template>
     <div class="server_classify">
-        <headerWithPhone :title="title" :linkMsg="''" class="head" @clickLink="toHis"></headerWithPhone>
+        <headerWithPhone :title="title" :linkMsg="''" class="head"></headerWithPhone>
         <!-- <div class="address_box">
             <div class="address_item">
                 <img src="@/assets/address.png">
@@ -11,12 +11,11 @@
         </div> -->
         <div>
             <div class="serve_list">
-                <vue-better-scroll class="wrapper"
-                ref="scroll"
-                :scrollbar="scrollSetting.scrollbarObj"
-                :pullUpLoad="scrollSetting.pullUpLoadObj"
-                :startY="parseInt(scrollSetting.startY)"
-                @pullingUp="onPullingUp">
+                <van-list v-model="scrollSetting.loading"
+                    :finished="scrollSetting.finished"
+                    finished-text="没有更多了"
+                    @load="getMsgList"
+                >
                     <serveListCard v-for="item in serveList" :key="item.id" 
                     :price="item.price" 
                     :title="item.goodName" 
@@ -28,10 +27,10 @@
                     :chooseListLength="chooseList.length"
                     @changePrice="changePrice" 
                     @toThisDetail="toThisDetail"></serveListCard>
-                </vue-better-scroll>
+                </van-list>
             </div>
-            <div class="cart" @click="showCard">
-                <div class="cart_left">
+            <div class="cart">
+                <div class="cart_left" @click="showCard">
                     <img src="@/assets/cart.png" class="cart_icon">
                     <div class="cart_price">
                         <div>合计:<span class="total_price">￥{{totalPrice}}</span></div>
@@ -74,123 +73,102 @@ import cartCard from './cartCard'
 import headerWithPhone from '@/components/headerWithPhone'
 import {ajaxPost} from '@/common/js/public'
 import { apiUrl } from '@/common/js/api.js'
-import VueBetterScroll from 'vue2-better-scroll'
+import { Toast } from 'vant';
 
 export default {
     data () {
         return {
             scrollSetting: {
-                // 这个配置可以开启滚动条，默认为 false。当设置为 true 或者是一个 Object 的时候，都会开启滚动条，默认是会 fade 的
-                scrollbarObj: {
-                    fade: true
-                },
-                // 这个配置用于做上拉加载功能，默认为 false。当设置为 true 或者是一个 Object 的时候，可以开启上拉加载，可以配置离底部距离阈值（threshold）来决定开始加载的时机
-                pullUpLoadObj: {
-                    threshold: -20,
-                    txt: {
-                        more: '加载更多',
-                        noMore: '没有更多数据了'
-                    }
-                },
-                startY: 0,
-            },  
+                loading: false,
+                finished: false
+            },
+            page: 0,
+            limit: 10,
             title: '',
-            id: '',
+            totalPage: 0,
+            goodtype: '',
             //isTelshow: false,
             isCartshow: false,
             preferentPrice: 100, //优惠金额
-            totalPrice: this.$store.state.serveModule.serveList.totalPrice, //总价
-            chooseList: this.$store.state.serveModule.serveList.chooseServeList,
+            totalPrice: 0, //总价
+            chooseList: [],
+            serveList: [{
+                "createTime": "2019-06-20T13:58:49.320Z",
+                "createUserId": 0,
+                "freeFlag": 0,
+                "goodName": "自主研发产权服务",
+                "goodType": "string",
+                "goodTypeName": "string",
+                "id": 54124321,
+                "imageUrl": "string",
+                "price": 0,
+                "remark": "入驻条件为，科技信息产业相关且入驻条件为",
+                "shopId": 0,
+                "sort": 0,
+                "status": 0,
+                "count": 0,
+                "updateTime": "2019-06-20T13:58:49.320Z",
+                "updateUserId": 0
+            },{
+                "createTime": "2019-06-20T13:58:49.320Z",
+                "createUserId": 0,
+                "freeFlag": 0,
+                "goodName": "自主研发产权服务",
+                "goodType": "string",
+                "goodTypeName": "string",
+                "id": 541243321,
+                "imageUrl": "string",
+                "price": 188,
+                "remark": "入驻条件为，科技信息产业相关且入驻条件为",
+                "shopId": 0,
+                "sort": 0,
+                "status": 0,
+                "count": 0,
+                "updateTime": "2019-06-20T13:58:49.320Z",
+                "updateUserId": 0
+            }]
         };
     },
-    components: {serveListCard, cartCard, headerWithPhone, VueBetterScroll },
+    components: {serveListCard, cartCard, headerWithPhone },
     created() {
         let query = this.$router.history.current.query;
-        this.id = query.id;
+        this.goodtype = query.goodtype;
         this.title = query.title;
 
-        //请求信息
-
-        /* 
-            进入页面数据全部清除从新获取
-        */
+        //重置vuex数据
         this.$store.commit('serveModule/initServeList');
-
-        //获取公司信息及商品列表
         
     },
-    computed: {
-        companyMsg() {
-            return this.$store.state.serveModule.serveCompanyMsg;
-        },
-        serveList() {
-            return this.$store.state.serveModule.serveList.originList;
-        }
-    },
-
     methods: {
-        onPullingUp() {
-            //上拉刷新
-            this.$store.commit('serveModule/addServeOriginList', [{
-                "createTime": "2019-06-20T13:58:49.320Z",
-                "createUserId": 0,
-                "freeFlag": 0,
-                "goodName": "自主研发产权服务1",
-                "goodType": "string",
-                "goodTypeName": "string",
-                "id": parseInt(Math.random() * 100),
-                "imageUrl": "string",
-                "price": 188,
-                "remark": "入驻条件为，科技信息产业相关且入驻条件为",
-                "shopId": 0,
-                "sort": 0,
-                "status": 0,
-                "count": 0,
-                "updateTime": "2019-06-20T13:58:49.320Z",
-                "updateUserId": 0
-            },{
-                "createTime": "2019-06-20T13:58:49.320Z",
-                "createUserId": 0,
-                "freeFlag": 0,
-                "goodName": "自主研发产权服务2",
-                "goodType": "string",
-                "goodTypeName": "string",
-                "id": parseInt(Math.random() * 100),
-                "imageUrl": "string",
-                "price": 188,
-                "remark": "入驻条件为，科技信息产业相关且入驻条件为",
-                "shopId": 0,
-                "sort": 0,
-                "status": 0,
-                "count": 0,
-                "updateTime": "2019-06-20T13:58:49.320Z",
-                "updateUserId": 0
-            },{
-                "createTime": "2019-06-20T13:58:49.320Z",
-                "createUserId": 0,
-                "freeFlag": 0,
-                "goodName": "自主研发产权服务3",
-                "goodType": "string",
-                "goodTypeName": "string",
-                "id": parseInt(Math.random() * 100),
-                "imageUrl": "string",
-                "price": 188,
-                "remark": "入驻条件为，科技信息产业相关且入驻条件为",
-                "shopId": 0,
-                "sort": 0,
-                "status": 0,
-                "count": 0,
-                "updateTime": "2019-06-20T13:58:49.320Z",
-                "updateUserId": 0
-            },])
-            this.$refs.scroll.forceUpdate(true)
+        getMsgList() {
+            this.page += 1;
+            //获取商品列表
+            ajaxPost(apiUrl.serveList, {
+                page: this.page,
+                limit: this.limit,
+                goodType: this.goodtype
+            }, res => {
+                let list = res.list;
+                for (let i=0; i<list.length; i++) {
+                    list[i]['count'] = 0;
+                    this.serveList.push(list[i]);
+                }
+                this.totalPage = res.totalPage;
+                this.scrollSetting.loading = false;
+            }, res => {
+                this.scrollSetting.loading = false;
+                this.scrollSetting.finished = true;
+            })
+            if (this.page > this.totalPage) {
+                this.scrollSetting.finished = true;
+            }
         },
-        telFn() {
+        /* telFn() {
             this.isTelshow = true;
         },
         callTel() {
             window.location.href = `tel:${this.tel}`;
-        },
+        }, */
         returnFn() {
             this.isTelshow = false;
             this.isCartshow = false;
@@ -239,19 +217,34 @@ export default {
             this.$store.commit('serveModule/changeServeList', {
                 list: this.chooseList,
                 total: this.totalPrice,
-                origin: this.serveList
             });
         },
         toPay() {
             //下单  
-            this.$router.push('/confirmOrder');
-        },
-        toThisDetail(id) {
-            this.$router.push(`/serveDetail?id=${id}`);
-        },
-        toHis() {
+            if (this.chooseList.length > 0) {
+                let list = [];
+                for (let i=0; i<this.chooseList.length; i++) {
+                    list.push({
+                        goodId: this.chooseList[i].id,
+                        orderNum: this.chooseList[i].count
+                    })
+                }
+                ajaxPost(apiUrl.pay, {
+                    list: list
+                }, res => {
+                    this.$router.push(`/foodsOrderComfirm?id=${res}&company=${this.spwCompanyMsg.companyName}&type=1`);
+                })
 
-        }
+            } else {
+                Toast({
+                    message: '请选择商品',
+                    duration: 2000
+                });
+            }
+        },
+        toThisDetail(obj) {
+            this.$router.push(`/serveDetail?id=${obj.id}&title=${obj.title}`);
+        },
     }
 }
 
@@ -291,11 +284,6 @@ export default {
     }
     .serve_list {
         padding: 0 .32rem;
-        position: fixed;
-        top: 1.76rem;
-        left: 0;
-        right: 0;
-        bottom: 1.02rem;
     }
     .popup_cart {
         bottom: 1.08rem;

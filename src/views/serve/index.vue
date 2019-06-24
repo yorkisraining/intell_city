@@ -35,7 +35,7 @@ export default {
         },
     },
     mounted() {
-        this.minH = document.documentElement.clientHeight;
+        this.minH = document.documentElement.clientHeight - 60;
         this.$router.beforeEach((to, from, next) => {
             if (from.path == '/serveClassify') {
                 this.active = 1;

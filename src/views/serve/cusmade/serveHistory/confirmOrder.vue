@@ -3,33 +3,37 @@
     <div class="confirm_order"  :style="{minHeight: minH + 'px'}">
         <div class="confirm_order_box">
             <div class="card_item">
-                <div class="title">{{name}}</div>
-                <anOrderList class="order_list" v-for="item in orderList" :key="item.id" :orderName="item.name" :orderMoney="item.price" :orderCount="item.count"></anOrderList>
+                <div class="title">{{serveType}}</div>
+                <anOrderList class="order_list" v-for="item in orderList" :key="item.id" :orderName="item.goodName" :orderMoney="item.price" :orderCount="item.orderNum"></anOrderList>
             </div>
             <div class="card_item">
                 <div class="title">订单信息</div>
                 <div class="msg_list">
                     <div class="msg_list_item">
                         <div>订单编号</div>
-                        <div>23545132344124</div>
+                        <div>{{orderId}}</div>
                     </div>
                     <div class="msg_list_item">
                         <div>服务分类</div>
-                        <div>恒伟知识产权服务</div>
+                        <div>{{serveType}}</div>
                     </div>
                     <div class="msg_list_item">
                         <div>下单时间</div>
-                        <div>2019-07-12 08:30</div>
+                        <div>{{createTime}}</div>
                     </div>
                 </div>
                 <div class="msg_list">
                     <div class="msg_list_item">
                         <div>店铺优惠</div>
-                        <div>无</div>
+                        <div>{{dpDiscount}}</div>
+                    </div>
+                    <div class="msg_list_item">
+                        <div>会员优惠</div>
+                        <div>{{vipDiscount}}</div>
                     </div>
                     <div class="msg_list_item">
                         <div>优惠金额</div>
-                        <div class="orange">-￥100</div>
+                        <div class="orange">-￥{{discount}}</div>
                     </div>
                     <div class="msg_list_item">
                         <div>合计金额</div>
@@ -37,20 +41,34 @@
                     </div>
                 </div>
             </div>
-            <div class="card_item">
+            <div class="card_item" v-if="type == 1">
                 <div class="title">联系信息</div>
-                <div class="msg_list">
+                <!-- <div class="msg_list" v-if="type == 0">
                     <div class="msg_list_item">
                         <div>姓名</div>
-                        <div>李太白</div>
+                        <div>{{user.name}}</div>
                     </div>
                     <div class="msg_list_item">
                         <div>电话</div>
-                        <div>15548745124</div>
+                        <div>{{user.tel}}</div>
                     </div>
                     <div class="msg_list_item">
                         <div>地址</div>
-                        <div>广西大学</div>
+                        <div>{{user.address}}</div>
+                    </div>
+                </div> -->
+                <div class="msg_list">
+                    <div class="msg_list_item">
+                        <div>姓名</div>
+                        <div><input type="text" class="input_item" v-model="user.name" /></div>
+                    </div>
+                    <div class="msg_list_item">
+                        <div>电话</div>
+                        <div><input type="text" class="input_item" v-model="user.tel" /></div>
+                    </div>
+                    <div class="msg_list_item">
+                        <div>地址</div>
+                        <div><input type="text" class="input_item" v-model="user.address" /></div>
                     </div>
                 </div>
             </div>
@@ -61,15 +79,29 @@
 
 <script>
 import anOrderList from '@/components/anOrderList'
+import { Toast, Dialog } from 'vant';
+import { ajaxPost, ajaxGet } from '@/common/js/public.js'
+import { apiUrl } from '@/common/js/api'
 
 export default {
     data () {
         return {
             minH: 0,
-            name: '恒伟知识产权服务',
-            orderList: this.$store.state.serveModule.serveList.chooseServeList,
-            totalPrice: this.$store.state.serveModule.serveList.totalPrice,
-            type: 1
+            serveType: '',
+            createTime: '',
+            orderId: '',
+            orderList: [],
+            totalPrice: 0,
+            discount: 0, //优惠
+            dpDiscount: '无',
+            vipDiscount: '无',
+            type: 1, //订单详情还是确认订单
+            user: {
+                name: '',
+                tel: '',
+                address: ''
+            },
+
         };
     },
     components: {anOrderList},
@@ -79,6 +111,32 @@ export default {
             return val == 0 ? '已完成' : '去支付';
         }
     },
+    created() {
+        let query = this.$route.query;
+        this.orderId = query.id;
+        this.type = query.type;
+
+        ajaxPost(`${apiUrl.baseURL}app/goodOrder/info/${this.orderId}`, {}, res => {
+            res = res.result.data;
+            this.orderList = res.detailList;
+            this.createTime = res.createTime;
+            this.serveType = res.orderType;//服务分类
+            this.decount = res.orderMoney - res.realMoney;
+            this.totalPrice = this.orderMoney;
+
+            let discount = res.discountList;
+            for (let i=0; i<discount.length; i++) {
+                if (discount[i].scopName == 'huiyuan') {
+                    //会员优惠
+                    this.vipDiscount = `￥${discount[i].money}`;
+                } else {
+                    //店铺
+                    this.dpDiscount = `￥${discount[i].money}`;
+                }
+            }
+        })
+
+    },
     mounted() {
         this.minH = document.documentElement.clientHeight;
     },
@@ -86,7 +144,23 @@ export default {
         pay(type) {
             //支付
             if (type == 1) {
-                this.$router.push('/choosePayFn?module=2');
+                if (this.user.name != '' && this.user.tel != '' &&this.user.address != '') {
+                    //提交地址信息
+                    
+                    ajaxPost(`${apiUrl.baseURL}app/goodOrder/link/${this.orderId}`, {
+                        address: this.user.address,
+                        mobile: this.user.tel,
+                        linkMan: this.user.username
+                    }, res => {
+                        this.$router.push(`/choosePayFn?module=3&id=${this.orderId}`);
+                    })
+                    
+                } else {
+                    Toast({
+                        message: '请填写个人信息',
+                        duration: 2000
+                    });
+                }
             }
         }
     },
@@ -141,6 +215,10 @@ export default {
                 .orange {
                     color: #F14D2A;
                 }
+            }
+            .input_item {
+                border: none;
+                text-align: right;
             }
         }
     }

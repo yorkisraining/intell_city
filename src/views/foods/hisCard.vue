@@ -1,6 +1,6 @@
 <!-- foods/hisCard -->
 <template>
-    <div class="hisCard_box">
+    <div class="hisCard_box" @click="toDetail(orderId)">
         <div class="top_box">
             <span class="order_id">订单编号：{{orderId}}</span>
             <span class="status">{{status | filterStatus}}</span>
@@ -17,21 +17,31 @@
             </div>
             <div class="msg">
                 <div class="appoint_time">预约时间 <span> {{appointTime}}</span></div>
-                <div v-if="status != 2" class="status_btn" @click="toPay(status, orderId)">{{status | filterBtn}}</div>
+                <div v-if="status == 0 || status == 1">
+                    <div class="status_btn cancel" v-if="status == 0" @click.stop="cacelOrder(orderId)">取消订单</div>
+                    <div class="status_btn cancel" v-if="status == 1" @click.stop="refund(orderId)">申请退款</div>
+                    <div class="status_btn" @click.stop="toPay(status, orderId)" v-if="status != 1">{{status | filterBtn}}</div>
+                    <div class="status_btn" v-if="status == 1">{{useType | filterUseT}} {{checkCode}}</div>
+                </div>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+import { apiUrl } from '@/common/js/api'
+import { ajaxPost, ajaxGet } from '@/common/js/public.js'
+import { Dialog  } from 'vant';
+
 export default {
     data () {
         return {
         };
     },
-    props: ['orderId', 'status', 'orderList', 'orderTime', 'appointTime'],
+    props: ['orderId', 'status', 'orderList', 'orderTime', 'appointTime', 'checkCode', 'useType'],
     filters: {
         filterStatus(val) {
+            /* 未付款0;已付款1;已过期2;已撤销9;已接单3;已使用4;已退款5;已申请6 */
             switch (val) {
                 case 0:
                     return '未支付'
@@ -40,10 +50,22 @@ export default {
                     return '已支付'
                     break;
                 case 2:
-                    return '已取餐'
+                    return '已过期'
                     break;
                 case 3:
-                    return '已取消'
+                    return '已接单'
+                    break;
+                case 4:
+                    return '已使用'
+                    break;
+                case 5:
+                    return '已退款'
+                    break;
+                case 6:
+                    return '已申请'
+                    break;
+                case 9:
+                    return '已撤销'
                     break;
             }
         },
@@ -52,14 +74,18 @@ export default {
                 case 0:
                     return '去支付'
                     break;
-                case 1:
-                    return '确认'
-                    break;
-                case 3:
+                case 4:
                     return '已完成'
                     break;
             }
         },
+        filterUseT(val) {
+            if (val == 1) {
+                return '确认';
+            } else {
+                return '取餐码'
+            }
+        }
     },
     methods: {
         toPay(status, id) {
@@ -69,6 +95,42 @@ export default {
                     status: status
                 });
             }
+        },
+        cacelOrder(id) {
+            //撤单
+            Dialog.confirm({
+                message: '是否确认取消订单？'
+            }).then(() => {
+                // on confirm
+                ajaxPost(`${apiUrl.baseURL}app/goodOrder/cancel/${id}`, {}, res => {
+                    res = res.result.data;
+                    this.$emit('cancelOrder', {
+                        id: id
+                    })
+                })
+            }).catch(() => {});
+        },
+        refund(id) {
+            //退款
+            Dialog.confirm({
+                message: '是否确认退款？'
+            }).then(() => {
+                // on confirm
+                ajaxPost(apiUrl.refund, {
+                    orderId: id,
+                    reason: ''
+                }, res => {
+                    res = res.result.data;
+                    this.$emit('refundOrder', {
+                        id: id
+                    })
+                })
+            }).catch(() => {});
+        },
+        toDetail(id) {
+            //查看详情
+            let type = this.status != 0 ? 0 : 1;
+            this.$router.push(`/foodsOrderComfirm?type=${type}&id=${id}`);
         }
     }
 }
@@ -117,6 +179,12 @@ export default {
             background-color: #FFCB44;
             border-radius: .04rem;
             float: right;
+            margin-left: .16rem;
+            &.cancel {  
+                background-color: #fff;
+                border: 1px solid #d2d2d2;
+                line-height: .58rem;
+            }
         }
         .appoint_time {
             font-size: .26rem;

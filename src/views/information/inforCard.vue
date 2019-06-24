@@ -10,9 +10,9 @@
             </div>
        </div>
        <div>
-           <inforList v-for="item in infornList" :key="item.id" 
-           :title="item.title" 
-           :brief="item.brief" 
+           <inforList v-for="item in list" :key="item.id" 
+           :title="item.policyName" 
+           :brief="item.policyContent" 
            :id="item.id" 
            :src="item.src"></inforList>
        </div>
@@ -45,15 +45,12 @@ export default {
             ]
         };
     },
-    props: ['title', 'classify', 'type'],
+    props: ['title', 'classify', 'type', 'list'],
     components: {inforList},
     methods: {
         toDetailList(id, classify) {
             //查看详情
-            this.$emit('toDetail', {
-                id: id,
-                classify: classify
-            })
+            this.$router.push(`/inforDetail?id=${id}&type=${classify}`);
         }
     }
 }

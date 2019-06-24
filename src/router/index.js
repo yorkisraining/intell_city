@@ -2,10 +2,10 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import home from '@/views/home/'
 import serve from '@/views/serve/'
-import serveHistory from '@/views/serve/cusmade/serveHistory'
 import paySuccess from '@/components/paySuccess'
 import payFail from '@/components/payFail'
 import confirmOrder from '@/views/serve/cusmade/serveHistory/confirmOrder'
+import serveHistory from '@/views/serve/cusmade/serveHistory'
 import serveClassify from '@/views/serve/cusmade/serveClassify'
 import serveDetail from '@/views/serve/cusmade/serveClassify/serveDetail'
 import foods from '@/views/foods'
@@ -18,12 +18,16 @@ import information from '@/views/information'
 import inforArticle from '@/views/information/inforArticle'
 import inforDetail from '@/views/information/inforDetailList'
 import choosePayFn from '@/components/choosePayFn'
+import activity from '@/views/activity'
+import activityHistory from '@/views/activity/activityHistory'
+import activityDetail from '@/views/activity/activityDetail'
+import activitySignUp from '@/views/activity/activitySignUp'
+import activitySignUpSuccess from '@/views/activity/signupSuccess'
 
 Vue.use(Router)
 
 const router = new Router({
-    mode: 'hash', //要配置成history https://router.vuejs.org/zh/guide/essentials/history-mode.html#%E5%90%8E%E7%AB%AF%E9%85%8D%E7%BD%AE%E4%BE%8B%E5%AD%90
-    linkActiveClass: 'is-active',
+    mode: 'history', //要配置成history https://router.vuejs.org/zh/guide/essentials/history-mode.html#%E5%90%8E%E7%AB%AF%E9%85%8D%E7%BD%AE%E4%BE%8B%E5%AD%90
     routes: [{
         path: '/',
         name: '中国-东盟新型智慧城市协同创新中心',
@@ -53,7 +57,7 @@ const router = new Router({
         name: '支付成功',
         component: paySuccess,
         props: {
-            returnBtn: true,
+            returnBtn: false,
             ifShowHeader: true
         }
     }, {
@@ -61,7 +65,7 @@ const router = new Router({
         name: '支付失败',
         component: payFail,
         props: {
-            returnBtn: true,
+            returnBtn: false,
             ifShowHeader: true
         }
     }, {
@@ -164,6 +168,46 @@ const router = new Router({
         path: '/choosePayFn',
         name: '订单支付',
         component: choosePayFn,
+        props: {
+            returnBtn: true,
+            ifShowHeader: true
+        }
+    }, {
+        path: '/activity',
+        name: '活动',
+        component: activity,
+        props: {
+            returnBtn: true,
+            ifShowHeader: false
+        }
+    }, {
+        path: '/activityHistory',
+        name: '活动记录',
+        component: activityHistory,
+        props: {
+            returnBtn: true,
+            ifShowHeader: true
+        }
+    }, {
+        path: '/activityDetail',
+        name: '活动',
+        component: activityDetail,
+        props: {
+            returnBtn: true,
+            ifShowHeader: false
+        }
+    }, {
+        path: '/activitySignUp',
+        name: '报名信息',
+        component: activitySignUp,
+        props: {
+            returnBtn: true,
+            ifShowHeader: true
+        }
+    }, {
+        path: '/activitySignUpSuccess',
+        name: '报名成功',
+        component: activitySignUpSuccess,
         props: {
             returnBtn: true,
             ifShowHeader: true

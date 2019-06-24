@@ -2,21 +2,23 @@
 <template>
     <div class="choose_payfn_box">
         <div class="pay_fn_top">
-            <div class="time">剩余支付时间{{time}}</div>
+            <div class="time">剩余支付时间 {{time}}</div>
             <div class="price">¥<span>{{price}}</span></div>
-            <div class="order_detail">订单详情</div>
+            <div class="order_detail" @click="toDetail">订单详情</div>
         </div>
         <div class="pay_fn">
             <van-radio-group v-model="radio">
             <van-cell-group>
                 <van-cell clickable title="" @click="radio = '1'">
                     <template slot="title">
+                        <img src="@/assets/wx_icon.png" class="icon" />
                         <span class="pay_title">微信支付</span>
                     </template>
                     <van-radio checked-color="#FFCB44" name="1" />
                 </van-cell>
                 <van-cell clickable title="" @click="radio = '2'">
                     <template slot="title">
+                        <img src="@/assets/ali_icon.png" class="icon" />
                         <span class="pay_title">支付宝支付</span>
                     </template>
                     <van-radio checked-color="#FFCB44" name="2" />
@@ -24,64 +26,103 @@
             </van-cell-group>
             </van-radio-group>
         </div>
-        <div class="pay_btn"  @click="pay(type)">确认支付</div>
+        <div class="pay_btn"  @click="pay">确认支付</div>
     </div>
 
 </template>
 
 <script>
 import {aliPay, wxPay} from '@/common/js/pay'
+import { ajaxPost, ajaxGet } from '@/common/js/public.js'
+import { apiUrl } from '@/common/js/api.js'
 
 export default {
     data () {
         return {
-            time: '14:00',
-            price: '26',
+            time: '00:00:00',
+            price: 26,
             radio: '1',
-            goodsList: [],
-            totolPrice: 0,
-            
+            module: 1,
+            orderId: '',
+            endTime: '1561428799535',//订单创建时间+24，做倒计时,
+            countTime: ''
         };
     },
     props: ['orderName', 'orderMoney', 'orderCount'],
     created() {
         /* 
-            从哪儿过来的，该查哪个vuex表
-            0 foods
-            1 coffee
-            2 serve
+            module从哪儿过来的
+            1 foods
+            2 coffee
+            3 serve
         */
-        let vuexModule = this.$route.query.module;
+        let query = this.$route.query;
+        this.module = query.module;
+        this.orderId = query.id;
+        
+        /* 查询订单详情，计算剩余时间，从下单开始24小时倒计时，做个倒计时 */
+        ajaxPost(`${apiUrl.baseUrl}app/goodOrder/info/${this.orderId}`, {}, res => {
+            this.endTime = new Date(res.createtime).getTime() + 1000 * 60 * 60 * 24;
+            this.countTime = this.endTime - new Date().getTime();
+            this.count();
+        })
 
-        switch (vuexModule) {
-            case 0:
-            this.$store.state.serveModule.serveList.chooseServeList  
-                break;
-            case 0:
-            this.$store.state.serveModule.serveList.chooseServeList    
-                break;
-            case 0:
-            this.$store.state.serveModule.serveList.chooseServeList    
-                break;
-            default:
-                break;
-        }
     },
     methods: {
-        pay(type) {
-            /* 
-                "createTime": "2019-06-21T02:51:14.194Z",
-                "goodId": 0,
-                "goodName": "string",
-                "goodType": "string",
-                "goodTypeName": "string",
-                "id": 0,
-                "imageUrl": "string",
-                "orderId": "string",
-                "orderNum": 0,
-                "price": 0
-            */
-
+        pay() {
+           if (radio == 1) {
+                //微信
+                wxPay({
+                    orderNo: this.orderId
+                }, this.orderId, this.module)
+            } else {
+               //支付宝
+                aliPay({
+                    orderNo: this.orderId
+                }, this.orderId, this.module)
+            }
+        },
+        toDetail() {
+            //查看详情
+            switch (Number(this.module)) {
+                case 1:
+                    this.$router.push('/foodsHistory')
+                    break;
+                case 2:
+                    this.$router.push('/coffeeHistory')    
+                    break;
+                case 3:
+                    this.$router.push('/serveHistory')
+                    break;
+                default:
+                    break;
+            }
+            
+        },
+        formatDuring(mss) {
+            let hours = parseInt((mss % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            if (hours < 10) {
+                hours = '0' + hours;
+            }
+            let minutes = parseInt((mss % (1000 * 60 * 60)) / (1000 * 60));
+            if (minutes < 10) {
+                minutes = '0' + minutes;
+            }
+            let seconds = parseInt((mss % (1000 * 60)) / 1000);
+            if (seconds < 10) {
+                seconds = '0' + seconds;
+            }
+            this.time = `${hours}:${minutes}:${seconds}`;
+        },
+        count() {
+            const _this = this;
+            if (this.countTime > 0) {
+                this.countTime -= 1000;
+                this.formatDuring(this.countTime);
+                setTimeout(function() {
+                    _this.count();
+                }, 1000);
+            }
         }
     }
 }
@@ -111,6 +152,10 @@ export default {
             line-height: .3rem;
             margin-bottom: 1.2rem;
         }
+    }
+    .icon {
+        width: .32rem;
+        margin-right: .2rem;
     }
     .pay_title {
         font-size: .28rem;

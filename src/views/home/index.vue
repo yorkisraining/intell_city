@@ -1,75 +1,77 @@
 <!-- home/home.vue -->
 <template>
     <div class="home_contain">
-        <div class="carousel_block">
-            <el-carousel 
-            :height="setting.height"
-            >
-            <el-carousel-item v-for="item in topCarImgList" :key="item.id" >
-                <img :src="item.image" :alt="item.remark" @click="toThisNav(item.url)">
-            </el-carousel-item>
-            </el-carousel>
-        </div>
-        <div class="nav_block">
-            <el-row>
-                <el-col :span="6" class="nav_item"  v-for="item in navList" :key="item.id">
-                    <mainNav 
-                    :title="item.title" 
-                    :src="item.src" 
-                    :mButton="'.2rem'" 
-                    :w="'.8rem'"
-                    :h="'.8rem'"
-                    :link="item.link"
-                    @toThisNavEmit="toThisNav"></mainNav>
-                </el-col>
-            </el-row>
-        </div>
-        <div class="list_item qy_block">
-            <div class="qy_title"  @click="toThisNav('/')">入驻企业成果展示<i class="el-icon-arrow-right"></i></div>
-            <div v-for="item in detailBox1List" :key="item.id" class="qy_detail_box" @click="toThisNav(item.link)">
-                <img :src="item.src">
-                <div class="qy_block_name">{{item.title}}</div>
-                <div class="qy_block_desc">{{item.desc}}</div>
+        <div class="home_contain_padding">
+            <div class="carousel_block">
+                <el-carousel 
+                :height="setting.height"
+                >
+                <el-carousel-item v-for="item in imageList" :key="item.id" >
+                    <img :src="item.image" :alt="item.remark" @click="toThisNav(item.url)">
+                </el-carousel-item>
+                </el-carousel>
             </div>
-        </div>
-        <div class="list_item">
-            <globalTitle :title="'资讯'"  :link="'/information'" :showMore="true" @toThisNavEmit="toThisNav"></globalTitle>
-            <detailBox2 v-for="item in detailBox2List" 
-            :key="item.id" 
-            :title="item.title" 
-            :remark="item.remark" 
-            :src="item.src"
-            :link="item.link" 
-            @toThisNavEmit="toThisNav"></detailBox2>
-        </div>
-        <div class="list_item">
-            <globalTitle :title="'美食'"  :link="'/'" :showMore="false" @toThisNavEmit="toThisNav"></globalTitle>
-            <el-row>
-                <el-col :span="12" class="nav_item" v-for="item in detailBox3List" :key="item.id">
-                    <detailBox3 
-                    :src="item.src" 
-                    :topMark="item.topMark" 
-                    :color="item.color" 
-                    :link="item.link" 
-                    @toThisNavEmit="toThisNav"
-                    ></detailBox3>
-                </el-col>
-            </el-row>
-        </div>
-        <div class="list_item">
-            <globalTitle :title="'项目信息'" :link="'/'" :showMore="true" @toThisNavEmit="toThisNav"></globalTitle>
-            <div class="slider_block_wrap">
-                <ul class="slider_block clearfix">
-                    <li v-for="item in carouselList" :key="item.id">
-                        <carouselWithDesc 
-                        :src="item.src" 
+            <div class="nav_block">
+                <el-row>
+                    <el-col :span="6" class="nav_item"  v-for="item in appList" :key="item.id">
+                        <mainNav 
                         :title="item.title" 
-                        :desc="item.desc" 
-                        :bgColor="item.bgColor"
+                        :src="item.image" 
+                        :mButton="'.2rem'" 
+                        :w="'.8rem'"
+                        :h="'.8rem'"
+                        :link="item.url"
+                        @toThisNavEmit="toThisNav"></mainNav>
+                    </el-col>
+                </el-row>
+            </div>
+            <div class="list_item qy_block">
+                <div class="qy_title"  @click="toThisNav('/')">入驻企业成果展示<i class="el-icon-arrow-right"></i></div>
+                <div v-for="item in companyPerformanceList" :key="item.id" class="qy_detail_box" @click="toThisNav(item.url)">
+                    <img :src="item.image">
+                    <div class="qy_block_name">{{item.title}}</div>
+                    <div class="qy_block_desc">{{item.remark}}</div>
+                </div>
+            </div>
+            <div class="list_item">
+                <globalTitle :title="'资讯'"  :link="'/information'" :showMore="true" @toThisNavEmit="toThisNav"></globalTitle>
+                <detailBox2 v-for="item in inforList" 
+                :key="item.id" 
+                :title="item.title" 
+                :remark="item.remark" 
+                :src="item.src"
+                :link="item.link" 
+                @toThisNavEmit="toThisNav"></detailBox2>
+            </div>
+            <div class="list_item">
+                <globalTitle :title="'美食'"  :link="'/'" :showMore="false" @toThisNavEmit="toThisNav"></globalTitle>
+                <el-row>
+                    <el-col :span="12" class="nav_item" v-for="item in cateList" :key="item.id">
+                        <detailBox3 
+                        :src="item.src" 
+                        :topMark="item.topMark" 
+                        :color="item.color" 
                         :link="item.link" 
-                        @toThisNavEmit="toThisNav"></carouselWithDesc>
-                    </li>
-                </ul>
+                        @toThisNavEmit="toThisNav"
+                        ></detailBox3>
+                    </el-col>
+                </el-row>
+            </div>
+            <div class="list_item">
+                <globalTitle :title="'项目信息'" :link="projectCenterUrl" :showMore="true" @toThisNavEmit="toThisNav"></globalTitle>
+                <div class="slider_block_wrap">
+                    <ul class="slider_block clearfix">
+                        <li v-for="(item, index) in companyProjectList" :key="item.id">
+                            <carouselWithDesc 
+                            :src="item.src" 
+                            :title="item.title" 
+                            :desc="item.desc" 
+                            :bgColor="index"
+                            :link="item.link" 
+                            @toThisNavEmit="toThisNav"></carouselWithDesc>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
         <div class="fix_bottom_nav">
@@ -96,7 +98,7 @@ import detailBox1 from './detailBox1'
 import detailBox2 from './detailBox2'
 import detailBox3 from './detailBox3'
 import carouselWithDesc from './carouselWithDesc'
-import { ajaxPost } from '@/common/js/public.js'
+import { ajaxPost, ajaxGet } from '@/common/js/public.js'
 import { apiUrl } from '@/common/js/api.js'
 
 export default {
@@ -113,13 +115,13 @@ export default {
                 name: 'project',
                 title: '项目',
                 src: require('@/assets/button_xm.png'),
-                link: '/'
+                link: ''
                 },
                 {
                 name: 'active',
                 title: '活动',
                 src: require('@/assets/button_hd.png'),
-                link: '/'
+                link: '/activity'
                 },
             ],
             setting: {
@@ -128,123 +130,57 @@ export default {
                 interval: 2000,
                 indicatorPosition: 'inside',
             },
-            navList: [
+            appList: [
                 {
                     id: 1001,
                     title: '场地预定',
-                    src: require('@/assets/nav_cdyd.png'),
-                    link: '/',
+                    image: require('@/assets/nav_cdyd.png'),
+                    url: '/',
                 },
                 {
                     id: 1002,
                     title: '运动中心',
-                    src: require('@/assets/nav_hdzx.png'),
-                    link: '/',
+                    image: require('@/assets/nav_hdzx.png'),
+                    url: '/',
                 },
                 {
                     id: 1003,
                     title: '共享书吧',
-                    src: require('@/assets/nav_gxsb.png'),
-                    link: '/',
+                    image: require('@/assets/nav_gxsb.png'),
+                    url: '/',
                 },
                 {
                     id: 1004,
                     title: '企业服务',
-                    src: require('@/assets/nav_qyfw.png'),
-                    link: '/serve',
+                    image: require('@/assets/nav_qyfw.png'),
+                    url: '/serve',
                 },
                 {
                     id: 1005,
                     title: '项目中心',
-                    src: require('@/assets/nav_xmzx.png'),
-                    link: '/',
+                    image: require('@/assets/nav_xmzx.png'),
+                    url: '/',
                 },
                 {
                     id: 1006,
                     title: '育托中心',
-                    src: require('@/assets/nav_ytzx.png'),
-                    link: '/',
+                    image: require('@/assets/nav_ytzx.png'),
+                    url: '/',
                 },
                 {
                     id: 1007,
                     title: '品牌中心',
-                    src: require('@/assets/nav_ppzx.png'),
-                    link: '/',
+                    image: require('@/assets/nav_ppzx.png'),
+                    url: '/',
                 },
                 {
                     id: 1008,
                     title: '餐饮',
-                    src: require('@/assets/nav_cy.png'),
-                    link: '/',
+                    image: require('@/assets/nav_cy.png'),
+                    url: '/',
                 },
             ],
-            detailBox1List: [
-                {
-                    id: 2001,
-                    desc: '大企业值得信赖',
-                    title: '中国移动',
-                    src: require('@/assets/41.jpg'),
-                    link: '/',
-                },
-                {
-                    id: 2002,
-                    desc: '大企业值得信赖',
-                    title: '中国联通',
-                    src: require('@/assets/41.jpg'),
-                    link: '/',
-                },
-                {
-                    id: 2003,
-                    desc: '大企业值得信赖',
-                    title: '美的集团',
-                    src: require('@/assets/41.jpg'),
-                    link: '/',
-                }
-            ],
-            detailBox2List: [
-                {
-                    id: 3001,
-                    title: '关注您的健康',
-                    remark: '健康与您同行',
-                    src: require('@/assets/hb.jpg'),
-                    link: '/',
-                },
-                {
-                    id: 3002,
-                    title: '关注您的健康',
-                    remark: '健康与您同行',
-                    src: require('@/assets/hb.jpg'),
-                    link: '/',
-                },
-                {
-                    id: 3003,
-                    title: '关注您的健康',
-                    remark: '健康与您同行',
-                    src: require('@/assets/hb.jpg'),
-                    link: '/',
-                },{
-                    id: 3004,
-                    title: '关注您的健康',
-                    remark: '健康与您同行',
-                    src: require('@/assets/hb.jpg'),
-                    link: '/',
-                },
-                {
-                    id: 3005,
-                    title: '关注您的健康',
-                    remark: '健康与您同行',
-                    src: require('@/assets/hb.jpg'),
-                    link: '/',
-                },
-                {
-                    id: 3006,
-                    title: '关注您的健康',
-                    remark: '健康与您同行',
-                    src: require('@/assets/hb.jpg'),
-                    link: '/',
-                }
-            ],
-            detailBox3List: [
+            cateList: [
                 {
                     id: 4001,
                     src: require('@/assets/coffe.png'),
@@ -260,32 +196,41 @@ export default {
                     link: '/foods',
                 },
             ],
-            carouselList: [
-                {
-                    id: 5001,
-                    desc: '世界如此美好，怎能让忙碌停止我们探索世界的脚步。',
-                    title: '第35个！中国又多一处世界遗产！',
-                    src: require('@/assets/gd1.jpg'),
-                    bgColor: '#F0F5FF',
-                    link: '/',
-                },
-                {
-                    id: 5002,
-                    desc: '世界如此美好，怎能让忙碌停止我们探索世界的脚步',
-                    title: '第35个！中国又多一处世界遗产！',
-                    src: require('@/assets/gd2.jpg'),
-                    bgColor: '#FFF1F0',
-                    link: '/',
-                },
-                {
-                    id: 5003,
-                    desc: '世界如此美好，怎能让忙碌停止我们探索世界的脚步',
-                    title: '第35个！中国又多一处世界遗产！',
-                    src: require('@/assets/gd3.jpg'),
-                    bgColor: '#F0F5FF',
-                    link: '/',
-                },
-            ]
+            imageList: [{
+                "createTime": "2019-06-20T08:49:21.203Z",
+                "id": 1,
+                "image": require('@/assets/fj.jpg'),
+                "remark": "string",
+                "sort": 0,
+                "status": 0,
+                "title": "string",
+                "type": 0,
+                "url": "string"
+            }, {
+                "createTime": "2019-06-20T08:49:21.203Z",
+                "id": 2,
+                "image": require('@/assets/fj.jpg'),
+                "remark": "string",
+                "sort": 0,
+                "status": 0,
+                "title": "string",
+                "type": 0,
+                "url": "string"
+            }, {
+                "createTime": "2019-06-20T08:49:21.203Z",
+                "id": 3,
+                "image": require('@/assets/fj.jpg'),
+                "remark": "string",
+                "sort": 0,
+                "status": 0,
+                "title": "string",
+                "type": 0,
+                "url": "string"
+            }], //轮播图
+            companyPerformanceList: [], //企业成果列表
+            companyProjectList: [], //项目列表
+            inforList: [], //资讯
+            projectCenterUrl: '', //项目中心链接
         };
     },
     components: {mainNav, globalTitle, detailBox1, detailBox2, detailBox3, carouselWithDesc},
@@ -293,23 +238,35 @@ export default {
         //获取tooken
         console.log(/\^?code=\w+/.exec(window.location.href)[0])
         let code = /\^?code=\w+/.exec(window.location.href)[0].split('=')[1];
-
+        
         ajaxPost(apiUrl.token, {
             code: code
         }, res => {
             localStorage.setItem('token', token);
             sessionStorage.setItem('token', token);
         })
+        
+        //请求banner
+        ajaxPost(apiUrl.banner, {
+            type: 1
+        }, res => {
+            this.imageList = res
+        })
 
-        if (this.topCarImgList.length == 0) {
-            //请求banner
-            this.$store.dispatch('homeModule/getHomeBanner');
-        }
-    },
-    computed: {
-        topCarImgList() {
-            return this.$store.state.homeModule.imageList;
-        }
+        //请求首页所有数据
+        ajaxGet(apiUrl.homeData, {}, res => {
+            for (let i=0; i<res.appList.length; i++) {
+                if (res.appList[i].title == '企业服务') {
+                    res.appList[i].url = '/serve';
+                }
+            }
+            this.navList = res.appList; //导航
+            this.companyPerformanceList = res.companyPerformanceList; //企业成果展示
+            this.companyProjectList = res.companyProjectList; //项目列表
+            this.inforList = res.inforList; //资讯
+            this.bottomNavList[1].link = res.projectCenterUrl; //底部url
+        })
+
     },
     methods: {
         toThisNav(url) {
@@ -323,8 +280,10 @@ export default {
 <style lang='less' scoped>
 
     .home_contain {
-        padding: .16rem .32rem;
         margin-bottom: 1rem;
+        .home_contain_padding {
+            padding: .16rem .32rem;
+        }
         .el-carousel__item img {
             width: 100%;
             border-radius: 4px;

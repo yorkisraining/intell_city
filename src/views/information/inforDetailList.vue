@@ -1,62 +1,84 @@
 <!-- inforDetailList 分类查看更多 -->
 <template>
     <div class="infor_detail_list">
-        <inforList v-for="item in infornList" :key="item.id" 
-           :title="item.title" 
-           :brief="item.brief" 
-           :id="item.id" 
-           :src="item.src"
-           :type="type"
-           ></inforList>
+        <van-list v-model="scrollSetting.loading"
+                :finished="scrollSetting.finished"
+                finished-text="没有更多了"
+                @load="getList"
+            >
+            <inforList v-for="item in list" :key="item.id" 
+            :title="item.policyName" 
+            :brief="item.policyContent" 
+            :id="item.id" 
+            :src="item.src"
+            :type="type" ></inforList>
+        </van-list>
     </div>
 </template>
 
 <script>
-import {ajaxPost} from '@/common/js/public'
+import { ajaxPost, ajaxGet } from '@/common/js/public.js'
+import { apiUrl } from '@/common/js/api.js'
 import inforList from './inforList'
 
 export default {
     data () {
         return {
-            type: ''
+            type: '', //大类，如商务
+            classify: '', //文章小分类，如政策
+            ajaxUrl: '',
+            list: [],
+            page: 0, //未支付
+            limit: 10,
+            totalPage: 0, //总页码
+            scrollSetting: {
+                loading: false,
+                finished: false
+            },
         };
     },
+    components: {inforList},
     created() {
-        let id = this.$route.query.id,
-            type = this.$route.query.type, //大分类
-            classify = this.$route.query.classify; // 文章小分类
+        let query = this.$route.query;
+        let id = query.id,
+            type = query.type;
+
+        this.classify = query.classify;
             
         switch (type) {
             case 0:
             //招商
-            this.$store.dispatch('inforModule/getPolicyList', {
-                page: this.page,
-                limit: this.limit,
-                type: classify
-            });
+            this.ajaxUrl = apiUrl.inforPocilyList
             break;
             case 1:
             //商务  
-            this.$store.dispatch('inforModule/getBusiList', {
-                page: this.page,
-                limit: this.limit,
-                type: classify
-            });
+            this.ajaxUrl = apiUrl.inforBusiList
             break;
             case 2:
             //租赁    
-            this.$store.dispatch('inforModule/getRentList', {
-                page: this.page,
-                limit: this.limit,
-                type: classify
-            });
+            this.ajaxUrl = apiUrl.inforRentList
             break;
         }
     },
-    computed: {
-        infornList() {
-            return this.$store.state.inforModule.detailList;
-        }
+    methods: {
+        getList() {
+            this.page += 1;
+            ajaxPost(this.ajaxUrl, {
+                page: this.page,
+                limit: this.limit,
+                type: this.classify
+            }, res => {
+                this.list = res.list;
+                this.totalPage = res.totalPage;
+                this.scrollSetting.loading = false;
+            }, res => {
+                this.scrollSetting.loading = false;
+                this.scrollSetting.finished = true;
+            })
+            if (this.page > this.totalPage) {
+                this.scrollSetting.finished = true;
+            }
+        },
     },
 }
 

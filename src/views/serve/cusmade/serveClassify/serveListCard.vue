@@ -1,18 +1,19 @@
 <!-- building/serveClassify/serveListCard 图 名称 价格 数量卡 -->
 <template>
-    <div class="serve_list_card">
-        <div class="serve_img"  @click="changeRouter(id)">
+    <div class="serve_list_card"  @click="changeRouter(id, title)">
+        <div class="serve_img">
             <img :src="src" alt="">
         </div>
         <div class="serve_detail">
-            <div class="title"  @click="changeRouter(id)">{{title}}</div>
-            <div class="brief"  @click="changeRouter(id)">{{brief}}</div>
+            <div class="title">{{title}}</div>
+            <div class="brief">{{brief}}</div>
             <div class="price_box">
-                <div class="price"  @click="changeRouter(id)">￥<span>{{price}}</span></div>
+                <div class="price" v-if="price > 0">￥<span>{{price}}</span></div>
+                <div class="free" v-else>免费</div>
                 <div class="stepper">
-                    <span @click="sub(id, price)" class="btn sub" v-show="tCount != 0">+</span>
+                    <span @click.stop="sub(id, price)" class="btn sub" v-show="tCount != 0">+</span>
                     <span v-show="tCount != 0">{{tCount}}</span>
-                    <span @click="add(id, price)" class="btn add">+</span>
+                    <span @click.stop="add(id, price)" class="btn add">+</span>
                 </div>
             </div>
         </div>
@@ -20,6 +21,8 @@
 </template>
 
 <script>
+import { Toast } from 'vant';
+
 export default {
     data () {
         return {
@@ -41,7 +44,10 @@ export default {
             */
             if ((price == 0 && this.totalPrice != 0) || (price != 0 && this.totalPrice == 0 && this.chooseListLength != 0)) {
                 // 不能共存,异常提示 
-                console.log('不能这样选择');
+                Toast({
+                    message: '请不要同时选择免费和付费商品',
+                    duration: 2000
+                })
                 return false;
             }
             return true;
@@ -69,8 +75,11 @@ export default {
                 })
             }
         },
-        changeRouter(id) {
-            this.$emit('toThisDetail', id)
+        changeRouter(id, title) {
+            this.$emit('toThisDetail', {
+                id: id,
+                title: title
+            })
         }
     }
 }
@@ -117,6 +126,10 @@ export default {
                 span {
                     font-size: .48rem;
                 }
+            }
+            .free {
+                font-size: .28rem;
+                color: #999;
             }
             .stepper {
                 span {

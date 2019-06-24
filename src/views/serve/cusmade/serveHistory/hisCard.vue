@@ -1,6 +1,6 @@
 <!-- serveHitory/hisCard -->
 <template>
-    <div class="hisCard_box">
+    <div class="hisCard_box"  @click="toDetail(orderId)">
         <div class="top_box">
             <span class="order_id">订单编号：{{orderId}}</span>
             <span class="status">{{status | filterStatus}}</span>
@@ -10,9 +10,10 @@
                 <div class="order_name">{{orderName}}</div>
                 <div class="order_time">{{orderTime}}</div>
             </div>
-            <div v-if="status != 2">
-                <div class="status_btn cancel" v-if="status == 0" @click="cacelOrder(orderId)">取消订单</div>
-                <div class="status_btn"  @click="toPay(status, orderId)">{{status | filterBtn}}</div>
+            <div v-if="status == 0 || status == 1">
+                <div class="status_btn cancel" v-if="status == 0" @click.stop="cacelOrder(orderId)">取消订单</div>
+                <div class="status_btn cancel" v-if="status == 1" @click.stop="refund(orderId)">申请退款</div>
+                <div class="status_btn" @click.stop="toPay(status, orderId)" v-show="status != 1">{{status | filterBtn}}</div>
             </div>
         </div>
     </div>
@@ -20,6 +21,7 @@
 
 <script>
 import { apiUrl } from '@/common/js/api'
+import { ajaxPost, ajaxGet } from '@/common/js/public.js'
 import { Dialog  } from 'vant';
 
 export default {
@@ -38,10 +40,22 @@ export default {
                     return '已支付'
                     break;
                 case 2:
-                    return '已预约'
+                    return '已过期'
                     break;
                 case 3:
-                    return '已消费'
+                    return '已接单'
+                    break;
+                case 4:
+                    return '已使用'
+                    break;
+                case 5:
+                    return '已退款'
+                    break;
+                case 6:
+                    return '已申请'
+                    break;
+                case 9:
+                    return '已撤销'
                     break;
             }
         },
@@ -50,10 +64,7 @@ export default {
                 case 0:
                     return '去支付'
                     break;
-                case 1:
-                    return '确认'
-                    break;
-                case 3:
+                case 4:
                     return '已完成'
                     break;
             }
@@ -67,19 +78,41 @@ export default {
         },
         cacelOrder(id) {
             //撤单
-            
             Dialog.confirm({
                 message: '是否确认取消订单？'
             }).then(() => {
-            // on confirmz
+                // on confirm
                 ajaxPost(`${apiUrl.baseURL}app/goodOrder/cancel/${id}`, {}, res => {
                     res = res.result.data;
-                    
+                    this.$emit('cancelOrder', {
+                        id: id
+                    })
                 })
             }).catch(() => {
-            // on cancel
-
+                console.log('cancel')
             });
+        },
+        refund(id) {
+            //退款
+            Dialog.confirm({
+                message: '是否确认退款？'
+            }).then(() => {
+                // on confirm
+                ajaxPost(apiUrl.refund, {
+                    orderId: id,
+                    reason: ''
+                }, res => {
+                    res = res.result.data;
+                    this.$emit('refundOrder', {
+                        id: id
+                    })
+                })
+            }).catch(() => {});
+        },
+        toDetail(id) {
+            //查看详情
+            let type = this.status != 0 ? 0 : 1;
+            this.$router.push(`/confirmOrder?type=${type}&id=${id}`);
         }
     }
 }

@@ -26,7 +26,7 @@ export default {
     },
     components: {inforTabs},
     mounted() {
-        this.minH = document.documentElement.clientHeight;
+        this.minH = document.documentElement.clientHeight - 60;
     },
     methods: {
         changeTabs(index, title) {

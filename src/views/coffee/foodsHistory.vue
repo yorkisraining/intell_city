@@ -1,24 +1,44 @@
 <!-- foods/foodsHistory 订单记录 -->
 <template>
-    <div class="order_history">
+    <div class="order_history" :style="{minHeight: minH + 'px'}">
         <div class="tabs_box">
-            <van-tabs @click="onClick">
-                <van-tab title="未消费">
-                    <hisCard v-for="item in hisCardList" :key="item.id" v-if="item.status != 2"
-                    :status="item.status" 
-                    :orderList="item.orderList" 
-                    :orderId="item.id" 
-                    :orderTime="item.orderTime" 
-                    :appointTime="item.appointTime" 
-                    @toPay="toPay"></hisCard>
+            <van-tabs sticky :offset-top="60">
+                <van-tab title="未消费" class="scroll_item">
+                    <van-list v-model="scrollSetting1.loading"
+                        :finished="scrollSetting1.finished"
+                        finished-text="没有更多了"
+                        @load="getHisList1"
+                    >
+                        <hisCard v-for="item in hisCardList1" :key="item.id"  
+                        :status="item.status" 
+                        :orderList="item.detailList" 
+                        :orderId="item.id" 
+                        :checkCode="item.checkCode" 
+                        :useType="item.useType" 
+                        :orderTime="item.createTime" 
+                        :appointTime="item.bookTime" 
+                        @refundOrder="refundOrder"
+                        @toPay="toPay"  
+                        @cancelOrder="cancelOrder"></hisCard>
+                    </van-list>
                 </van-tab>
-                <van-tab title="历史订单">
-                    <hisCard v-for="item in hisCardList" :key="item.id"
-                    :status="item.status" 
-                    :orderList="item.orderList" 
-                    :orderId="item.id" 
-                    :orderTime="item.orderTime" 
-                    :appointTime="item.appointTime"></hisCard>
+                <van-tab title="历史订单" class="scroll_item">
+                    <van-list v-model="scrollSetting2.loading"
+                        :finished="scrollSetting2.finished"
+                        finished-text="没有更多了"
+                        @load="getHisList2"
+                    >
+                        <hisCard v-for="item in hisCardList2" :key="item.id"
+                        :status="item.status" 
+                        :orderList="item.detailList" 
+                        :orderId="item.id" 
+                        :orderTime="item.createTime" 
+                        :appointTime="item.bookTime" 
+                        :checkCode="item.checkCode" 
+                        :useType="item.useType" 
+                        @refundOrder="refundOrder"
+                        @cancelOrder="cancelOrder"></hisCard>
+                    </van-list>
                 </van-tab>
             </van-tabs>
         </div>
@@ -27,72 +47,111 @@
 
 <script>
 import hisCard from './hisCard'
+import { ajaxPost, ajaxGet } from '@/common/js/public.js'
+import { apiUrl } from '@/common/js/api.js'
 
 export default {
     data () {
         return {
-            hisCardList: [
-                {
-                    id: 1323441243,
-                    status: 0,
-                    orderList: [{
-                        name: '拿铁',
-                        count: 1
-                    },{
-                        name: '抹茶拿铁',
-                        count: 2
-                    },{
-                        name: '牛排',
-                        count: 1
-                    }],
-                    orderTime: '2019-07-13 08:30',
-                    appointTime: '13:20',
-                },{
-                    id: 1323441242,
-                    status: 1,
-                    orderList: [{
-                        name: '冰咖啡',
-                        count: 1
-                    }],
-                    orderTime: '2019-07-13 08:30',
-                    appointTime: '13:20',
-                },{
-                    id: 1323441241,
-                    status: 2,
-                    orderList: [{
-                        name: '拿铁',
-                        count: 1
-                    }],
-                    orderTime: '2019-07-13 08:30',
-                    appointTime: '13:20',
-                },{
-                    id: 1323441245,
-                    status: 3,
-                    orderList: [{
-                        name: '拿铁',
-                        count: 1
-                    },{
-                        name: '拿铁',
-                        count: 2
-                    },{
-                        name: '抹茶拿铁',
-                        count: 1
-                    }],
-                    orderTime: '2019-07-13 08:30',
-                    appointTime: '13:20',
-                }
-            ]
+            minH: 0,
+            hisCardList1: [],
+            hisCardList2: [],
+            page1: 0, //未支付
+            page2: 1, //历史订单
+            limit: 10,
+            totalPage1: 0,
+            totalPage2: 0,
+            scrollSetting1: {
+                loading: false,
+                finished: false
+            },
+            scrollSetting2: {
+                loading: false,
+                finished: false
+            },
         };
+    },
+    mounted() {
+        this.minH = document.documentElement.clientHeight - 60;
     },
     components: {hisCard},
     methods: {
+        getHisList1() {
+            this.page1 += 1;
+            ajaxPost(apiUrl.coffeeOrderList, {
+                page: this.page1,
+                limit: this.limit,
+                status: '0,1,3',
+            }, res => {
+                this.hisCardList1 = res.list;
+                this.totalPage1 = res.totalPage;
+                this.scrollSetting1.loading = false;
+            }, res => {
+                this.scrollSetting1.loading = false;
+                this.scrollSetting1.finished = true;
+            })
+            if (this.page1 > this.totalPage) {
+                this.scrollSetting1.finished = true;
+            }
+        },
+        getHisList2() {
+            this.page2 += 1;
+            this.scrollSetting2.loading = false;
+            ajaxPost(apiUrl.coffeeOrderList, {
+                page: this.page2,
+                limit: this.limit
+            }, res => {
+                this.hisCardList2 = res.list;
+                this.totalPage2 = res.totalPage;
+                this.scrollSetting2.loading = false;
+            }, res => {
+                this.scrollSetting2.loading = false;
+                this.scrollSetting2.finished = true;
+            })
+            if (this.page2 > this.totalPage) {
+                this.scrollSetting2.finished = true;
+            }
+        },
         toPay(obj) {
             //去支付
-            this.$router.push('/coffeeOrderComfirm');
+            this.$router.push(`/coffeeOrderComfirm?type=1&id=${obj.id}`);
+        },
+        cancelOrder(obj) {
+            let findOrder = (id, list) => {
+                for (let i=0; i<list.length; i++) {
+                    if (list[i].id == id) {
+                        list[i].status = 3;
+                    }
+                }
+                
+            }
+
+            findOrder(obj.id, this.hisCardList1)
+            findOrder(obj.id, this.hisCardList2)
+        },
+        refundOrder(obj) {
+            let findOrder = (id, list) => {
+                for (let i=0; i<list.length; i++) {
+                    if (list[i].id == id) {
+                        list[i].status = 5;
+                    }
+                }
+                
+            }
+
+            findOrder(obj.id, this.hisCardList1)
+            findOrder(obj.id, this.hisCardList2)
         }
     }
 }
 
 </script>
 <style lang='less' scoped>
+.order_history {
+    background-color: #f3f3f3;
+    .scroll_item {
+        padding: 0 .32rem .24rem;
+        border-radius: .1rem;
+    }
+}
 </style>
