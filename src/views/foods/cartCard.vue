@@ -3,11 +3,11 @@
     <div class="cart_card_list">
         <div class="title">{{title}}</div>
         <div class="price_box">
-            <div class="price">￥<span>{{price}}</span></div>
+            <div class="price">￥<span>{{price | filterPrice}}</span></div>
             <div class="stepper">
-                <span @click="sub(id, price)" class="btn sub">+</span>
+                <span @click.stop="sub(id, price)" class="btn sub">+</span>
                 <span>{{tCount}}</span>
-                <span @click="add(id, price)" class="btn add">+</span>
+                <span @click.stop="add(id, price)" class="btn add">+</span>
             </div>
         </div>
     </div> 
@@ -21,6 +21,11 @@ export default {
         };
     },
     props: ['title', 'price', 'count', 'id'],
+    filters: {
+        filterPrice(val) {
+            return (Number(val) / 100).toFixed(2);
+        }
+    },
     watch: {
         count(val) {
             this.tCount = val;

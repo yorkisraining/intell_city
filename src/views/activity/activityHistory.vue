@@ -39,7 +39,7 @@
 
 <script>
 import hisCard from './hisCard'
-import { ajaxPost, ajaxGet } from '@/common/js/public.js'
+import { ajaxGet } from '@/common/js/public.js'
 import { apiUrl } from '@/common/js/api.js'
 
 export default {
@@ -57,7 +57,7 @@ export default {
             hisCardList1: [],
             hisCardList2: [],
             page1: 0, //已报名
-            page2: 1, //已审核
+            page2: 0, //已审核
             totalPage1: 0,
             totalPage2: 0,
             limit: 10,
@@ -70,7 +70,7 @@ export default {
     methods: {
         getHisList1() {
             this.page1 += 1;
-            ajaxPost(apiUrl.activitySignedList, {
+            ajaxGet(apiUrl.activitySignedList, {
                 page: this.page1,
                 limit: this.limit
             }, res => {
@@ -81,13 +81,13 @@ export default {
                 this.scrollSetting1.loading = false;
                 this.scrollSetting1.finished = true;
             })
-            if (this.page1 > this.totalPage) {
+            if (this.page1 > this.totalPage1) {
                 this.scrollSetting1.finished = true;
             }
         },
         getHisList2() {
             this.page2 += 1;
-            ajaxPost(apiUrl.activityAuditedList, {
+            ajaxGet(apiUrl.activityAuditedList, {
                 page: this.page2,
                 limit: this.limit
             }, res => {
@@ -98,7 +98,7 @@ export default {
                 this.scrollSetting2.loading = false;
                 this.scrollSetting2.finished = true;
             })
-            if (this.page2 > this.totalPage) {
+            if (this.page2 > this.totalPage2) {
                 this.scrollSetting2.finished = true;
             }
         },
@@ -115,6 +115,9 @@ export default {
         &:first-child {
             top: .24rem;
         }
+    }
+    .scroll_item {
+        padding-top: .24rem;
     }
 }
 

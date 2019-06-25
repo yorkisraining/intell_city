@@ -3,7 +3,7 @@
     <div class="cart_card_list">
         <div class="title">{{title}}</div>
         <div class="price_box">
-            <div class="price">￥<span>{{price}}</span></div>
+            <div class="price">￥<span>{{price | filterPrice}}</span></div>
             <div class="stepper">
                 <span @click="sub(id, price)" class="btn sub">+</span>
                 <span>{{tCount}}</span>
@@ -24,6 +24,11 @@ export default {
     watch: {
         count(val) {
             this.tCount = val;
+        }
+    },
+    filters: {
+        filterPrice(val) {
+            return (Number(val) / 100).toFixed(2);
         }
     },
     methods: {

@@ -33,8 +33,8 @@
                 <div class="cart_left" @click="showCard">
                     <img src="@/assets/cart.png" class="cart_icon">
                     <div class="cart_price">
-                        <div>合计:<span class="total_price">￥{{totalPrice}}</span></div>
-                        <div class="preferent">已优惠{{preferentPrice}}</div>
+                        <div>合计:<span class="total_price">￥{{totalPrice | filterPrice}}</span></div>
+                        <div class="preferent">已优惠{{preferentPrice | filterPrice}}</div>
                     </div>
                 </div>
                 <div class="cart_right cart_btn" @click="toPay">下单</div>
@@ -50,7 +50,7 @@
             </van-popup> -->
             <van-popup v-model="isCartshow" position="bottom" class="popup_cart">
                 <div class="popup_cart_box">
-                    <div class="popup_cart_preferent">有优惠券可使用，已优惠{{preferentPrice}}元</div>
+                    <div class="popup_cart_preferent">有优惠券可使用，已优惠{{preferentPrice | filterPrice}}元</div>
                     <div class="popup_cart_title">已选服务</div>
                     <cartCard class="popup_cart_card" v-for="item in chooseList" 
                     :key="item.id" 
@@ -71,7 +71,7 @@
 import serveListCard from './serveListCard'
 import cartCard from './cartCard'
 import headerWithPhone from '@/components/headerWithPhone'
-import {ajaxPost} from '@/common/js/public'
+import { ajaxGet, ajaxPost } from '@/common/js/public'
 import { apiUrl } from '@/common/js/api.js'
 import { Toast } from 'vant';
 
@@ -89,44 +89,10 @@ export default {
             goodtype: '',
             //isTelshow: false,
             isCartshow: false,
-            preferentPrice: 100, //优惠金额
+            preferentPrice: 0, //优惠金额
             totalPrice: 0, //总价
             chooseList: [],
-            serveList: [{
-                "createTime": "2019-06-20T13:58:49.320Z",
-                "createUserId": 0,
-                "freeFlag": 0,
-                "goodName": "自主研发产权服务",
-                "goodType": "string",
-                "goodTypeName": "string",
-                "id": 54124321,
-                "imageUrl": "string",
-                "price": 0,
-                "remark": "入驻条件为，科技信息产业相关且入驻条件为",
-                "shopId": 0,
-                "sort": 0,
-                "status": 0,
-                "count": 0,
-                "updateTime": "2019-06-20T13:58:49.320Z",
-                "updateUserId": 0
-            },{
-                "createTime": "2019-06-20T13:58:49.320Z",
-                "createUserId": 0,
-                "freeFlag": 0,
-                "goodName": "自主研发产权服务",
-                "goodType": "string",
-                "goodTypeName": "string",
-                "id": 541243321,
-                "imageUrl": "string",
-                "price": 188,
-                "remark": "入驻条件为，科技信息产业相关且入驻条件为",
-                "shopId": 0,
-                "sort": 0,
-                "status": 0,
-                "count": 0,
-                "updateTime": "2019-06-20T13:58:49.320Z",
-                "updateUserId": 0
-            }]
+            serveList: []
         };
     },
     components: {serveListCard, cartCard, headerWithPhone },
@@ -139,11 +105,16 @@ export default {
         this.$store.commit('serveModule/initServeList');
         
     },
+    filters: {
+        filterPrice(val) {
+            return (Number(val) / 100).toFixed(2);
+        }
+    },
     methods: {
         getMsgList() {
             this.page += 1;
             //获取商品列表
-            ajaxPost(apiUrl.serveList, {
+            ajaxGet(apiUrl.serveList, {
                 page: this.page,
                 limit: this.limit,
                 goodType: this.goodtype
@@ -229,10 +200,8 @@ export default {
                         orderNum: this.chooseList[i].count
                     })
                 }
-                ajaxPost(apiUrl.pay, {
-                    list: list
-                }, res => {
-                    this.$router.push(`/foodsOrderComfirm?id=${res}&company=${this.spwCompanyMsg.companyName}&type=1`);
+                ajaxPost(apiUrl.pay, list, res => {
+                    this.$router.push(`/confirmOrder?id=${res}&type=1`);
                 })
 
             } else {
@@ -251,6 +220,7 @@ export default {
 </script>
 <style lang='less' scoped>
 .server_classify {
+    padding-top: .32rem;
     .head {
         position: fixed;
         width: 100%;

@@ -1,7 +1,7 @@
 <!-- information 资讯 -->
 <template>
     <div class="information_contain" :style="{minHeight: minH + 'px'}">
-        <van-tabs  @click="changeTabs">
+        <van-tabs  @click="changeTabs" sticky :offset-top="60">
             <van-tab title="招商信息">
                 <inforTabs :type="0"></inforTabs>
             </van-tab>

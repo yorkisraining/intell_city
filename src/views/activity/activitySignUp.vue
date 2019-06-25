@@ -32,7 +32,7 @@
 
 <script>
 import { Toast } from 'vant';
-import { ajaxPost, ajaxGet } from '@/common/js/public.js'
+import { ajaxPost } from '@/common/js/public.js'
 import { apiUrl } from '@/common/js/api.js'
 
 export default {

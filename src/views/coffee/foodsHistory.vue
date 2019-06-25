@@ -47,7 +47,7 @@
 
 <script>
 import hisCard from './hisCard'
-import { ajaxPost, ajaxGet } from '@/common/js/public.js'
+import { ajaxGet } from '@/common/js/public.js'
 import { apiUrl } from '@/common/js/api.js'
 
 export default {
@@ -57,7 +57,7 @@ export default {
             hisCardList1: [],
             hisCardList2: [],
             page1: 0, //未支付
-            page2: 1, //历史订单
+            page2: 0, //历史订单
             limit: 10,
             totalPage1: 0,
             totalPage2: 0,
@@ -78,7 +78,7 @@ export default {
     methods: {
         getHisList1() {
             this.page1 += 1;
-            ajaxPost(apiUrl.coffeeOrderList, {
+            ajaxGet(apiUrl.coffeeOrderList, {
                 page: this.page1,
                 limit: this.limit,
                 status: '0,1,3',
@@ -90,14 +90,14 @@ export default {
                 this.scrollSetting1.loading = false;
                 this.scrollSetting1.finished = true;
             })
-            if (this.page1 > this.totalPage) {
+            if (this.page1 > this.totalPage1) {
                 this.scrollSetting1.finished = true;
             }
         },
         getHisList2() {
             this.page2 += 1;
             this.scrollSetting2.loading = false;
-            ajaxPost(apiUrl.coffeeOrderList, {
+            ajaxGet(apiUrl.coffeeOrderList, {
                 page: this.page2,
                 limit: this.limit
             }, res => {
@@ -108,7 +108,7 @@ export default {
                 this.scrollSetting2.loading = false;
                 this.scrollSetting2.finished = true;
             })
-            if (this.page2 > this.totalPage) {
+            if (this.page2 > this.totalPage2) {
                 this.scrollSetting2.finished = true;
             }
         },

@@ -80,7 +80,7 @@
 <script>
 import anOrderList from '@/components/anOrderList'
 import { Toast, Dialog } from 'vant';
-import { ajaxPost, ajaxGet } from '@/common/js/public.js'
+import { ajaxGet } from '@/common/js/public.js'
 import { apiUrl } from '@/common/js/api'
 
 export default {
@@ -116,8 +116,7 @@ export default {
         this.orderId = query.id;
         this.type = query.type;
 
-        ajaxPost(`${apiUrl.baseURL}app/goodOrder/info/${this.orderId}`, {}, res => {
-            res = res.result.data;
+        ajaxGet(`${apiUrl.baseURL}app/goodOrder/info/${this.orderId}`, {}, res => {
             this.orderList = res.detailList;
             this.createTime = res.createTime;
             this.serveType = res.orderType;//服务分类
@@ -138,7 +137,7 @@ export default {
 
     },
     mounted() {
-        this.minH = document.documentElement.clientHeight;
+        this.minH = document.documentElement.clientHeight - 60;
     },
     methods: {
         pay(type) {
@@ -147,7 +146,7 @@ export default {
                 if (this.user.name != '' && this.user.tel != '' &&this.user.address != '') {
                     //提交地址信息
                     
-                    ajaxPost(`${apiUrl.baseURL}app/goodOrder/link/${this.orderId}`, {
+                    ajaxGet(`${apiUrl.baseURL}app/goodOrder/link/${this.orderId}`, {
                         address: this.user.address,
                         mobile: this.user.tel,
                         linkMan: this.user.username
@@ -170,6 +169,7 @@ export default {
 <style lang='less' scoped>
 .confirm_order {
     background-color: #f3f3f3;
+    position: relative;
     .confirm_order_box {
         padding: .24rem .32rem;
     }
@@ -231,7 +231,7 @@ export default {
         color: #393733;
         background-color: #FFCB44;
         border: 1px solid #DCDCDC;
-        position: fixed;
+        position: absolute;
         bottom: 0;
         &.default_btn {
             background-color: #FFFFFF;

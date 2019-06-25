@@ -3,7 +3,7 @@
     <div class="serve_contain"  :style="{minHeight: minH + 'px'}">
         <headerWithPhone :title="'企业服务'" :linkMsg="'服务记录'" class="head" @clickLink="toHis"></headerWithPhone>
         <div class="tabs_box">
-            <van-tabs v-model="active" color="#0D9BED" line-width=".4rem" title-active-color="#0D9BED" >
+            <van-tabs v-model="active" color="#0D9BED" line-width=".4rem" title-active-color="#0D9BED" sticky :offset-top="60">
                 <van-tab class="tabs_item" title="楼宇服务">
                     <building></building>
                 </van-tab>

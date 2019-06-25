@@ -21,26 +21,29 @@
                         :w="'.8rem'"
                         :h="'.8rem'"
                         :link="item.url"
+                        :blank="item.url != '/serve' ? true : false"
                         @toThisNavEmit="toThisNav"></mainNav>
                     </el-col>
                 </el-row>
             </div>
             <div class="list_item qy_block">
-                <div class="qy_title"  @click="toThisNav('/')">入驻企业成果展示<i class="el-icon-arrow-right"></i></div>
-                <div v-for="item in companyPerformanceList" :key="item.id" class="qy_detail_box" @click="toThisNav(item.url)">
-                    <img :src="item.image">
-                    <div class="qy_block_name">{{item.title}}</div>
-                    <div class="qy_block_desc">{{item.remark}}</div>
+                <div class="qy_title"  @click="toThisNav('/framesCompany')">入驻企业成果展示<i class="el-icon-arrow-right"></i></div>
+                <div v-for="item in companyPerformanceList" :key="item.id" class="qy_detail_box" @click="toThisNav(item.linkUrl, true)">
+                    <img :src="item.imageUrl">
+                    <div class="qy_block_name">{{item.title | filterCompanyTitle}}</div>
+                    <div class="qy_block_desc">{{item.absContent | filterCompanyContent}}</div>
                 </div>
             </div>
             <div class="list_item">
                 <globalTitle :title="'资讯'"  :link="'/information'" :showMore="true" @toThisNavEmit="toThisNav"></globalTitle>
                 <detailBox2 v-for="item in inforList" 
                 :key="item.id" 
-                :title="item.title" 
-                :remark="item.remark" 
-                :src="item.src"
+                :title="item.policyName" 
+                :remark="item.absContent" 
+                :src="item.mainImageUrl"
+                :id="item.id" 
                 :link="item.link" 
+                :typeName="item.typeName"
                 @toThisNavEmit="toThisNav"></detailBox2>
             </div>
             <div class="list_item">
@@ -98,7 +101,7 @@ import detailBox1 from './detailBox1'
 import detailBox2 from './detailBox2'
 import detailBox3 from './detailBox3'
 import carouselWithDesc from './carouselWithDesc'
-import { ajaxPost, ajaxGet } from '@/common/js/public.js'
+import { ajaxGet } from '@/common/js/public.js'
 import { apiUrl } from '@/common/js/api.js'
 
 export default {
@@ -115,7 +118,7 @@ export default {
                 name: 'project',
                 title: '项目',
                 src: require('@/assets/button_xm.png'),
-                link: ''
+                link: '/framesProject'
                 },
                 {
                 name: 'active',
@@ -130,56 +133,7 @@ export default {
                 interval: 2000,
                 indicatorPosition: 'inside',
             },
-            appList: [
-                {
-                    id: 1001,
-                    title: '场地预定',
-                    image: require('@/assets/nav_cdyd.png'),
-                    url: '/',
-                },
-                {
-                    id: 1002,
-                    title: '运动中心',
-                    image: require('@/assets/nav_hdzx.png'),
-                    url: '/',
-                },
-                {
-                    id: 1003,
-                    title: '共享书吧',
-                    image: require('@/assets/nav_gxsb.png'),
-                    url: '/',
-                },
-                {
-                    id: 1004,
-                    title: '企业服务',
-                    image: require('@/assets/nav_qyfw.png'),
-                    url: '/serve',
-                },
-                {
-                    id: 1005,
-                    title: '项目中心',
-                    image: require('@/assets/nav_xmzx.png'),
-                    url: '/',
-                },
-                {
-                    id: 1006,
-                    title: '育托中心',
-                    image: require('@/assets/nav_ytzx.png'),
-                    url: '/',
-                },
-                {
-                    id: 1007,
-                    title: '品牌中心',
-                    image: require('@/assets/nav_ppzx.png'),
-                    url: '/',
-                },
-                {
-                    id: 1008,
-                    title: '餐饮',
-                    image: require('@/assets/nav_cy.png'),
-                    url: '/',
-                },
-            ],
+            appList: [],
             cateList: [
                 {
                     id: 4001,
@@ -196,82 +150,73 @@ export default {
                     link: '/foods',
                 },
             ],
-            imageList: [{
-                "createTime": "2019-06-20T08:49:21.203Z",
-                "id": 1,
-                "image": require('@/assets/fj.jpg'),
-                "remark": "string",
-                "sort": 0,
-                "status": 0,
-                "title": "string",
-                "type": 0,
-                "url": "string"
-            }, {
-                "createTime": "2019-06-20T08:49:21.203Z",
-                "id": 2,
-                "image": require('@/assets/fj.jpg'),
-                "remark": "string",
-                "sort": 0,
-                "status": 0,
-                "title": "string",
-                "type": 0,
-                "url": "string"
-            }, {
-                "createTime": "2019-06-20T08:49:21.203Z",
-                "id": 3,
-                "image": require('@/assets/fj.jpg'),
-                "remark": "string",
-                "sort": 0,
-                "status": 0,
-                "title": "string",
-                "type": 0,
-                "url": "string"
-            }], //轮播图
+            imageList: [], //轮播图
             companyPerformanceList: [], //企业成果列表
             companyProjectList: [], //项目列表
             inforList: [], //资讯
-            projectCenterUrl: '', //项目中心链接
+            projectCenterUrl: '/framesProject', //项目中心链接
         };
     },
     components: {mainNav, globalTitle, detailBox1, detailBox2, detailBox3, carouselWithDesc},
+    filters: {
+        filterCompanyTitle(val) {
+            if (val) {
+                return val.length > 6 ? val.slice(0, 6) : val;
+            }
+        },
+        filterCompanyContent(val) {
+            if (val) {
+                return val.length > 12 ? val.slice(0, 12) : val;
+            }
+        }
+    },
     created() {
         //获取tooken
-        console.log(/\^?code=\w+/.exec(window.location.href)[0])
-        let code = /\^?code=\w+/.exec(window.location.href)[0].split('=')[1];
+        //let code = /\^?code=\w+/.exec(window.location.href)[0].split('=')[1];
         
-        ajaxPost(apiUrl.token, {
+        /* ajaxGet(apiUrl.token, {
             code: code
         }, res => {
             localStorage.setItem('token', token);
             sessionStorage.setItem('token', token);
+        }) */
+        ajaxGet(apiUrl.testToken, {}, res => {
+            localStorage.setItem('token', res.token);
+            sessionStorage.setItem('token', res.token);
         })
         
-        //请求banner
-        ajaxPost(apiUrl.banner, {
-            type: 1
-        }, res => {
-            this.imageList = res
-        })
-
         //请求首页所有数据
         ajaxGet(apiUrl.homeData, {}, res => {
+            res.appList.push({
+                id: 1004,
+                title: '企业服务',
+                image: require('@/assets/nav_qyfw.png'),
+                url: '/serve',
+            })
             for (let i=0; i<res.appList.length; i++) {
-                if (res.appList[i].title == '企业服务') {
-                    res.appList[i].url = '/serve';
+                if (res.appList[i].title == '政策') {
+                    
                 }
             }
+            this.appList = res.appList;
+            this.imageList = res.imageList;
             this.navList = res.appList; //导航
             this.companyPerformanceList = res.companyPerformanceList; //企业成果展示
             this.companyProjectList = res.companyProjectList; //项目列表
             this.inforList = res.inforList; //资讯
-            this.bottomNavList[1].link = res.projectCenterUrl; //底部url
         })
 
     },
     methods: {
-        toThisNav(url) {
-            console.log(url)
-            this.$router.push(url);
+        toThisNav(url, blank) {
+            if (blank) {
+                if (!/http/.test(url)) {
+                    url = `http://${url}`;
+                }
+                window.location.href = url;
+            } else {
+                this.$router.push(url);
+            }
         },
     }
 }
@@ -286,6 +231,7 @@ export default {
         }
         .el-carousel__item img {
             width: 100%;
+            height: 100%;
             border-radius: 4px;
         }
 
@@ -347,12 +293,16 @@ export default {
                     font-size: .3rem;
                     margin-bottom: .1rem;
                     font-weight: 600;
+                    width: 100%;
                 }
                 .qy_block_desc {
                     font-size: .2rem;
                     font-weight: 500;
                     line-height: .28rem;
                     color: #666;
+                    width: 100%;
+                    text-align: left;
+                    word-break: break-all;
                 }
             }
         }

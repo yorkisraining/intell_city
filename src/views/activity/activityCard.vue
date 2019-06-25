@@ -5,16 +5,14 @@
             <img :src="src" />
         </div>
         <div class="msg">
-            <div class="title">{{title}}</div>
-            <div class="msg_bottom">
-                <div class="detail_msg">
-                    <div>时间：<span>{{time}}</span></div>
-                    <div>地点：<span>{{address}}</span></div>
-                </div>
-                <div class="sign_up" @click.stop="signUp(id)">
-                    <div><img class="sign_up_icon" src="@/assets/activ_icon.png" /></div>
-                    <div>报名</div>
-                </div>
+            <div class="msg_left">
+                <div class="title">{{title}}</div>
+                <div class="detail_msg">时间：<span>{{time}}</span></div>
+                <div class="detail_msg">地点：<span>{{address}}</span></div>
+            </div>
+            <div class="sign_up" @click.stop="signUp(id)" >
+                <div><img class="sign_up_icon" src="@/assets/activ_icon.png" /></div>
+                <div>报名</div>
             </div>
         </div>
     </div>
@@ -26,8 +24,7 @@ export default {
         return {
         };
     },
-    props: ['id', 'title', 'src', 'time', 'address'],
-    components: {},
+    props: ['id', 'title', 'src', 'time', 'address', 'allowSign'],
     methods: {
         toDetail(id) {
             this.$router.push(`/activityDetail?id=${id}`)
@@ -41,15 +38,15 @@ export default {
 </script>
 <style lang='less' scoped>
 .avtivity_card {
-    display: flex;
-    padding: .24rem 0;
-    border-bottom: 1px solid #cfcfcf;
+    padding: .16rem .32rem;
+    position: relative;
+    background-color: #fff;
     .img_box {
-        width: 2.1rem;
-        height: 2.5rem;
-        border-radius: .1rem;
-        margin-right: .24rem;
+        width: 100%;
+        height: 2.4rem;
+        margin-bottom: .08rem;
         img {
+            border-radius: .1rem;
             width: 100%;
             height: 100%;
         }
@@ -58,40 +55,43 @@ export default {
         font-size: .34rem;
         color: #333;
         line-height: .48rem;
-        margin-top: .08rem;
-        margin-bottom: .24rem;
+        margin-bottom: .08rem;
     }
     .msg {
-        width: calc(100% - 2.1rem - .24rem);
-        .msg_bottom {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        margin-right: .16rem;
+        .msg_left {
+            width: calc(100% - .9rem);
             .detail_msg {
                 font-size: .22rem;
                 color: #666;
                 line-height: .3rem;
-                border-right: 1px dotted #cbcbcb;
-                width: calc(100% - .9rem);
-                padding-right: .4rem;
-                div {
-                    margin-bottom: .08rem;
-                    span {
-                        color: #999;
-                    }
-                    &:last-child {
-                        margin: 0;
-                    }
+                width: 100%;
+                margin-bottom: .1rem;
+                span {
+                    color: #999;
+                }
+                &:last-child {
+                    margin: 0;
                 }
             }
-            .sign_up {
-                width: .9rem;
-                text-align: center;
-                color: #FFA122;
-                font-size: .22rem;
-                .sign_up_icon {
-                    width: .22rem;
-                }
+        }
+        .sign_up {
+            position: absolute;
+            right: .32rem;
+            bottom: .16rem;
+            border-left: 1px dotted #cbcbcb;
+            width: .9rem;
+            height: 1rem;
+            display: flex;
+            flex-direction: column;
+            flex-wrap: nowrap;
+            justify-content: center;
+            align-items: center;
+            align-content: center;
+            color: #FFA122;
+            font-size: .22rem;
+            .sign_up_icon {
+                width: .22rem;
             }
         }
     }

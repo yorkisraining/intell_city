@@ -16,7 +16,10 @@ export default {
     props: ['title', 'returnBtn', 'linkMsg'],
     filters: {
         filterTitle(val) {
-            return val.length > 8 ? val.slice(0, 8) + '...' : val;
+            if (val != '' && val != undefined) {
+                return val.length > 8 ? val.slice(0, 8) + '...' : val;
+            }
+            return ''
         }
     },
     methods: {

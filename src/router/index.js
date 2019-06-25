@@ -16,13 +16,15 @@ import coffeeHistory from '@/views/coffee/foodsHistory'
 import coffeeOrderComfirm from '@/views/coffee/foodsOrderComfirm'
 import information from '@/views/information'
 import inforArticle from '@/views/information/inforArticle'
-import inforDetail from '@/views/information/inforDetailList'
+import inforDetails from '@/views/information/inforDetailList'
 import choosePayFn from '@/components/choosePayFn'
 import activity from '@/views/activity'
 import activityHistory from '@/views/activity/activityHistory'
 import activityDetail from '@/views/activity/activityDetail'
 import activitySignUp from '@/views/activity/activitySignUp'
 import activitySignUpSuccess from '@/views/activity/signupSuccess'
+import framesCompany from '@/views/frames/framesCompany'
+import framesProject from '@/views/frames/framesProject'
 
 Vue.use(Router)
 
@@ -133,9 +135,9 @@ const router = new Router({
             ifShowHeader: true
         }
     }, {
-        path: '/inforDetail',
+        path: '/inforDetails',
         name: '资讯',
-        component: inforDetail,
+        component: inforDetails,
         props: {
             returnBtn: true,
             ifShowHeader: true
@@ -208,6 +210,22 @@ const router = new Router({
         path: '/activitySignUpSuccess',
         name: '报名成功',
         component: activitySignUpSuccess,
+        props: {
+            returnBtn: true,
+            ifShowHeader: true
+        }
+    }, {
+        path: '/framesCompany',
+        name: '入驻企业成果展',
+        component: framesCompany,
+        props: {
+            returnBtn: true,
+            ifShowHeader: true
+        }
+    }, {
+        path: '/framesProject',
+        name: '项目',
+        component: framesProject,
         props: {
             returnBtn: true,
             ifShowHeader: true

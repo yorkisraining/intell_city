@@ -10,31 +10,34 @@
                 <div class="title">{{title}}</div>
                 <div class="brief">{{brief}}</div>
                 <div class="price_box">
-                    <div class="price">￥<span>{{price}}</span></div>
+                    <div class="price">￥<span>{{price | filterPrice}}</span></div>
                 </div>
             </div>
         </div> 
-        <div class="article_box">
-            {{article}}
-        </div>
+        <div class="article_box" v-html="article"></div>
     </div> 
 </template>
 
 <script>
 import globalHeader from '@/components/header'
-import {ajaxPost} from '@/common/js/public'
+import {ajaxGet} from '@/common/js/public'
 import { apiUrl } from '@/common/js/api.js'
 
 export default {
     data () {
         return {
             headeTitle: 'tite',
-            id: 54124321,
-            price: 188,
-            title: '自主研发产权服务',
-            brief: '入驻条件为，科技信息产业相关且入驻条件为',
+            id: 0,
+            price: 0,
+            title: '',
+            brief: '',
             article: '',
             src: ''
+        }
+    },
+    filters: {
+        filterPrice(val) {
+            return (Number(val) / 100).toFixed(2);
         }
     },
     created() {
@@ -42,12 +45,12 @@ export default {
         this.id = query.id;
         this.headeTitle = query.title;
 
-        ajaxPost(`${apiUrl.baseURL}app/good/info/service/${this.id}`, {}, res => {
+        ajaxGet(`${apiUrl.baseURL}app/good/info/service/${this.id}`, {}, res => {
             this.address = res.company.address;
             this.tel = res.company.linkPhone;
-            let list = this.goodList[0];
-            this.article = list.absContent;
-            this.src = list.imgUrl;
+            let list = res.goodList[0];
+            this.article = list.policyContent;
+            this.src = list.imageUrl;
             this.title = list.goodName;
             this.price = list.price;
             this.brief = list.remark;
@@ -69,7 +72,7 @@ export default {
         display: flex;
         align-items: top; 
         border-bottom: .16rem solid #F5F8FD;
-        padding-top: .22rem;
+        padding: .24rem .32rem;
         .serve_img {
             width: 1.8rem;
             height: 1.8rem;
@@ -77,6 +80,7 @@ export default {
             margin-right: .24rem;
             img {
                 width: 100%;
+                height: 100%;
             }
         }
         .serve_detail {

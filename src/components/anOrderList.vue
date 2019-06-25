@@ -3,7 +3,7 @@
     <div class="order_list_card">
         <div class="order_name">{{orderName}}</div>
         <div>
-            <div class="order_money">￥{{orderMoney}}</div>
+            <div class="order_money">￥{{orderMoney | filterPrice}}</div>
             <div class="order_count">X{{orderCount}}</div>
         </div>
     </div>
@@ -16,7 +16,11 @@ export default {
         };
     },
     props: ['orderName', 'orderMoney', 'orderCount'],
-    methods: {}
+    filters: {
+        filterPrice(val) {
+            return (Number(val) / 100).toFixed(2);
+        },
+    },
 }
 
 </script>

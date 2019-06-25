@@ -3,7 +3,7 @@
     <div class="confirm_order"  :style="{minHeight: minH + 'px'}">
         <div class="card_item">
             <div class="title">{{serveType}}</div>
-            <anOrderList class="order_list" v-for="item in orderList" :key="item.id" :orderName="item.name" :orderMoney="item.price" :orderCount="item.count"></anOrderList>
+            <anOrderList class="order_list" v-for="item in orderList" :key="item.id" :orderName="item.goodName" :orderMoney="item.price" :orderCount="item.orderNum"></anOrderList>
         </div>
         <div class="card_item">
             <div class="title">订单信息</div>
@@ -36,11 +36,11 @@
                 </div>
                 <div class="msg_list_item">
                     <div>优惠金额</div>
-                    <div class="orange">-￥{{discount}}</div>
+                    <div class="orange">-￥{{discount | filterPrice}}</div>
                 </div>
                 <div class="msg_list_item">
                     <div>合计金额</div>
-                    <div class="orange">￥{{totalPrice}}</div>
+                    <div class="orange">￥{{totalPrice | filterPrice}}</div>
                 </div>
             </div>
         </div>
@@ -66,7 +66,7 @@
 
 <script>
 import anOrderList from '@/components/anOrderList'
-import { ajaxPost, ajaxGet } from '@/common/js/public.js'
+import { ajaxGet } from '@/common/js/public.js'
 import { apiUrl } from '@/common/js/api.js'
 
 export default {
@@ -92,6 +92,14 @@ export default {
         filterTypeBtn(val) {
             //0 是订单详情 1 是订单确认
             return val == 0 ? '已完成' : '去支付';
+        },
+        filterPrice(val) {
+            return (Number(val) / 100).toFixed(2);
+        },
+        filterDisCount(val) {
+            if (val != '无') {
+                return (Number(val) / 100).toFixed(2);
+            }
         }
     },
     created() {
@@ -99,8 +107,7 @@ export default {
         this.orderId = query.id;
         this.type = query.type;
 
-        ajaxPost(`${apiUrl.baseURL}app/goodOrder/info/${this.orderId}`, {}, res => {
-            res = res.result.data;
+        ajaxGet(`${apiUrl.baseURL}app/goodOrder/info/${this.orderId}`, {}, res => {
             this.orderList = res.detailList;
             this.createTime = res.createTime;
             this.serveType = res.orderType;//服务分类
@@ -118,10 +125,12 @@ export default {
                     this.dpDiscount = `￥${discount[i].money}`;
                 }
             }
+        }, res => {
+            console.log(res)
         })
     },
     mounted() {
-        this.minH = document.documentElement.clientHeight;
+        this.minH = document.documentElement.clientHeight - 60;
     },
     methods: {
         clickAppoint() {
@@ -141,12 +150,12 @@ export default {
             if (this.type == 1) {
                 if (this.curBtn) {
                     //立即
-                    ajaxPost(`${apiUrl.baseUrl}app/goodOrder/book/1/${this.id}`, {}, res => {
+                    ajaxGet(`${apiUrl.baseUrl}app/goodOrder/book/1/${this.id}`, {}, res => {
                         this.$router.push(`/choosePayFn?module=2&id=${this.orderId}`);
                     })
                 } else {
                     //预约
-                    ajaxPost(`${apiUrl.baseUrl}app/goodOrder/book/2/${this.id}`, {
+                    ajaxGet(`${apiUrl.baseUrl}app/goodOrder/book/2/${this.id}`, {
                         bookTime: this.appointTime
                     }, res => {
                         this.$router.push(`/choosePayFn?module=2&id=${this.orderId}`);
@@ -163,6 +172,7 @@ export default {
 .confirm_order {
     background-color: #f3f3f3;
     padding: .24rem 0;
+    position: relative;
     .card_item {
         background-color: #fff;
         padding: .18rem .24rem .24rem;
@@ -218,7 +228,7 @@ export default {
         color: #393733;
         background-color: #FFCB44;
         border-radius: .1rem;
-        position: fixed;
+        position: absolute;
         bottom: 0;
         &.default_btn {
             background-color: #FFFFFF;

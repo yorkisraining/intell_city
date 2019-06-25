@@ -2,7 +2,7 @@
 <template>
     <div class="order_history" :style="{minHeight: minH + 'px'}">
         <div class="tabs_box">
-            <van-tabs>
+            <sticky :offset-top="60">
                 <van-tab title="未消费" class="scroll_item">
                     <van-list v-model="scrollSetting1.loading"
                         :finished="scrollSetting1.finished"
@@ -40,14 +40,14 @@
                     @cancelOrder="cancelOrder"></hisCard>
                     </van-list>
                 </van-tab>
-            </van-tabs>
+            </sticky>
         </div>
     </div>
 </template>
 
 <script>
 import hisCard from './hisCard'
-import { ajaxPost, ajaxGet } from '@/common/js/public.js'
+import { ajaxGet } from '@/common/js/public.js'
 import { apiUrl } from '@/common/js/api.js'
 
 export default {
@@ -78,7 +78,7 @@ export default {
     methods: {
         getHisList1() {
             this.page1 += 1;
-            ajaxPost(apiUrl.spwOrderList, {
+            ajaxGet(apiUrl.spwOrderList, {
                 page: this.page1,
                 limit: this.limit,
                 status: '0,1,3'
@@ -90,13 +90,13 @@ export default {
                 this.scrollSetting1.loading = false;
                 this.scrollSetting1.finished = true;
             })
-            if (this.page1 > this.totalPage) {
+            if (this.page1 > this.totalPage1) {
                 this.scrollSetting1.finished = true;
             }
         },
         getHisList2() {
             this.page2 += 1;
-            ajaxPost(apiUrl.spwOrderList, {
+            ajaxGet(apiUrl.spwOrderList, {
                 page: this.page2,
                 limit: this.limit
             }, res => {
@@ -107,7 +107,7 @@ export default {
                 this.scrollSetting2.loading = false;
                 this.scrollSetting2.finished = true;
             })
-            if (this.page2 > this.totalPage) {
+            if (this.page2 > this.totalPage2) {
                 this.scrollSetting2.finished = true;
             }
         },

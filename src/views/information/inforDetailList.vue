@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import { ajaxPost, ajaxGet } from '@/common/js/public.js'
+import { ajaxGet } from '@/common/js/public.js'
 import { apiUrl } from '@/common/js/api.js'
 import inforList from './inforList'
 
@@ -44,8 +44,7 @@ export default {
             type = query.type;
 
         this.classify = query.classify;
-            
-        switch (type) {
+        switch (Number(type)) {
             case 0:
             //招商
             this.ajaxUrl = apiUrl.inforPocilyList
@@ -63,10 +62,10 @@ export default {
     methods: {
         getList() {
             this.page += 1;
-            ajaxPost(this.ajaxUrl, {
+            ajaxGet(this.ajaxUrl, {
                 page: this.page,
                 limit: this.limit,
-                type: this.classify
+                type: this.classify //type 用前面的
             }, res => {
                 this.list = res.list;
                 this.totalPage = res.totalPage;

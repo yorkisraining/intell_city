@@ -33,7 +33,7 @@
 
 <script>
 import {aliPay, wxPay} from '@/common/js/pay'
-import { ajaxPost, ajaxGet } from '@/common/js/public.js'
+import { ajaxGet } from '@/common/js/public.js'
 import { apiUrl } from '@/common/js/api.js'
 
 export default {
@@ -61,7 +61,7 @@ export default {
         this.orderId = query.id;
         
         /* 查询订单详情，计算剩余时间，从下单开始24小时倒计时，做个倒计时 */
-        ajaxPost(`${apiUrl.baseUrl}app/goodOrder/info/${this.orderId}`, {}, res => {
+        ajaxGet(`${apiUrl.baseUrl}app/goodOrder/info/${this.orderId}`, {}, res => {
             this.endTime = new Date(res.createtime).getTime() + 1000 * 60 * 60 * 24;
             this.countTime = this.endTime - new Date().getTime();
             this.count();

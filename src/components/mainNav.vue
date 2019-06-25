@@ -1,6 +1,6 @@
 <!-- home/mainNav -->
 <template>
-    <div class="box" :style="{ marginBottom: mButton }" @click="clickFn(link)">
+    <div class="box" :style="{ marginBottom: mButton }" @click="clickFn(link, blank, title)">
         <div>
             <img :src="src" class="nav_img" :style="{width: w, height: h}">
         </div>
@@ -14,11 +14,14 @@ export default {
         return {
         };
     },
-    props: ['src', 'title', 'mButton', 'w', 'h', 'link'],
+    props: ['src', 'title', 'mButton', 'w', 'h', 'link', 'blank'],
     components: {},
     methods: {
-        clickFn(url) {
-            this.$emit('toThisNavEmit', url);
+        clickFn(url, blank, title) {
+            if (title == '政策') {
+                blank = false;
+            }
+            this.$emit('toThisNavEmit', url, blank);
         }
     }
 }

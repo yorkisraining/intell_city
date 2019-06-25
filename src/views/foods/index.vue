@@ -34,34 +34,34 @@
                 <foodsListCard v-for="item in foodsList" :key="item.id" 
                 class="food_list_card"
                 :price="item.price" 
-                :title="item.name" 
-                :brief="item.brief"
+                :title="item.goodName" 
+                :brief="item.remark"
                 :id="item.id"
                 :count="item.count"
-                :src="item.src" 
+                :src="item.imageUrl" 
                 :totalPrice="totalPrice"
                 :chooseListLength="chooseList.length"
                 @changePrice="changePrice" ></foodsListCard>
             </van-list>
         </div>
-        <div class="cart">
-            <div class="cart_left"  @click="showCard">
+        <div class="cart"  @click="showCard">
+            <div class="cart_left">
                 <img src="@/assets/cart.png" class="cart_icon">
                 <div class="cart_price">
-                    <div>合计:<span class="total_price">￥{{totalPrice}}</span></div>
-                    <div class="preferent">已优惠{{preferentPrice}}</div>
+                    <div>合计:<span class="total_price">￥{{totalPrice | filterPrice}}</span></div>
+                    <div class="preferent">已优惠{{preferentPrice | filterPrice}}</div>
                 </div>
             </div>
-            <div class="cart_right cart_btn" @click="toPay">下单</div>
+            <div class="cart_right cart_btn" @click.stop="toPay">下单</div>
         </div>
         <van-popup v-model="isCartshow" position="bottom" class="popup_cart">
             <div class="popup_cart_box">
-                <div class="popup_cart_preferent">有优惠券可使用，已优惠{{preferentPrice}}元</div>
+                <div class="popup_cart_preferent">有优惠券可使用，已优惠{{preferentPrice | filterPrice}}元</div>
                 <div class="popup_cart_title">已选服务</div>
                 <cartCard class="popup_cart_card" v-for="item in chooseList" 
                 :key="item.id" 
                 :id="item.id" 
-                :title="item.name" 
+                :title="item.goodName" 
                 :price="item.price" 
                 :count="item.count" 
                 :totalPrice="totalPrice" 
@@ -76,7 +76,7 @@
 import foodsListCard from './foodsListCard'
 import cartCard from './cartCard'
 import headerWithPhone from '@/components/headerWithPhone'
-import { ajaxPost, ajaxGet } from '@/common/js/public.js'
+import { ajaxGet, ajaxPost } from '@/common/js/public.js'
 import { apiUrl } from '@/common/js/api.js'
 import { Toast } from 'vant';
 
@@ -89,53 +89,8 @@ export default {
                 interval: 2000,
                 indicatorPosition: 'inside',
             },
-            spwCompanyMsg: {
-                "companyName": "三品王",
-                "createTime": "2019-06-20T09:25:16.400Z",
-                "createUserId": 0,
-                "id": 0,
-                "inTime": "2019-06-20T09:25:16.400Z",
-                "linkMan": "string",
-                "linkPhone": "15478451242",
-                "outTime": "2019-06-20T09:25:16.400Z",
-                "scope": "string",
-                "shortName": "string",
-                "status": 0,
-                "type": "string",
-                "updateTime": "2019-06-20T09:25:16.400Z",
-                "updateUserId": 0
-            },
-            topCarImgList: [{
-                "createTime": "2019-06-20T08:49:21.203Z",
-                "id": 1,
-                "image": require('@/assets/fj.jpg'),
-                "remark": "string",
-                "sort": 0,
-                "status": 0,
-                "title": "string",
-                "type": 0,
-                "url": "string"
-            }, {
-                "createTime": "2019-06-20T08:49:21.203Z",
-                "id": 2,
-                "image": require('@/assets/fj.jpg'),
-                "remark": "string",
-                "sort": 0,
-                "status": 0,
-                "title": "string",
-                "type": 0,
-                "url": "string"
-            }, {
-                "createTime": "2019-06-20T08:49:21.203Z",
-                "id": 3,
-                "image": require('@/assets/fj.jpg'),
-                "remark": "string",
-                "sort": 0,
-                "status": 0,
-                "title": "string",
-                "type": 0,
-                "url": "string"
-            }],
+            spwCompanyMsg: {},
+            topCarImgList: [],
             page: 0,
             limit: 10,
             totalPage: 0,
@@ -145,63 +100,42 @@ export default {
             },
             isTelshow: false,
             isCartshow: false,
-            foodsList: [{
-                id: 54124321,
-                price: 20,
-                name: '麻辣牛腩粉',
-                brief: '月销量八千，销量第一',
-                count: 0,
-                src: require('@/assets/th.jpg')
-            }, {
-                id: 415241,
-                price: 14,
-                name: '酸辣牛肉粉',
-                brief: '月销量300份',
-                count: 0,
-                src: require('@/assets/th.jpg')
-            }, {
-                id: 5325632,
-                price: 14.9,
-                name: '高汤牛肉粉',
-                brief: '日销50份，店长推荐',
-                count: 0,
-                src: require('@/assets/th.jpg')
-            }, {
-                id: 5325635,
-                price: 13.88,
-                name: '高汤牛肉粉',
-                brief: '日销50份，店长推荐',
-                count: 0,
-                src: require('@/assets/th.jpg')
-            }],//商品列表
+            foodsList: [],//商品列表
             totalPrice: 0, //总价
             chooseList: [],
-            preferentPrice: 100, //优惠金额
+            preferentPrice: 0, //优惠金额
         };
     },
     components: {foodsListCard, cartCard, headerWithPhone},
     created() {
+        this.$store.commit('cartModule/changeFoodsReduce', this.reduce);
+
         //重置vuex数据
         this.$store.commit('cartModule/resetSPW');
 
         //请求banner
-        ajaxPost(apiUrl.banner, {
+        ajaxGet(apiUrl.banner, {
             type: 2
         }, res => {
             this.topCarImgList = res
         })
         
         //请求公司信息
-        ajaxPost(apiUrl.spwMsg, {}, res => {
+        ajaxGet(apiUrl.spwMsg, {}, res => {
             this.spwCompanyMsg = res;
         })
 
+    },
+    filters: {
+        filterPrice(val) {
+            return (Number(val) / 100).toFixed(2);
+        },
     },
     methods: {
         getMsgList() {
             this.page += 1;
             //获取商品列表
-            ajaxPost(apiUrl.spwGoods, {
+            ajaxGet(apiUrl.spwGoods, {
                 page: this.page,
                 limit: this.limit
             }, res => {
@@ -293,9 +227,7 @@ export default {
                         orderNum: this.chooseList[i].count
                     })
                 }
-                ajaxPost(apiUrl.pay, {
-                    list: list
-                }, res => {
+                ajaxPost(apiUrl.pay, list, res => {
                     this.$router.push(`/foodsOrderComfirm?id=${res}&company=${this.spwCompanyMsg.companyName}&type=1`);
                 })
             } else {

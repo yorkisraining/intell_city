@@ -1,11 +1,11 @@
-import { ajaxPost, ajaxGet } from '@/common/js/public.js'
+import { ajaxGet } from '@/common/js/public.js'
 import { apiUrl } from '@/common/js/api.js'
 
 //请求商务首页
 export const getBusiHomeData = ({
     commit
 }, obj) => {
-    ajaxPost(apiUrl.inforBusiIndex, {
+    ajaxGet(apiUrl.inforBusiIndex, {
         num: obj
     }, res => {
         commit('changeBusiHomeList', res);
@@ -16,7 +16,7 @@ export const getBusiHomeData = ({
 export const getBusiList = ({
     commit
 }, obj) => {
-    ajaxPost(apiUrl.inforBusiList, {
+    ajaxGet(apiUrl.inforBusiList, {
         type: obj.type,
         page: obj.page,
         limit: obj.limit
@@ -35,7 +35,7 @@ export const getBusiList = ({
 export const getPolicyHomeData = ({
     commit
 }, obj) => {
-    ajaxPost(apiUrl.inforPocilyIndex, {
+    ajaxGet(apiUrl.inforPocilyIndex, {
         num: obj
     }, res => {
         commit('changePolicyHomeList', res);
@@ -46,7 +46,7 @@ export const getPolicyHomeData = ({
 export const getPolicyList = ({
     commit
 }, obj) => {
-    ajaxPost(apiUrl.inforPocilyList, {
+    ajaxGet(apiUrl.inforPocilyList, {
         type: obj.type,
         page: obj.page,
         limit: obj.limit
@@ -65,7 +65,7 @@ export const getPolicyList = ({
 export const getRentHomeData = ({
     commit
 }, obj) => {
-    ajaxPost(apiUrl.inforRentIndex, {
+    ajaxGet(apiUrl.inforRentIndex, {
         num: obj
     }, res => {
         commit('changeRentHomeList', res);
@@ -76,7 +76,7 @@ export const getRentHomeData = ({
 export const getRentList = ({
     commit
 }, obj) => {
-    ajaxPost(apiUrl.inforRentList, {
+    ajaxGet(apiUrl.inforRentList, {
         type: obj.type,
         page: obj.page,
         limit: obj.limit

@@ -15,8 +15,6 @@ http://pay.cloudbae.cn:39000/mv/api/doc#
 
 - 退款原因
 
-- 倒计时
-
 - 订单记录状态颜色
 
 - 各种记录页的tab

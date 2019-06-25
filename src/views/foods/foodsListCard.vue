@@ -8,11 +8,11 @@
             <div class="title">{{title}}</div>
             <div class="brief">{{brief}}</div>
             <div class="price_box">
-                <div class="price">￥<span>{{price}}</span></div>
+                <div class="price">￥<span>{{price | filterPrice}}</span></div>
                 <div class="stepper">
-                    <span @click="sub(id, price)" class="btn sub" v-show="tCount != 0">+</span>
+                    <span @click.stop="sub(id, price)" class="btn sub" v-show="tCount != 0">+</span>
                     <span v-show="tCount != 0">{{tCount}}</span>
-                    <span @click="add(id, price)" class="btn add">+</span>
+                    <span @click.stop="add(id, price)" class="btn add">+</span>
                 </div>
             </div>
         </div>
@@ -30,6 +30,11 @@ export default {
     watch: {
         count(val) {
             this.tCount = val;
+        }
+    },
+    filters: {
+        filterPrice(val) {
+            return (Number(val) / 100).toFixed(2);
         }
     },
     methods: {

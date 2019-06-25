@@ -18,7 +18,7 @@
 
 <script>
 import { apiUrl } from '@/common/js/api'
-import { ajaxPost, ajaxGet } from '@/common/js/public.js'
+import { ajaxGet } from '@/common/js/public.js'
 import { Dialog  } from 'vant';
 
 export default {

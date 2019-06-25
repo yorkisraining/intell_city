@@ -4,7 +4,7 @@
         <div class="carousel_block">
             <el-carousel :height="setting.height" >
                 <el-carousel-item v-for="item in topCarImgList" :key="item.id" >
-                    <img :src="item.src" alt="" @click="toThisNav(item.link)">
+                    <img :src="item.image" alt="" @click="toThisNav(item.url)">
                 </el-carousel-item>
             </el-carousel>
         </div>
@@ -16,7 +16,7 @@
 
 <script>
 import inforCard from './inforCard'
-import { ajaxPost, ajaxGet } from '@/common/js/public.js'
+import { ajaxGet } from '@/common/js/public.js'
 import { apiUrl } from '@/common/js/api.js'
 
 export default {
@@ -28,45 +28,8 @@ export default {
                 interval: 2000,
                 indicatorPosition: 'inside',
             },
-            topCarImgList: [{
-                id: 1010,
-                src: require('@/assets/fj.jpg'),
-                link: '/',
-            },{
-                id: 1011,
-                src: require('@/assets/fj.jpg'),
-                link: '/',
-            },{
-                id: 1012,
-                src: require('@/assets/fj.jpg'),
-                link: '/',
-            },{
-                id: 1013,
-                src: require('@/assets/fj.jpg'),
-                link: '/',
-            }],
-            inforCardList: [{
-                "list": [
-                {
-                    "absContent": "string",
-                    "createTime": "2019-06-22T06:59:43.423Z",
-                    "createUserId": 0,
-                    "id": 0,
-                    "policyCode": "string",
-                    "policyContent": "string",
-                    "policyName": "string",
-                    "recommendFlag": 0,
-                    "sort": 0,
-                    "status": 0,
-                    "stickieFlag": 0,
-                    "type": "string",
-                    "updateTime": "2019-06-22T06:59:43.423Z",
-                    "updateUserId": 0
-                }
-                ],
-                "type": "string",
-                "typeName": "string"
-            }],
+            topCarImgList: [],
+            inforCardList: [],
             
         };
     },
@@ -92,17 +55,18 @@ export default {
     },
     methods: {
         getBanner(url, type) {
-            ajaxPost(url, {
+            ajaxGet(url, {
                 type: type
             }, res => {
                 this.topCarImgList = res;
             })
         },
         getList(url) {
-            ajaxPost(url, {
+            ajaxGet(url, {
                 num: 5
             }, res => {
-                this.inforCardList = res;
+                this.inforCardList = res
+                console.log(this.inforCardList)
             })
         }
     },
@@ -112,6 +76,7 @@ export default {
 <style lang='less' scoped>
     .el-carousel__item img {
         width: 100%;
+        height: 100%;
         border-radius: 4px;
     }
 

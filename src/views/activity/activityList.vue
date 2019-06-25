@@ -1,6 +1,6 @@
 <!-- activityList  -->
 <template>
-    <div class="avtivity_list">
+    <div class="avtivity_list"  :style="{minHeight: minH + 'px'}">
         <van-list v-model="scrollSetting.loading"
             :finished="scrollSetting.finished"
             finished-text="没有更多了"
@@ -10,7 +10,9 @@
             :title="item.actName" 
             :time="item.activeTime" 
             :address="item.actPlace" 
-            :src="item.imageList[0].url" 
+            :id="item.id" 
+            :allowSign="item.allowSign" 
+            :src="item.imageList != null ? item.imageList[0].url : ''" 
             class="list_card"></activityCard>
         </van-list>
     </div>
@@ -18,12 +20,13 @@
 
 <script>
 import activityCard from './activityCard'
-import { ajaxPost, ajaxGet } from '@/common/js/public.js'
+import { ajaxGet } from '@/common/js/public.js'
 import { apiUrl } from '@/common/js/api.js'
 
 export default {
     data () {
         return {
+            minH: 0,
             scrollSetting: {
                 loading: false,
                 finished: false
@@ -36,25 +39,23 @@ export default {
     },
     components: {activityCard},
     props: ['type'],
-    /* type
-        0 沙龙
-        1 创业
-        2 培训
-        3 全部
-    */
+    mounted() {
+        this.minH = document.documentElement.clientHeight - 112;
+    },
     methods: {
         getMsgList() {
             this.page += 1;
             //获取活动列表
             this.scrollSetting.loading = false;
-            ajaxPost(apiUrl.activityList, {
+            ajaxGet(apiUrl.activityList, {
                 page: this.page,
                 limit: this.limit,
-                type: this.type
+                actType: this.type
             }, res => {
                 this.list = res.list;
                 this.totalPage = res.totalPage;
                 this.scrollSetting.loading = false;
+                console.log(this.list)
             }, res => {
                 this.scrollSetting.loading = false;
                 this.scrollSetting.finished = true;
@@ -69,6 +70,10 @@ export default {
 </script>
 <style lang='less' scoped>
 .avtivity_list {
-    padding: 0 .32rem;
+    background-color: #f3f3f3;
+    padding-top: .24rem;
+    .list_card {
+        margin-bottom: .1rem;
+    }
 }
 </style>

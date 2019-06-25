@@ -2,14 +2,14 @@
 <template>
     <div class="serve_his_box" :style="{minHeight: minH + 'px'}">
         <div class="tabs_box">
-            <van-tabs  color="#FFA036" line-width=".4rem" title-active-color="#333" class="serve_tab_line">
+            <van-tabs  color="#FFA036" line-width=".4rem" title-active-color="#333" class="serve_tab_line" sticky :offset-top="60">
                 <van-tab title="未支付" class="scroll_item">
                     <van-list v-model="scrollSetting1.loading"
                         :finished="scrollSetting1.finished"
                         finished-text="没有更多了"
                         @load="getHisList1"
                     >
-                        <hisCard v-for="item in hisCardList1" :key="item.id" v-if="item.status == 0" 
+                        <hisCard v-for="item in hisCardList1" :key="item.id" 
                         :status="item.status" 
                         :orderList="item.detailList" 
                         :orderId="item.id" 
@@ -46,71 +46,17 @@
 <script>
 import hisCard from './hisCard'
 import VueBetterScroll from 'vue2-better-scroll'
-import { ajaxPost, ajaxGet } from '@/common/js/public.js'
+import { ajaxGet } from '@/common/js/public.js'
 import { apiUrl } from '@/common/js/api.js'
 
 export default {
     data () {
         return {
             minH: 0,
-            hisCardList1: [
-                {
-                    id: 1323441243,
-                    status: 0,
-                    orderName: '商标注册服务',
-                    orderTime: '2019-07-13 08:30'
-                },{
-                    id: 1323441242,
-                    status: 1,
-                    orderName: '商标注册服务',
-                    orderTime: '2019-07-13 08:30'
-                },{
-                    id: 1323441241,
-                    status: 2,
-                    orderName: '商标注册服务',
-                    orderTime: '2019-07-13 08:30'
-                },{
-                    id: 1323441245,
-                    status: 3,
-                    orderName: '商标注册服务',
-                    orderTime: '2019-07-13 08:30'
-                },{
-                    id: 1323441245,
-                    status: 4,
-                    orderName: '商标注册服务',
-                    orderTime: '2019-07-13 08:30'
-                }
-            ],
-            hisCardList2: [
-                {
-                    id: 1323441243,
-                    status: 0,
-                    orderName: '商标注册服务',
-                    orderTime: '2019-07-13 08:30'
-                },{
-                    id: 1323441242,
-                    status: 1,
-                    orderName: '商标注册服务',
-                    orderTime: '2019-07-13 08:30'
-                },{
-                    id: 1323441241,
-                    status: 2,
-                    orderName: '商标注册服务',
-                    orderTime: '2019-07-13 08:30'
-                },{
-                    id: 1323441245,
-                    status: 3,
-                    orderName: '商标注册服务',
-                    orderTime: '2019-07-13 08:30'
-                },{
-                    id: 13234441245,
-                    status: 4,
-                    orderName: '商标注册服务',
-                    orderTime: '2019-07-13 08:30'
-                }
-            ],
+            hisCardList1: [],
+            hisCardList2: [],
             page1: 0, //未支付
-            page2: 1, //历史订单
+            page2: 0, //历史订单
             limit: 10,
             totalPage1: 0,
             totalPage2: 0,
@@ -132,7 +78,7 @@ export default {
     methods: {
         getHisList1(page) {
             this.page1 += 1;
-            ajaxPost(apiUrl.serveList, {
+            ajaxGet(apiUrl.serveOrderList, {
                 page: this.page1,
                 limit: this.limit,
                 status: '0'
@@ -144,13 +90,13 @@ export default {
                 this.scrollSetting1.loading = false;
                 this.scrollSetting1.finished = true;
             })
-            if (this.page1 > this.totalPage) {
+            if (this.page1 > this.totalPage1) {
                 this.scrollSetting1.finished = true;
             }
         },
         getHisList2(page) {
             this.page2 += 1;
-            ajaxPost(apiUrl.serveList, {
+            ajaxGet(apiUrl.serveOrderList, {
                 page: this.page2,
                 limit: this.limit
             }, res => {
@@ -161,7 +107,7 @@ export default {
                 this.scrollSetting2.loading = false;
                 this.scrollSetting2.finished = true;
             })
-            if (this.page2 > this.totalPage) {
+            if (this.page2 > this.totalPage2) {
                 this.scrollSetting2.finished = true;
             }
         },

@@ -33,7 +33,7 @@
 
 <script>
 import orderCard from './orderCard'
-import { ajaxPost, ajaxGet } from '@/common/js/public.js'
+import { ajaxGet } from '@/common/js/public.js'
 import { apiUrl } from '@/common/js/api.js'
 
 export default {
@@ -46,10 +46,10 @@ export default {
     },
     components: {orderCard},
     created() {
-        ajaxPost(apiUrl.buildingNone, {}, res => {
+        ajaxGet(apiUrl.buildingNone, {}, res => {
             this.orderCardList1 = res;
         })
-        ajaxPost(apiUrl.buildingYes, {}, res => {
+        ajaxGet(apiUrl.buildingYes, {}, res => {
             this.orderCardList2 = res;
         })
     },

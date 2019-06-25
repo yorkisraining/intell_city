@@ -8,7 +8,10 @@
         <div class="bottom_box">
             <div class="order_list">
                 <div class="order_list_box">
-                    <div class="order_list_item" v-for="(item, index) in orderList" :key="index">{{item.name}}<span> ×{{item.count}}</span></div>
+                   <anOrderList v-for="(item, index) in orderList"  :key="index" 
+                   :orderName="item.goodName" 
+                   :orderMoney="item.price" 
+                   :orderCount="item.orderNum"></anOrderList>
                 </div>
                 <div class="order_time">
                     <div style="color: #999;">下单时间</div>
@@ -17,7 +20,7 @@
             </div>
             <div class="msg">
                 <div class="appoint_time">预约时间 <span> {{appointTime}}</span></div>
-                <div v-if="status == 0 || status == 1">
+                <div v-if="status == 0 || status == 1" class="flex_btn">
                     <div class="status_btn cancel" v-if="status == 0" @click.stop="cacelOrder(orderId)">取消订单</div>
                     <div class="status_btn cancel" v-if="status == 1" @click.stop="refund(orderId)">申请退款</div>
                     <div class="status_btn" @click.stop="toPay(status, orderId)" v-if="status != 1">{{status | filterBtn}}</div>
@@ -30,8 +33,9 @@
 
 <script>
 import { apiUrl } from '@/common/js/api'
-import { ajaxPost, ajaxGet } from '@/common/js/public.js'
+import { ajaxGet } from '@/common/js/public.js'
 import { Dialog  } from 'vant';
+import anOrderList from '@/components/anOrderList'
 
 export default {
     data () {
@@ -39,6 +43,7 @@ export default {
         };
     },
     props: ['orderId', 'status', 'orderList', 'orderTime', 'appointTime', 'checkCode', 'useType'],
+    components: {anOrderList},
     filters: {
         filterStatus(val) {
             /* 未付款0;已付款1;已过期2;已撤销9;已接单3;已使用4;已退款5;已申请6 */
@@ -102,8 +107,7 @@ export default {
                 message: '是否确认取消订单？'
             }).then(() => {
                 // on confirm
-                ajaxPost(`${apiUrl.baseURL}app/goodOrder/cancel/${id}`, {}, res => {
-                    res = res.result.data;
+                ajaxGet(`${apiUrl.baseURL}app/goodOrder/cancel/${id}`, {}, res => {
                     this.$emit('cancelOrder', {
                         id: id
                     })
@@ -116,11 +120,10 @@ export default {
                 message: '是否确认退款？'
             }).then(() => {
                 // on confirm
-                ajaxPost(apiUrl.refund, {
+                ajaxGet(apiUrl.refund, {
                     orderId: id,
                     reason: ''
                 }, res => {
-                    res = res.result.data;
                     this.$emit('refundOrder', {
                         id: id
                     })
@@ -211,6 +214,9 @@ export default {
             }
         }
     }   
+    .flex_btn {
+        display: flex;
+    }
 }
 
 </style>

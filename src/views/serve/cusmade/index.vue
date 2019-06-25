@@ -7,23 +7,20 @@
 
 <script>
 import cusCard from './cusCard'
+import { ajaxGet } from '@/common/js/public.js'
+import { apiUrl } from '@/common/js/api.js'
 
 export default {
     data () {
         return {
+            cardList: []
         };
     },
     components: {cusCard},
-    computed: {
-        cardList() {
-            return this.$store.state.serveModule.serveCardList;
-        }
-    },
     created() {
-        if (this.cardList.length == 0) {
-            //请求服务大类
-            this.$store.dispatch('serveModule/getServeGoodsData');
-        }
+        ajaxGet(apiUrl.cusmadeSever, {}, res => {
+            this.cardList = res;
+        })
     },
     methods: {
         toDetail(code, name) {

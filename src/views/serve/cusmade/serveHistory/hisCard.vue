@@ -6,9 +6,9 @@
             <span class="status">{{status | filterStatus}}</span>
         </div>
         <div class="bottom_box">
-            <div class="msg">
-                <div class="order_name">{{orderName}}</div>
-                <div class="order_time">{{orderTime}}</div>
+            <div class="msg" v-for="item in orderList" :key="item.id">
+                <div class="order_name">{{item.goodName}}</div>
+                <div class="order_time">{{item.createTime}}</div>
             </div>
             <div v-if="status == 0 || status == 1">
                 <div class="status_btn cancel" v-if="status == 0" @click.stop="cacelOrder(orderId)">取消订单</div>
@@ -21,7 +21,7 @@
 
 <script>
 import { apiUrl } from '@/common/js/api'
-import { ajaxPost, ajaxGet } from '@/common/js/public.js'
+import { ajaxGet } from '@/common/js/public.js'
 import { Dialog  } from 'vant';
 
 export default {
@@ -29,7 +29,7 @@ export default {
         return {
         };
     },
-    props: ['orderId', 'status', 'orderName', 'orderTime'],
+    props: ['orderId', 'status', 'orderName', 'orderTime', 'orderList'],
     filters: {
         filterStatus(val) {
             switch (val) {
@@ -82,7 +82,7 @@ export default {
                 message: '是否确认取消订单？'
             }).then(() => {
                 // on confirm
-                ajaxPost(`${apiUrl.baseURL}app/goodOrder/cancel/${id}`, {}, res => {
+                ajaxGet(`${apiUrl.baseURL}app/goodOrder/cancel/${id}`, {}, res => {
                     res = res.result.data;
                     this.$emit('cancelOrder', {
                         id: id
@@ -98,7 +98,7 @@ export default {
                 message: '是否确认退款？'
             }).then(() => {
                 // on confirm
-                ajaxPost(apiUrl.refund, {
+                ajaxGet(apiUrl.refund, {
                     orderId: id,
                     reason: ''
                 }, res => {
@@ -121,7 +121,7 @@ export default {
 <style lang='less' scoped>
 .hisCard_box {
     padding: .24rem;
-    margin-top: .24rem;
+    margin: .24rem .32rem 0;
     background-color: #fff;
     border-radius: .1rem;
     overflow: hidden;

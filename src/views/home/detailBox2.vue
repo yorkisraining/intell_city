@@ -1,13 +1,13 @@
 <!-- home/detailBox2 左图右文 -->
 <template>
     <div>
-        <div class="box" @click="clickFn(link)">
+        <div class="box" @click="clickFn(title, id)">
             <img :src="src" class="list_img">
             <div class="list_desc">
                 <p class="title">{{title}}</p>
-                <p class="remark">{{remark}}</p>
+                <p class="remark" v-html="remark"></p>
                 <div class="mark">
-                    <span class="green">政策法规</span>
+                    <span class="green">{{typeName}}</span>
                     <span class="fg">|</span>
                     <span class="time">2019/06/14</span>
                 </div>
@@ -22,10 +22,10 @@ export default {
         return {
         };
     },
-    props: ['title', 'remark', 'src', 'link'],
+    props: ['title', 'remark', 'src', 'link', 'typeName', 'type', 'id'],
     methods: {
-        clickFn(url) {
-            this.$emit('toThisNavEmit', url);
+        clickFn(title, id) {
+            this.$router.push( `/inforArticle?id=${id}&title=${title}&type=0`)
         }
     }
 }
@@ -39,6 +39,7 @@ export default {
         margin: 0 .15rem;
         border-bottom: 1px solid #f2f2f2;
         cursor: pointer;
+        display: flex;
         .list_img {
             width: 1.4rem;
             height: 1.6rem;
@@ -49,10 +50,10 @@ export default {
         .list_desc {
             vertical-align:top;
             display: inline-block;
-            margin: 0 auto;
             opacity: .8;
             text-align: left;
             word-break: break-all;
+            width: calc(100% - 1.4rem - .16rem);
             .title {
                 font-size: .3rem;
                 color: #333;
@@ -62,6 +63,9 @@ export default {
                 font-size: .22rem;
                 line-height: .3rem;
                 color: #999;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
                 
             }
             .mark {

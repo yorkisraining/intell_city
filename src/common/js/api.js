@@ -6,6 +6,7 @@
 const environment = {
     onLine: 'http://www.build.com:8080/', //生产环境请求地址
     dev: 'http://139.224.194.252:8504/', //开发环境请求地址
+    text: 'http://139.224.194.252:8504/'
 }
 
 // 接口前缀
@@ -21,7 +22,8 @@ if (host.indexOf('www.build.com') > -1) {
     baseHost = environment.dev;
 }
 
-baseURL = baseHost;
+//baseURL = baseHost;
+baseURL = environment.text;
 
 // 接口集合
 export const apiUrl = {
@@ -72,13 +74,15 @@ export const apiUrl = {
     //咖啡订单列表
     coffeeOrderList: baseURL + 'app/goodOrder/my/list/coffee',
     //服务订单列表
-    spwOrderList: baseURL + 'app/goodOrder/my/list/customService',
+    serveOrderList: baseURL + 'app/goodOrder/my/list/customService',
     //服务商品列表
     serveList: baseURL + 'app/good/list', //ok
     //未解决楼宇服务
     buildingNone: baseURL + 'app/building/list/nonProcess',
     //已解决楼宇服务
     buildingYes: baseURL + 'app/building/list/processed',
+    //活动类型
+    activityTye: baseURL + 'app/act/actType/list',
     //可分页活动列表
     activityList: baseURL + 'app/act/page',
     //已报名活动信息分页

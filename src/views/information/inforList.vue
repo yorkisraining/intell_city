@@ -3,7 +3,7 @@
     <div class="infor_list" @click="toArticle(id, title, type)">
         <div :class="['msg_box', {noImg: src == ''}]">
             <div class="title">{{title}}</div>
-            <div class="brief">{{brief}}</div>
+            <div class="brief" v-html="brief">{{brief}}</div>
         </div>
         <div class="img_box" v-if="src">
             <img :src="src" />

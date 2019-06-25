@@ -12,39 +12,18 @@ let token = localStorage.getItem('token') || sessionStorage.getItem('token');
 axios.interceptors.request.use(config => {
     if (token) {
         // 每次发送请求之前判断是否存在token，如果存在，则统一在http请求的header都加上token，不用每次请求都手动添加了
-        config.headers.Authorization = token;
+        config.headers.cvsToken = token;
     }
     return config;
 }, error => {
     return Promise.reject(error);
 })
 
-// 响应拦截器，拦截401错误，并重新跳入登页重新获取token
-/* axios.interceptors.response.use(response => {
-    return response;
-}, error => {
-    if (error.response) {
-        switch (error.response.status) {
-            case 401:
-                router.replace({
-                    path: 'login',
-                    query: {
-                        redirect: router.currentRoute.fullPath
-                    } //登录成功后跳入浏览的当前页面
-                })
-                break;
-            default:
-                break;
-        }
-    }
-    return Promise.reject(error);
-}) */
-
 // 发送请求及接收后处理
 export const ajaxPost = (url, params, callback, errorCallback) => {
     axios.post(url, params)
         .then(function(response) {
-            callback(response.result.data);
+            callback(response.data.result.data);
         })
         .catch(function(error) {
             if (errorCallback) {
@@ -55,9 +34,11 @@ export const ajaxPost = (url, params, callback, errorCallback) => {
 }
 
 export const ajaxGet = (url, params, callback, errorCallback) => {
-    axios.get(url, params)
+    axios.get(url, {
+        params: params
+    })
         .then(function(response) {
-            callback(response.result.data);
+            callback(response.data.result.data);
         })
         .catch(function(error) {
             if (errorCallback) {

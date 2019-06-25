@@ -5,8 +5,8 @@
             <div class="left_item">
                 <span class="title">{{title}}</span>
             </div>
-            <div class="right_item" @click="toDetailList(id, classify)">
-                查看详情<i class="el-icon-arrow-right"></i>
+            <div class="right_item" @click="toDetailList(type)">
+                查看更多<i class="el-icon-arrow-right"></i>
             </div>
        </div>
        <div>
@@ -14,6 +14,7 @@
            :title="item.policyName" 
            :brief="item.policyContent" 
            :id="item.id" 
+           :type="type"
            :src="item.src"></inforList>
        </div>
     </div>
@@ -25,32 +26,15 @@ import inforList from './inforList'
 export default {
     data () {
         return {
-            infornList: [
-                {
-                    id: 123,
-                    src: require('@/assets/fj.jpg'),
-                    title: '南宁市出台若干措施促消费稳增长',
-                    brief: '17日上午，2019年全国食品安全宣传周广西活动暨第七届广西食品安全论坛启动仪式在南宁举办，主题是“尚德守法，食品安全让生活'
-                },{
-                    id: 124,
-                    src: require('@/assets/fj.jpg'),
-                    title: '南宁市出台若干措施促消费稳增长',
-                    brief: '17日上午，2019年全国食品安全宣传周广西活动暨第七届广西食品安全论坛启动仪式在南宁举办，主题是“尚德守法，食品安全让生活'
-                },{
-                    id: 125,
-                    src: '',
-                    title: '南宁市出台若干措施促消费稳增长',
-                    brief: '17日上午，2019年全国食品安全宣传周广西活动暨第七届广西食品安全论坛启动仪式在南宁举办，主题是“尚德守法，食品安全让生活'
-                }
-            ]
+            infornList: []
         };
     },
-    props: ['title', 'classify', 'type', 'list'],
+    props: ['title', 'classify', 'type', 'list', 'id'],
     components: {inforList},
     methods: {
-        toDetailList(id, classify) {
+        toDetailList(classify) {
             //查看详情
-            this.$router.push(`/inforDetail?id=${id}&type=${classify}`);
+           this.$router.push(`/inforDetails?&type=${classify}`);
         }
     }
 }

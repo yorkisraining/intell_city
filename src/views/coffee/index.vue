@@ -5,7 +5,7 @@
         <div class="carousel_block">
             <el-carousel :height="setting.height" >
                 <el-carousel-item v-for="item in topCarImgList" :key="item.id" >
-                    <img :src="item.src" alt="" @click="toThisNav(item.link)">
+                    <img :src="item.image" alt="" @click="toThisNav(item.url)">
                 </el-carousel-item>
             </el-carousel>
         </div> 
@@ -33,34 +33,34 @@
             >
                 <foodsListCard v-for="item in coffeeList" :key="item.id" 
                 :price="item.price" 
-                :title="item.name" 
-                :brief="item.brief"
+                :title="item.goodName" 
+                :brief="item.remark"
                 :id="item.id"
-                :src="item.src"
+                :src="item.imageUrl"
                 :count="item.count"
                 :totalPrice="totalPrice" 
                 :chooseListLength="chooseList.length"
                 @changePrice="changePrice" ></foodsListCard>
             </van-list>
         </div>
-        <div class="cart">
-            <div class="cart_left"  @click="showCard">
+        <div class="cart" @click="showCard">
+            <div class="cart_left">
                 <img src="@/assets/cart.png" class="cart_icon">
                 <div class="cart_price">
-                    <div>合计:<span class="total_price">￥{{totalPrice}}</span></div>
-                    <div class="preferent">已优惠{{preferentPrice}}</div>
+                    <div>合计:<span class="total_price">￥{{totalPrice | filterPrice}}</span></div>
+                    <div class="preferent">已优惠{{preferentPrice | filterPrice}}</div>
                 </div>
             </div>
-            <div class="cart_right cart_btn" @click="toPay">下单</div>
+            <div class="cart_right cart_btn" @click.stop="toPay">下单</div>
         </div>
         <van-popup v-model="isCartshow" position="bottom" class="popup_cart">
             <div class="popup_cart_box">
-                <div class="popup_cart_preferent">有优惠券可使用，已优惠{{preferentPrice}}元</div>
+                <div class="popup_cart_preferent">有优惠券可使用，已优惠{{preferentPrice | filterPrice}}元</div>
                 <div class="popup_cart_title">已选服务</div>
                 <cartCard class="popup_cart_card" v-for="item in chooseList" 
                 :key="item.id" 
                 :id="item.id" 
-                :title="item.name" 
+                :title="item.goodName" 
                 :price="item.price" 
                 :count="item.count" 
                 :totalPrice="totalPrice" 
@@ -75,7 +75,7 @@
 import foodsListCard from './foodsListCard'
 import cartCard from './cartCard'
 import headerWithPhone from '@/components/headerWithPhone'
-import { ajaxPost, ajaxGet } from '@/common/js/public.js'
+import { ajaxGet, ajaxPost } from '@/common/js/public.js'
 import { apiUrl } from '@/common/js/api.js'
 import { Toast } from 'vant';
 
@@ -88,39 +88,8 @@ export default {
                 interval: 2000,
                 indicatorPosition: 'inside',
             },
-            companyMsg: {
-                "companyName": "咖啡厅",
-                "createTime": "2019-06-20T09:25:16.400Z",
-                "createUserId": 0,
-                "id": 0,
-                "inTime": "2019-06-20T09:25:16.400Z",
-                "linkMan": "string",
-                "linkPhone": "15478451242",
-                "outTime": "2019-06-20T09:25:16.400Z",
-                "scope": "string",
-                "shortName": "string",
-                "status": 0,
-                "type": "string",
-                "updateTime": "2019-06-20T09:25:16.400Z",
-                "updateUserId": 0
-            },
-            topCarImgList: [{
-                id: 1010,
-                src: require('@/assets/fj.jpg'),
-                link: '/',
-            },{
-                id: 1011,
-                src: require('@/assets/fj.jpg'),
-                link: '/',
-            },{
-                id: 1012,
-                src: require('@/assets/fj.jpg'),
-                link: '/',
-            },{
-                id: 1013,
-                src: require('@/assets/fj.jpg'),
-                link: '/',
-            }],
+            companyMsg: {},
+            topCarImgList: [],
             page: 0,
             limit: 10,
             totalPage: 0,
@@ -133,26 +102,30 @@ export default {
             },
             coffeeList: [],
             chooseList: [],
-            preferentPrice: 100, //优惠金额
+            preferentPrice: 0, //优惠金额
         };
     },
     components: {foodsListCard, cartCard, headerWithPhone},
-    mounted() {
-        this.$store.commit('cartModule/changeCoffeeReduce', this.reduce);
+    filters: {
+        filterPrice(val) {
+            return (Number(val) / 100).toFixed(2);
+        }
     },
     created() {
+        this.$store.commit('cartModule/changeCoffeeReduce', this.reduce);
+
         //重置vuex数据
         this.$store.commit('cartModule/resetCoffee');
 
         //请求banner
-        ajaxPost(apiUrl.banner, {
+        ajaxGet(apiUrl.banner, {
             type: 3
         }, res => {
             this.topCarImgList = res
         })
         
         //请求公司信息
-        ajaxPost(apiUrl.coffeeMsg, {}, res => {
+        ajaxGet(apiUrl.coffeeMsg, {}, res => {
             this.companyMsg = res;
         })
     },
@@ -160,12 +133,13 @@ export default {
         getMsgList() {
             this.page += 1;
             //获取商品列表
-            ajaxPost(apiUrl.coffeeGoods, {
+            ajaxGet(apiUrl.coffeeGoods, {
                 page: this.page,
                 limit: this.limit
             }, res => {
                 this.totalPage = res.totalPage;
                 let list = res.list;
+                console.log('list', list)
                 for (let i=0; i<list.length; i++) {
                     list[i]['count'] = 0;
                     this.coffeeList.push(list[i]);
@@ -253,10 +227,8 @@ export default {
                         orderNum: this.chooseList[i].count
                     })
                 }
-                ajaxPost(apiUrl.pay, {
-                    list: list
-                }, res => {
-                    this.$router.push(`/foodsOrderComfirm?id=${res}&company=${this.companyMsg.companyName}&type=1`);
+                ajaxPost(apiUrl.pay, list, res => {
+                    this.$router.push(`/coffeeOrderComfirm?id=${res}&company=${this.companyMsg.companyName}&type=1`);
                 })
 
             } else {
@@ -319,6 +291,7 @@ export default {
 
     .foods_list_box {
         padding: 0 .32rem;
+        margin-top: .24rem;
     }
 
     .popup_cart {

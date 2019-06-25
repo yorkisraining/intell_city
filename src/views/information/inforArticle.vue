@@ -1,12 +1,11 @@
 <!-- inforArticle 资讯文章页 -->
 <template>
-    <div class="infor_article_box">
-        {{article}}
-    </div>
+    <div class="infor_article_box" v-html="article"></div>
 </template>
 
 <script>
-import {ajaxPost} from '@/common/js/public'
+import {ajaxGet} from '@/common/js/public'
+import { apiUrl } from '@/common/js/api.js'
 
 export default {
     data () {
@@ -23,8 +22,8 @@ export default {
             
         let url = [`app/infor/policy/info/${id}`, `app/infor/busi/info/${id}`,  `app/infor/rent/info/${id}`];
         /* 0 招商 1 商务 2 租赁 */
-        ajaxPost(url[type], {}, res => {
-            this.article = res.absContent;
+        ajaxGet(`${apiUrl.baseURL}${url[type]}`, {}, res => {
+            this.article = res.policyContent;
         })
     },
 }

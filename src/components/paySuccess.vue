@@ -48,7 +48,7 @@ export default {
         },
         queryPay() {
             //查询支付宝支付状态
-            ajaxPost(apiUrl.payResult, {
+            ajaxGet(apiUrl.payResult, {
                 orderId: id
             }, res => {
                 if (res == '') {

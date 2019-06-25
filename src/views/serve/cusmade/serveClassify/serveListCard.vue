@@ -8,7 +8,7 @@
             <div class="title">{{title}}</div>
             <div class="brief">{{brief}}</div>
             <div class="price_box">
-                <div class="price" v-if="price > 0">￥<span>{{price}}</span></div>
+                <div class="price" v-if="price > 0">￥<span>{{price | filterPrice}}</span></div>
                 <div class="free" v-else>免费</div>
                 <div class="stepper">
                     <span @click.stop="sub(id, price)" class="btn sub" v-show="tCount != 0">+</span>
@@ -33,6 +33,11 @@ export default {
     watch: {
         count(val) {
             this.tCount = val;
+        }
+    },
+    filters: {
+        filterPrice(val) {
+            return (Number(val) / 100).toFixed(2);
         }
     },
     methods: {
