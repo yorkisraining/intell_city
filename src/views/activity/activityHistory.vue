@@ -1,7 +1,7 @@
 <!-- activityHistory  -->
 <template>
     <div class="avtivity_history_box"  :style="{minHeight: minH + 'px'}">
-        <van-tabs :swipe-threshold="3" :line-width="'.4rem'" color="#33" title-active-color="#FFA036" class="van_tabs" sticky :offset-top="60">
+        <van-tabs :swipe-threshold="3" :line-width="'.4rem'" color="#33" title-active-color="#FFA036" class="van_tabs" sticky :offset-top="58">
             <van-tab title="已报名" class="scroll_item">
                 <van-list v-model="scrollSetting1.loading"
                     :finished="scrollSetting1.finished"

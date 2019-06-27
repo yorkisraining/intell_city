@@ -29,7 +29,7 @@
             <div class="list_item qy_block">
                 <div class="qy_title"  @click="toThisNav('/framesCompany')">入驻企业成果展示<i class="el-icon-arrow-right"></i></div>
                 <div v-for="item in companyPerformanceList" :key="item.id" class="qy_detail_box" @click="toThisNav(item.linkUrl, true)">
-                    <img :src="item.imageUrl">
+                    <img v-lazy="item.imageUrl">
                     <div class="qy_block_name">{{item.title | filterCompanyTitle}}</div>
                     <div class="qy_block_desc">{{item.absContent | filterCompanyContent}}</div>
                 </div>

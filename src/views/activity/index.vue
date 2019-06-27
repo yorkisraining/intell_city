@@ -2,7 +2,7 @@
 <template>
     <div class="avtivity_box">
         <headerWithPhone :title="'活动'" :linkMsg="'报名记录'" class="head" @clickLink="toHis"></headerWithPhone>
-        <van-tabs :swipe-threshold="3" :line-width="'.4rem'" color="#0D9BED" title-active-color="#0D9BED" sticky :offset-top="60">
+        <van-tabs :swipe-threshold="3" :line-width="'.4rem'" color="#0D9BED" title-active-color="#0D9BED" sticky:offset-top="55">
             <van-tab v-for="item in activityTypeList" :key="item.id" :title="item.paramValue">
                 <activityList :type="item.id"></activityList>
             </van-tab>

@@ -2,7 +2,7 @@
 <template>
     <div class="serve_his_box" :style="{minHeight: minH + 'px'}">
         <div class="tabs_box">
-            <van-tabs  color="#FFA036" line-width=".4rem" title-active-color="#333" class="serve_tab_line" sticky :offset-top="60">
+            <van-tabs  color="#FFA036" line-width=".4rem" title-active-color="#333" class="serve_tab_line" sticky :offset-top="58">
                 <van-tab title="未支付" class="scroll_item">
                     <van-list v-model="scrollSetting1.loading"
                         :finished="scrollSetting1.finished"

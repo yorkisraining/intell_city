@@ -2,7 +2,7 @@
 <template>
     <div>
         <div class="box" @click="clickFn(link)">
-            <img :src="src" class="list_img">
+            <img v-lazy="src" class="list_img">
             <div class="top_mark">
                 <div>{{topMark}}</div>
                 <div class="go_now" :style="{backgroundColor: color}">立即查看<i class="el-icon-arrow-right"></i></div>

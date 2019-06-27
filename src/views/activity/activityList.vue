@@ -46,7 +46,6 @@ export default {
         getMsgList() {
             this.page += 1;
             //获取活动列表
-            this.scrollSetting.loading = false;
             ajaxGet(apiUrl.activityList, {
                 page: this.page,
                 limit: this.limit,
@@ -55,7 +54,6 @@ export default {
                 this.list = res.list;
                 this.totalPage = res.totalPage;
                 this.scrollSetting.loading = false;
-                console.log(this.list)
             }, res => {
                 this.scrollSetting.loading = false;
                 this.scrollSetting.finished = true;

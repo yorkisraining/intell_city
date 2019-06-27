@@ -2,7 +2,7 @@
 <template>
     <div class="order_history" :style="{minHeight: minH + 'px'}">
         <div class="tabs_box">
-            <van-tabs sticky :offset-top="60">
+            <van-tabs sticky :offset-top="58">
                 <van-tab title="未消费" class="scroll_item">
                     <van-list v-model="scrollSetting1.loading"
                         :finished="scrollSetting1.finished"
@@ -21,7 +21,7 @@
                         @toPay="toPay"  
                         @cancelOrder="cancelOrder"></hisCard>
                     </van-list>
-                </van-tab>
+                </van-tab> 
                 <van-tab title="历史订单" class="scroll_item">
                     <van-list v-model="scrollSetting2.loading"
                         :finished="scrollSetting2.finished"

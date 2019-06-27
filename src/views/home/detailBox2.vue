@@ -2,7 +2,7 @@
 <template>
     <div>
         <div class="box" @click="clickFn(title, id)">
-            <img :src="src" class="list_img">
+            <img class="list_img" v-lazy="src">
             <div class="list_desc">
                 <p class="title">{{title | filterTitle}}</p>
                 <p class="remark" v-html="remark"></p>

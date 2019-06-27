@@ -2,7 +2,7 @@
 <template>
     <div class="order_history" :style="{minHeight: minH + 'px'}">
         <div class="tabs_box">
-            <van-tabs sticky :offset-top="60">
+            <van-tabs sticky :offset-top="55">
                 <van-tab title="未消费" class="scroll_item">
                     <van-list v-model="scrollSetting1.loading"
                         :finished="scrollSetting1.finished"
