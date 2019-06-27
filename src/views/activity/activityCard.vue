@@ -10,7 +10,7 @@
                 <div class="detail_msg">时间：<span>{{time}}</span></div>
                 <div class="detail_msg">地点：<span>{{address}}</span></div>
             </div>
-            <div class="sign_up" @click.stop="signUp(id)" >
+            <div class="sign_up" @click.stop="signUp(id)" v-if="allowSign != 0">
                 <div><img class="sign_up_icon" src="@/assets/activ_icon.png" /></div>
                 <div>报名</div>
             </div>

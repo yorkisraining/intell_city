@@ -1,7 +1,7 @@
 <!-- inforList -->
 <template>
     <div class="infor_list" @click="toArticle(id, title, type)">
-        <div :class="['msg_box', {noImg: src == ''}]">
+        <div :class="['msg_box', {noImg: src == '' || src == null || src == undefined}]">
             <div class="title">{{title}}</div>
             <div class="brief" v-html="brief">{{brief}}</div>
         </div>

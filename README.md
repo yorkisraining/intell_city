@@ -9,8 +9,6 @@ http://pay.cloudbae.cn:39000/mv/api/doc#
 
 - 退款查询
 
-- 活动查看详情怎么知道自己有没有报名？
-
 - 微信支付回调
 
 - 退款原因
@@ -22,3 +20,5 @@ http://pay.cloudbae.cn:39000/mv/api/doc#
 - 拨打电话
 
 - 定制化服务的小图标
+
+- page 和 totalpage

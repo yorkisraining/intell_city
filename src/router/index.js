@@ -25,6 +25,7 @@ import activitySignUp from '@/views/activity/activitySignUp'
 import activitySignUpSuccess from '@/views/activity/signupSuccess'
 import framesCompany from '@/views/frames/framesCompany'
 import framesProject from '@/views/frames/framesProject'
+import framesPolicy from '@/views/frames/framesPolicy'
 
 Vue.use(Router)
 
@@ -211,7 +212,7 @@ const router = new Router({
         name: '报名成功',
         component: activitySignUpSuccess,
         props: {
-            returnBtn: true,
+            returnBtn: false,
             ifShowHeader: true
         }
     }, {
@@ -226,6 +227,14 @@ const router = new Router({
         path: '/framesProject',
         name: '项目',
         component: framesProject,
+        props: {
+            returnBtn: true,
+            ifShowHeader: true
+        }
+    }, {
+        path: '/framesPolicy',
+        name: '政策',
+        component: framesPolicy,
         props: {
             returnBtn: true,
             ifShowHeader: true

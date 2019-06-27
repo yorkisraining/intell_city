@@ -1,4 +1,3 @@
-import Vue from 'vue'
 import Router from 'vue-router'
 import { ajaxPost, ajaxGet } from './public'
 import { apiUrl } from './api'
@@ -21,6 +20,7 @@ export const aliPay = (param, id, module) => {
     YBB.hybrid.util.getIP().then(function(response) {
         const ip = response.clientIP;
         param['clientIp'] = ip;
+        console.log(apiUrl.aliPay, param)
         ajaxPost(apiUrl.aliPay, param, res => {
             if (res) {
                 const params = res; // 由后台提供的字符串
@@ -86,7 +86,7 @@ export const aliPay = (param, id, module) => {
     7. 后台返回支付结果
  */
 export const wxPay = (params, id, modules) => {
-    Promise.all([hybrid.util.fingerprint(), hybrid.util.getIP()]).then(result => {
+    Promise.all([YBB.hybrid.util.fingerprint(), YBB.hybrid.util.getIP()]).then(result => {
         const fingerprint = result[0];
         const ip = result[1].clientIP;
 

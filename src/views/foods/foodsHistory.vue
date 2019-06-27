@@ -2,14 +2,14 @@
 <template>
     <div class="order_history" :style="{minHeight: minH + 'px'}">
         <div class="tabs_box">
-            <sticky :offset-top="60">
+            <van-tabs sticky :offset-top="60">
                 <van-tab title="未消费" class="scroll_item">
                     <van-list v-model="scrollSetting1.loading"
                         :finished="scrollSetting1.finished"
                         finished-text="没有更多了"
                         @load="getHisList1"
                     >
-                    <hisCard v-for="item in hisCardList1" :key="item.id"
+                    <hisCard v-for="item in hisCardList1" :key="item.id" v-if="item.status == 0"
                     :status="item.status" 
                     :orderList="item.detailList" 
                     :orderId="item.id" 
@@ -40,7 +40,7 @@
                     @cancelOrder="cancelOrder"></hisCard>
                     </van-list>
                 </van-tab>
-            </sticky>
+            </van-tabs>
         </div>
     </div>
 </template>
@@ -57,7 +57,7 @@ export default {
             hisCardList1: [],
             hisCardList2: [],
             page1: 0, //未支付
-            page2: 1, //历史订单
+            page2: 0, //历史订单
             limit: 10,
             totalPage1: 0,
             totalPage2: 0,
@@ -119,7 +119,7 @@ export default {
             let findOrder = (id, list) => {
                 for (let i=0; i<list.length; i++) {
                     if (list[i].id == id) {
-                        list[i].status = 3;
+                        list[i].status = 9;
                     }
                 }
             }

@@ -7,7 +7,7 @@
                 :height="setting.height"
                 >
                 <el-carousel-item v-for="item in imageList" :key="item.id" >
-                    <img :src="item.image" :alt="item.remark" @click="toThisNav(item.url)">
+                    <img :src="item.image" :alt="item.remark" @click="toThisNav(item.url, true)">
                 </el-carousel-item>
                 </el-carousel>
             </div>
@@ -66,11 +66,12 @@
                     <ul class="slider_block clearfix">
                         <li v-for="(item, index) in companyProjectList" :key="item.id">
                             <carouselWithDesc 
-                            :src="item.src" 
+                            :src="item.imageUrl" 
                             :title="item.title" 
-                            :desc="item.desc" 
+                            :desc="item.absContent" 
                             :bgColor="index"
-                            :link="item.link" 
+                            :importantFlag="item.importantFlag"
+                            :link="item.linkUrl" 
                             @toThisNavEmit="toThisNav"></carouselWithDesc>
                         </li>
                     </ul>
@@ -166,7 +167,7 @@ export default {
         },
         filterCompanyContent(val) {
             if (val) {
-                return val.length > 12 ? val.slice(0, 12) : val;
+                return val.length > 15 ? val.slice(0, 15) + '...' : val;
             }
         }
     },
@@ -195,7 +196,7 @@ export default {
             })
             for (let i=0; i<res.appList.length; i++) {
                 if (res.appList[i].title == '政策') {
-                    
+                    res.url = '/framesPolicy';
                 }
             }
             this.appList = res.appList;

@@ -1,6 +1,6 @@
 <!-- inforArticle 资讯文章页 -->
 <template>
-    <div class="infor_article_box" v-html="article"></div>
+    <div class="infor_article_box" v-html="article" :style="{width: width + 'px'}"></div>
 </template>
 
 <script>
@@ -12,7 +12,8 @@ export default {
         return {
             article: '',
             createTime: '',
-            title: ''
+            title: '',
+            width: 0
         };
     },
     created() {
@@ -25,6 +26,8 @@ export default {
         ajaxGet(`${apiUrl.baseURL}${url[type]}`, {}, res => {
             this.article = res.policyContent;
         })
+
+        this.width = document.documentElement.clientWidth;
     },
 }
 

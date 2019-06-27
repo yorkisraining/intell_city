@@ -4,7 +4,7 @@
         <div class="box" @click="clickFn(title, id)">
             <img :src="src" class="list_img">
             <div class="list_desc">
-                <p class="title">{{title}}</p>
+                <p class="title">{{title | filterTitle}}</p>
                 <p class="remark" v-html="remark"></p>
                 <div class="mark">
                     <span class="green">{{typeName}}</span>
@@ -23,6 +23,13 @@ export default {
         };
     },
     props: ['title', 'remark', 'src', 'link', 'typeName', 'type', 'id'],
+    filters: {
+        filterTitle(val) {
+            if (val) {
+                return val.length > 30 ? val.slice(0, 30) + '...' : val;
+            }
+        }
+    },
     methods: {
         clickFn(title, id) {
             this.$router.push( `/inforArticle?id=${id}&title=${title}&type=0`)

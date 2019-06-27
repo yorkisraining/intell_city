@@ -3,8 +3,8 @@
     <div class="with_desc_carousel" :style="{backgroundColor: bgColor % 2 == 0 ? '#F0F5FF' : '#FFF1F0'}" @click="clickFn(link)">
         <img :src="src" class="list_img">
         <div class="list_desc">
-            <p class="title">{{title}}</p>
-            <p class="remark">{{desc}}</p>
+            <p class="title">{{title | filterTitle}}</p>
+            <p class="remark">{{desc | filterDesc}}</p>
         </div>
     </div>
 </template>
@@ -15,10 +15,22 @@ export default {
         return {
         };
     },
-    props: ['src', 'title', 'desc', 'bgColor', 'link'],
+    props: ['src', 'title', 'desc', 'bgColor', 'link', 'importantFlag'],
+    filters: {
+        filterTitle(val) {
+            if (val) {
+                return val.length > 16 ? val.slice(0, 16) + '...' : val;
+            }
+        },
+        filterDesc(val) {
+            if (val) {
+                return val.length > 20 ? val.slice(0, 20) + '...' : val;
+            }
+        }
+    },
     methods: {
         clickFn(url) {
-            this.$emit('toThisNavEmit', url);
+            this.$emit('toThisNavEmit', url, true);
         }
     }
 }

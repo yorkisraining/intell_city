@@ -62,7 +62,7 @@ export const apiUrl = {
     //微信支付
     wxPay: baseURL + 'app/pay/wx',
     //支付宝支付
-    alipPay: baseURL + 'app/pay/alipay',
+    aliPay: baseURL + 'app/pay/alipay',
     //查询支付信息
     payResult: baseURL + 'app/pay/payResult',
     //查询退款信息

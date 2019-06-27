@@ -8,9 +8,9 @@
             >
             <inforList v-for="item in list" :key="item.id" 
             :title="item.policyName" 
-            :brief="item.policyContent" 
+            :brief="item.absContent" 
             :id="item.id" 
-            :src="item.src"
+            :src="item.mainImageUrl"
             :type="type" ></inforList>
         </van-list>
     </div>
@@ -40,11 +40,10 @@ export default {
     components: {inforList},
     created() {
         let query = this.$route.query;
-        let id = query.id,
-            type = query.type;
-
+        let id = query.id;
+        this.type = query.type;
         this.classify = query.classify;
-        switch (Number(type)) {
+        switch (Number(this.type)) {
             case 0:
             //招商
             this.ajaxUrl = apiUrl.inforPocilyList
@@ -65,7 +64,7 @@ export default {
             ajaxGet(this.ajaxUrl, {
                 page: this.page,
                 limit: this.limit,
-                type: this.classify //type 用前面的
+                type: this.classify
             }, res => {
                 this.list = res.list;
                 this.totalPage = res.totalPage;

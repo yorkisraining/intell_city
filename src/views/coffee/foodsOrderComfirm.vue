@@ -106,7 +106,6 @@ export default {
         let query = this.$route.query;
         this.orderId = query.id;
         this.type = query.type;
-
         ajaxGet(`${apiUrl.baseURL}app/goodOrder/info/${this.orderId}`, {}, res => {
             this.orderList = res.detailList;
             this.createTime = res.createTime;
@@ -141,6 +140,20 @@ export default {
             this.ifShowTime = false;
             this.curBtn = false;
         },
+        formatDate(timestamp) {
+            function addZero(num) {
+                return num < 10 ? '0' + num : num;
+            }
+            var date = new Date(timestamp);
+            var year = date.getFullYear();
+            var month = addZero(date.getMonth() + 1);
+            var day = addZero(date.getDate());
+            var hours = addZero(date.getHours());
+            var minutes = addZero(date.getMinutes());
+            var seconds = addZero(date.getSeconds());
+            // return year + '-' + month + '-' + day + ' ' + hours + ':' + minutes + ':' + seconds;
+            return year + '-' + month + '-' + day;
+        },
         pay(type) {
             //支付
             /* 
@@ -150,13 +163,14 @@ export default {
             if (this.type == 1) {
                 if (this.curBtn) {
                     //立即
-                    ajaxGet(`${apiUrl.baseUrl}app/goodOrder/book/1/${this.id}`, {}, res => {
+                    ajaxGet(`${apiUrl.baseURL}app/goodOrder/book/1/${this.orderId}`, {}, res => {
                         this.$router.push(`/choosePayFn?module=2&id=${this.orderId}`);
                     })
                 } else {
                     //预约
-                    ajaxGet(`${apiUrl.baseUrl}app/goodOrder/book/2/${this.id}`, {
-                        bookTime: this.appointTime
+                    let time = `${this.formatDate(new Date().getTime())} ${this.appointTime}:00`;
+                    ajaxGet(`${apiUrl.baseURL}app/goodOrder/book/2/${this.id}`, {
+                        bookTime: time
                     }, res => {
                         this.$router.push(`/choosePayFn?module=2&id=${this.orderId}`);
                     })

@@ -68,6 +68,12 @@ export default {
                 this.inforCardList = res
                 console.log(this.inforCardList)
             })
+        },
+        toThisNav(url) {
+            if (!/http/.test(url)) {
+                url = `http://${url}`;
+            }
+            window.location.href = url;
         }
     },
 }

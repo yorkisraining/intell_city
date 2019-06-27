@@ -1,7 +1,7 @@
 <!-- foods 美食服务首页 -->
 <template>
     <div class="foods_containt">
-        <headerWithPhone :title="companyMsg.companyName" :linkMsg="'服务记录'" class="head" @clickLink="toHis"></headerWithPhone>
+        <headerWithPhone :title="companyMsg.companyName" :linkMsg="'订单记录'" class="head" @clickLink="toHis"></headerWithPhone>
         <div class="carousel_block">
             <el-carousel :height="setting.height" >
                 <el-carousel-item v-for="item in topCarImgList" :key="item.id" >
@@ -155,6 +155,9 @@ export default {
         },
         toThisNav(url) {
             //图片链接
+            if (!/http/.test(url)) {
+                url = `http://${url}`;
+            }
             window.location.href = url;
         },
         toHis() {

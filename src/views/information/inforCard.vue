@@ -5,17 +5,17 @@
             <div class="left_item">
                 <span class="title">{{title}}</span>
             </div>
-            <div class="right_item" @click="toDetailList(type)">
+            <div class="right_item" @click="toDetailList(type, classify)">
                 查看更多<i class="el-icon-arrow-right"></i>
             </div>
        </div>
        <div>
            <inforList v-for="item in list" :key="item.id" 
            :title="item.policyName" 
-           :brief="item.policyContent" 
+           :brief="item.absContent" 
            :id="item.id" 
            :type="type"
-           :src="item.src"></inforList>
+           :src="item.mainImageUrl"></inforList>
        </div>
     </div>
 </template>
@@ -32,9 +32,9 @@ export default {
     props: ['title', 'classify', 'type', 'list', 'id'],
     components: {inforList},
     methods: {
-        toDetailList(classify) {
+        toDetailList(type, classify) {
             //查看详情
-           this.$router.push(`/inforDetails?&type=${classify}`);
+           this.$router.push(`/inforDetails?&type=${type}&classify=${classify}`);
         }
     }
 }

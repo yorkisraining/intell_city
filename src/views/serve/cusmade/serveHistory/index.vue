@@ -9,7 +9,7 @@
                         finished-text="没有更多了"
                         @load="getHisList1"
                     >
-                        <hisCard v-for="item in hisCardList1" :key="item.id" 
+                        <hisCard v-for="item in hisCardList1" :key="item.id"  v-if="item.status == 0"
                         :status="item.status" 
                         :orderList="item.detailList" 
                         :orderId="item.id" 
@@ -115,7 +115,7 @@ export default {
             let findOrder = (id, list) => {
                 for (let i=0; i<list.length; i++) {
                     if (list[i].id == id) {
-                        list[i].status = 4;
+                        list[i].status = 9;
                     }
                 }
                 

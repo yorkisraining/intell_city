@@ -43,20 +43,6 @@
             </div>
             <div class="card_item" v-if="type == 1">
                 <div class="title">联系信息</div>
-                <!-- <div class="msg_list" v-if="type == 0">
-                    <div class="msg_list_item">
-                        <div>姓名</div>
-                        <div>{{user.name}}</div>
-                    </div>
-                    <div class="msg_list_item">
-                        <div>电话</div>
-                        <div>{{user.tel}}</div>
-                    </div>
-                    <div class="msg_list_item">
-                        <div>地址</div>
-                        <div>{{user.address}}</div>
-                    </div>
-                </div> -->
                 <div class="msg_list">
                     <div class="msg_list_item">
                         <div>姓名</div>
@@ -80,7 +66,7 @@
 <script>
 import anOrderList from '@/components/anOrderList'
 import { Toast, Dialog } from 'vant';
-import { ajaxGet } from '@/common/js/public.js'
+import { ajaxGet, ajaxPost } from '@/common/js/public.js'
 import { apiUrl } from '@/common/js/api'
 
 export default {
@@ -146,7 +132,7 @@ export default {
                 if (this.user.name != '' && this.user.tel != '' &&this.user.address != '') {
                     //提交地址信息
                     
-                    ajaxGet(`${apiUrl.baseURL}app/goodOrder/link/${this.orderId}`, {
+                    ajaxPost(`${apiUrl.baseURL}app/goodOrder/link/${this.orderId}`, {
                         address: this.user.address,
                         mobile: this.user.tel,
                         linkMan: this.user.username

@@ -14,7 +14,7 @@
                     :id="item.id"
                     :actId="item.actId" 
                     :remark="item.remark" 
-                    :auditTime="item.auditTime" 
+                    :auditTime="item.createTime" 
                     :actName="item.actName"></hisCard>
                 </van-list>
             </van-tab>

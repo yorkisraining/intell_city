@@ -40,7 +40,7 @@ export default {
     data () {
         return {
             time: '00:00:00',
-            price: 26,
+            price: 0,
             radio: '1',
             module: 1,
             orderId: '',
@@ -61,16 +61,17 @@ export default {
         this.orderId = query.id;
         
         /* 查询订单详情，计算剩余时间，从下单开始24小时倒计时，做个倒计时 */
-        ajaxGet(`${apiUrl.baseUrl}app/goodOrder/info/${this.orderId}`, {}, res => {
-            this.endTime = new Date(res.createtime).getTime() + 1000 * 60 * 60 * 24;
+        ajaxGet(`${apiUrl.baseURL}app/goodOrder/info/${this.orderId}`, {}, res => {
+            this.endTime = new Date(res.createTime).getTime() + 1000 * 60 * 60 * 24;
             this.countTime = this.endTime - new Date().getTime();
             this.count();
+            this.price = (res.realMoney / 100).toFixed(2)
         })
 
     },
     methods: {
         pay() {
-           if (radio == 1) {
+           if (this.radio == 1) {
                 //微信
                 wxPay({
                     orderNo: this.orderId
