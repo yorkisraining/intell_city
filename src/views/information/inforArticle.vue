@@ -29,6 +29,12 @@ export default {
 
         this.width = document.documentElement.clientWidth;
     },
+    updated() {
+        let imgs = document.querySelectorAll('img');
+        for (let i=0; i<imgs.length; i++) {
+            imgs[i].style.height = '100%'
+        }
+    }
 }
 
 </script>

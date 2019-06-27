@@ -1,7 +1,8 @@
 import Router from 'vue-router'
-import { ajaxPost, ajaxGet } from './public'
+import { ajaxPost } from './public'
 import { apiUrl } from './api'
 import { Toast } from 'vant'
+import axios from 'axios'
 
 const router = new Router({
     mode: 'history'
@@ -98,22 +99,31 @@ export const wxPay = (params, id, modules) => {
         params['fingerprint'] = fingerprint;
         params['clientIp'] = ip;
         //请求后端，发起支付
-        return ajaxPost(apiUrl.wxPay, params, res => {
-            console.log('wxpay:', res);
-        })
-    }).then((response) => {
-        // 若 failureCode 为 null 即为预支付成功
-        // 若 failureCode 不为 null 则预支付生成存在异常，具体异常信息请查看 response.failureMsg
-        if (response.failureCode === null) {
-            // 获得到订单号
-            const orderNo = response.orderNo;
-            // 经过encodeURIComponent转义
-            const url = encodeURIComponent(`${apiUrl.baseURL}paySuccess?orderNo=${orderNo}&id=${id}&module=${modules}`);
+        axios.post(apiUrl.wxPay, params)
+            .then(function(response) {
+                response = response.data.result;
+                if (response.code == 10000) {
+                    response = response.data;
+                    // 若 failureCode 为 null 即为预支付成功
+                    // 若 failureCode 不为 null 则预支付生成存在异常，具体异常信息请查看 response.failureMsg
+                    if (response.failureCode === null) {
+                        // 获得到订单号
+                        const orderNo = response.orderNo;
+                        // 经过encodeURIComponent转义
+                        const url = encodeURIComponent(`${apiUrl.baseURL}paySuccess?orderNo=${orderNo}&id=${id}&module=${modules}`);
 
-            location.href = response.credential.wx.mweb_url + '&redirect_url=' + url;
-        } else {
-            //预支付失败
+                        location.href = response.credential.wx.mweb_url + '&redirect_url=' + url;
+                    } else {
+                        //预支付失败
 
-        }
+                    }
+                }
+            })
+            .catch(function(error) {
+                if (errorCallback) {
+                    errorCallback(error)
+                }
+                console.log('服务器错误', error);
+            })
     });
 }
