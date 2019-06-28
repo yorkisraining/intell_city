@@ -18,6 +18,9 @@ remAndPhoneConfig();
 
 Vue.config.productionTip = false;
 
+//隐藏自带导航
+YBB.hybrid.navigation.hide();
+
 /* eslint-disable no-new */
 new Vue({
     el: '#app',
